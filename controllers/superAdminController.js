@@ -1,0 +1,646 @@
+const User = require("../models/UserModel")
+const jwt = require('jsonwebtoken');
+const Admin = require("../models/AdminModel");
+const { cloudinary } = require("../config/cloudinary");
+
+// Controller for registering a super admin
+// This function handles the registration of a super admin user
+exports.registerSuperAdmin = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        // Validate input
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                message: 'Name, email, and password are required',
+                success: false
+            });
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                message: 'superAdmin already exists',
+                success: false
+            });
+        }
+
+        // Create new super admin user
+        const newUser = new User({
+            name,
+            email,
+            password, // Note: Password should be hashed in a real application
+            role: 'superadmin'
+        });
+
+        await newUser.save();
+
+        res.status(201).json({
+            message: 'Super admin registered successfully',
+            success: true,
+            user: newUser
+        });
+    } catch (error) {
+        console.error('Error registering super admin:', error);
+        res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            sucess: false
+        });
+    }
+};
+
+
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({
+                message: 'Email and password are required',
+                success: false
+            });
+        }
+
+        // Find user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(200).json({
+                message: 'Super admin not found',
+                success: false
+            });
+        }
+
+        // Check password (in a real application, you should hash the password and compare)
+        if (user.password !== password) {
+            return res.status(401).json({
+                message: 'Invalid password',
+                success: false
+            });
+        }
+
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" })
+
+        res.status(200).json({
+            message: 'Super admin logged in successfully',
+            success: true,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            },
+            token,
+        });
+
+    } catch (error) {
+        console.error('Error logging in super admin:', error);
+        res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false
+        });
+    }
+}
+
+
+
+exports.getProfile = async (req, res) => {
+    try {
+        const userId = req.user.userId; // Assuming user ID is stored in req.user by middleware
+
+        // Find user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found',
+                success: false
+            });
+        }
+
+        res.status(200).json({
+            message: 'User profile retrieved successfully',
+            success: true,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error('Error retrieving user profile:', error);
+        res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false
+        });
+    }
+};
+
+
+
+exports.createAdmin = async (req, res) => {
+    try {
+        const userId = req.user.userId; // From auth middleware
+
+        const {
+            name_of_business,
+            Regd_Address,
+            Gstin_No,
+            Pan_no,
+            Name_of_Business_owner,
+            Email,
+            Contact_No
+        } = req.body;
+
+        // Validate text fields
+        if (!name_of_business || !Regd_Address || !Gstin_No || !Pan_no || !Name_of_Business_owner || !Email || !Contact_No) {
+            return res.status(400).json({
+                message: 'All fields are required',
+                success: false
+            });
+        }
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId);
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can create new admins.',
+                success: false
+            });
+        }
+
+        // Ensure all files are uploaded
+        const requiredFiles = ['Company_Logo', 'Incorporation_Certificate', 'Pan_Card', 'GST_Certificate'];
+        for (let field of requiredFiles) {
+            if (!req.files[field] || req.files[field].length === 0) {
+                return res.status(400).json({
+                    message: `${field} file is required`,
+                    success: false
+                });
+            }
+        }
+
+        // ✅ Upload files separately
+        let companyLogoUrl = null;
+        let incorporationCertUrl = null;
+        let panCardUrl = null;
+        let gstCertUrl = null;
+
+        if (req.files['Company_Logo']) {
+            const file = req.files['Company_Logo'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw" // keeps PDF as raw
+            });
+            companyLogoUrl = result.secure_url;
+        }
+
+        if (req.files['Incorporation_Certificate']) {
+            const file = req.files['Incorporation_Certificate'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            incorporationCertUrl = result.secure_url;
+        }
+
+        if (req.files['Pan_Card']) {
+            const file = req.files['Pan_Card'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            panCardUrl = result.secure_url;
+        }
+
+        if (req.files['GST_Certificate']) {
+            const file = req.files['GST_Certificate'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            gstCertUrl = result.secure_url;
+        }
+
+        // Create admin document in DB
+        const newAdmin = new Admin({
+            superAdminId: userId,
+            name_of_business,
+            Regd_Address,
+            Gstin_No,
+            Pan_no,
+            Name_of_Business_owner,
+            Email,
+            Contact_No,
+            Company_Logo: companyLogoUrl,
+            Incorporation_Certificate: incorporationCertUrl,
+            Pan_Card: panCardUrl,
+            GST_Certificate: gstCertUrl
+        });
+
+        // save email and password in userCollenction
+
+        const adminSaveInUser = new User({
+            adminId: newAdmin._id, // Link to the admin document
+            email: Email,
+            password: Contact_No, // Assuming Contact_No is used as a password here, which is
+            role: 'admin',
+        });
+
+        await adminSaveInUser.save();
+        await newAdmin.save();
+
+        return res.status(201).json({
+            message: 'Admin created successfully',
+            success: true,
+            data: newAdmin
+        });
+
+    } catch (error) {
+        console.error('Error creating admin:', error);
+        res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false
+        });
+    }
+};
+
+
+
+exports.getAllAdmins = async (req, res) => {
+    try {
+        const userId = req.user.userId; // From auth middleware
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId);
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can view all admins.',
+                success: false
+            });
+        }
+
+        // Fetch all admins
+        const admins = await Admin.find().populate('superAdminId', 'name email');
+        if (admins.length === 0) {
+            return res.status(404).json({
+                message: 'No admins found',
+                success: false
+            });
+        }
+        res.status(200).json({
+            message: 'Admins retrieved successfully',
+            success: true,
+            data: admins
+        });
+
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        res.status(500).json({
+           message: `Internal Server Error Or ${error.message}`,
+            success: false
+        });
+    }
+};
+
+
+
+exports.getAdminById = async (req, res) => {
+    try {
+        const { adminId } = req.body; // Get adminId from request parameters
+        const userId = req.user.userId; // From auth middleware
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId
+        );
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can view admin details.',
+                success: false
+            });
+        }
+
+        // Validate adminId
+        if (!adminId) {
+            return res.status(400).json({
+                message: 'Admin ID is required',
+                success: false
+            });
+        }
+
+        // Fetch admin by ID
+        const admin = await Admin.findById(adminId).populate('superAdminId', 'name email');
+        if (!admin) {
+            return res.status(404).json({
+                message: 'Admin not found',
+                success: false
+            });
+        }
+        
+
+        res.status(200).json({
+            message: 'Admin retrieved successfully',
+            success: true,
+            data: admin
+        });
+    } catch (error) {
+        console.error('Error fetching admin by ID:', error);
+        res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false
+        });
+
+    }
+}
+
+
+exports.editAdmin = async (req, res) => {
+    try {
+        const { adminId } = req.body;
+        const userId = req.user.userId; // From auth middleware
+
+        const {
+            name_of_business,
+            Regd_Address,
+            Gstin_No,
+            Pan_no,
+            Name_of_Business_owner,
+            Email,
+            Contact_No
+        } = req.body;
+
+        // Validate text fields
+        // if (!name_of_business || !Regd_Address || !Gstin_No || !Pan_no || !Name_of_Business_owner || !Email || !Contact_No) {
+        //     return res.status(400).json({
+        //         message: 'All fields are required',
+        //         success: false
+        //     });
+        // }
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId);
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can edit admins.',
+                success: false
+            });
+        }
+
+        // Validate adminId
+        if (!adminId) {
+            return res.status(400).json({
+                message: 'Admin ID is required',
+                success: false
+            });
+        }
+
+        // Find the admin to edit
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({
+                message: 'Admin not found',
+                success: false
+            });
+        }
+
+        // Handle file uploads (optional fields)
+        const fileUploads = {};
+
+        if (req.files?.Company_Logo?.[0]) {
+            const result = await cloudinary.uploader.upload(req.files.Company_Logo[0].path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            fileUploads.Company_Logo = result.secure_url;
+        }
+
+        if (req.files?.Incorporation_Certificate?.[0]) {
+            const result = await cloudinary.uploader.upload(req.files.Incorporation_Certificate[0].path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            fileUploads.Incorporation_Certificate = result.secure_url;
+        }
+
+        if (req.files?.Pan_Card?.[0]) {
+            const result = await cloudinary.uploader.upload(req.files.Pan_Card[0].path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            fileUploads.Pan_Card = result.secure_url;
+        }
+
+        if (req.files?.GST_Certificate?.[0]) {
+            const result = await cloudinary.uploader.upload(req.files.GST_Certificate[0].path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            fileUploads.GST_Certificate = result.secure_url;
+        }
+
+        // Update admin data
+        admin.name_of_business = name_of_business;
+        admin.Regd_Address = Regd_Address;
+        admin.Gstin_No = Gstin_No;
+        admin.Pan_no = Pan_no;
+        admin.Name_of_Business_owner = Name_of_Business_owner;
+        admin.Email = Email;
+        admin.Contact_No = Contact_No;
+
+        // If new files are uploaded, update them
+        Object.assign(admin, fileUploads);
+
+        await admin.save();
+
+        return res.status(200).json({
+            message: 'Admin updated successfully',
+            success: true,
+            data: admin
+        });
+
+    } catch (error) {
+        console.error("Error in editAdmin:", error.message);
+        return res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false,
+        });
+    }
+};
+
+
+
+exports.deleteAdmin = async (req, res) => {
+    try {
+        const { adminId } = req.body;
+        const userId = req.user.userId; // From auth middleware
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId);
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can delete admins.',
+                success: false
+            });
+        }
+
+        // Validate adminId
+        if (!adminId) {
+            return res.status(400).json({
+                message: 'Admin ID is required',
+                success: false
+            });
+        }
+
+        // Find the admin to delete
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({
+                message: 'Admin not found',
+                success: false
+            });
+        }
+
+        // Delete the admin
+        await Admin.findByIdAndDelete(adminId);
+        await User.findOneAndDelete({ email: admin.Email }); // Assuming Email is unique in User collection 
+        res.status(200).json({
+            message: 'Admin deleted successfully',
+            success: true
+        });
+
+    } catch (error) {
+        console.log("Error in deleteAdmin:", error.message);
+        return res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false,
+        });
+    }
+}
+
+
+
+// This controller in not complite yet pending in fetch Elements and wlp
+exports.fetchAllAdmins_Elements_wlp = async (req, res) =>{
+    try {
+        const userId = req.user.userId; // From auth middleware
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId);
+
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can view all admins.',
+                success: false
+            });
+        }
+
+        // Fetch all admins
+        const admins = await Admin.find().populate('superAdminId', 'name email');
+        // Fetch all Elements
+        // fetch all wlp
+
+        if (admins.length === 0) {
+            return res.status(404).json({
+                message: 'No admins found',
+                success: false
+            });
+        }
+        res.status(200).json({
+            message: 'Admins retrieved successfully',
+            success: true,
+            admins: admins,
+            adminsCount: admins.length,
+            // elements
+            // elementsCount: elements.length,
+            // wlp
+            // wlpCount: wlp.length
+        });
+
+    } catch (error) {
+        console.log("Error in fetchAllAdmins_Elements_wlp:", error.message);
+        return res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false,
+        });
+    }
+};
+
+
+
+// not complitede still working on it (Progress)
+exports.addElement = async (req, res) =>{
+    try {
+        const userId = req.user.userId; // From auth middleware
+
+        const {ElementType , VltdStatus} = req.body;
+
+        // Validate input
+        if (!ElementType || !VltdStatus) {
+            return res.status(400).json({
+                message: 'ElementType and VltdStatus are required',
+                success: false
+            });
+        }
+
+        // Check if user is superadmin
+        const checkifSuperAdmin = await User.findById(userId);
+        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Only super admins can add elements.',
+                success: false
+            });
+        }
+
+        // Create new element
+        const newElement = new Element({
+            superAdminId: userId,
+            ElementType,
+            VltdStatus
+        });
+
+        await newElement.save();
+        
+        res.status(201).json({
+            message: 'Element added successfully',
+            success: true,
+            data: newElement
+        });
+
+    } catch (error) {
+        console.log("Error in addElement:", error.message);
+        return res.status(500).json({
+            message: `Internal Server Error Or ${error.message}`,
+            success: false,
+        }); 
+    }
+};
+
+
+
+exports.showElements = async (req,res) =>{
+    try {
+        
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error While Showing The Elements"
+        })
+    }
+}
+
+
+
+exports.showMe =  async(req,res) =>{
+    try {
+        
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in Show me Controller "
+        })
+    }
+}
