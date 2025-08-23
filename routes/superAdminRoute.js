@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp } = require('../controllers/superAdminController');
+const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement } = require('../controllers/superAdminController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -35,6 +35,11 @@ router.post(
 
 router.post("/deleteAdmin", authMiddelWere, deleteAdmin);
 router.post('/fetchAllAdmins_Elements_wlp', authMiddelWere, fetchAllAdmins_Elements_wlp)
+router.post("/createBrand",authMiddelWere, createBrand);
+router.post("/fetchAllBrands", authMiddelWere, fetchAllBrands);
+router.post("/createElementCategory", authMiddelWere, createElementCategory);
+router.post("/fetchAllCategory",authMiddelWere,fetchAllCategory);
+router.post("/createElement",authMiddelWere,createElement)
 
 
 module.exports = router;

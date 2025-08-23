@@ -2,6 +2,9 @@ const User = require("../models/UserModel")
 const jwt = require('jsonwebtoken');
 const Admin = require("../models/AdminModel");
 const { cloudinary } = require("../config/cloudinary");
+const BrandModel = require("../models/CreateBrandModel");
+const CateGoryModel = require('../models/CreateElementCategory');
+const ElementModel = require('../models/CreateElement')
 
 // Controller for registering a super admin
 // This function handles the registration of a super admin user
@@ -299,7 +302,7 @@ exports.getAllAdmins = async (req, res) => {
     } catch (error) {
         console.error('Error fetching admins:', error);
         res.status(500).json({
-           message: `Internal Server Error Or ${error.message}`,
+            message: `Internal Server Error Or ${error.message}`,
             success: false
         });
     }
@@ -338,7 +341,7 @@ exports.getAdminById = async (req, res) => {
                 success: false
             });
         }
-        
+
 
         res.status(200).json({
             message: 'Admin retrieved successfully',
@@ -522,7 +525,7 @@ exports.deleteAdmin = async (req, res) => {
 
 
 // This controller in not complite yet pending in fetch Elements and wlp
-exports.fetchAllAdmins_Elements_wlp = async (req, res) =>{
+exports.fetchAllAdmins_Elements_wlp = async (req, res) => {
     try {
         const userId = req.user.userId; // From auth middleware
 
@@ -569,78 +572,229 @@ exports.fetchAllAdmins_Elements_wlp = async (req, res) =>{
 
 
 
-// not complitede still working on it (Progress)
-exports.addElement = async (req, res) =>{
+
+exports.showElements = async (req, res) => {
     try {
-        const userId = req.user.userId; // From auth middleware
 
-        const {ElementType , VltdStatus} = req.body;
-
-        // Validate input
-        if (!ElementType || !VltdStatus) {
-            return res.status(400).json({
-                message: 'ElementType and VltdStatus are required',
-                success: false
-            });
-        }
-
-        // Check if user is superadmin
-        const checkifSuperAdmin = await User.findById(userId);
-        if (!checkifSuperAdmin || checkifSuperAdmin.role !== 'superadmin') {
-            return res.status(403).json({
-                message: 'Access denied. Only super admins can add elements.',
-                success: false
-            });
-        }
-
-        // Create new element
-        const newElement = new Element({
-            superAdminId: userId,
-            ElementType,
-            VltdStatus
-        });
-
-        await newElement.save();
-        
-        res.status(201).json({
-            message: 'Element added successfully',
-            success: true,
-            data: newElement
-        });
-
-    } catch (error) {
-        console.log("Error in addElement:", error.message);
-        return res.status(500).json({
-            message: `Internal Server Error Or ${error.message}`,
-            success: false,
-        }); 
-    }
-};
-
-
-
-exports.showElements = async (req,res) =>{
-    try {
-        
     } catch (error) {
         console.log(error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error While Showing The Elements"
+            sucess: false,
+            message: "Server Error While Showing The Elements"
         })
     }
 }
 
 
 
-exports.showMe =  async(req,res) =>{
+exports.createBrand = async (req, res) => {
     try {
-        
+        const userId = req.user.userId;
+        const { brandName } = req.body;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        if (!brandName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide brandName"
+            })
+        }
+
+        const brand = await BrandModel.create({
+            brandName: brandName
+        })
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Brand Created Sucessfully",
+            brand,
+        });
+
     } catch (error) {
-        console.log(error, error.message);
+        console.log(error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in Show me Controller "
+            sucess: false,
+            message: "Server error in createBrand"
+        })
+    }
+};
+
+
+
+
+exports.fetchAllBrands = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        const allBrand = await BrandModel.find({});
+
+        if (allBrand.length === 0) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found AllBrand "
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Fetch all Brands",
+            allBrand
+        })
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAllBrands"
+        })
+    }
+}
+
+
+
+exports.createElementCategory = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { elementCategoryName, brandName } = req.body;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        if (!elementCategoryName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide elementCategoryName"
+            })
+        };
+
+        // Fetch Brand 
+        const brand = await BrandModel.findOne({ brandName });
+        // save in Db
+        const cateGory = await CateGoryModel.create({
+            elementBrandModelId: brand._id,
+            elementCategoryName: elementCategoryName
+        });
+
+        return res.status(200).json({
+            sucess: true,
+            message: "CateGory Created SucessFullt",
+            cateGory,
+        })
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error in createElementCategory"
+        })
+    }
+};
+
+
+
+
+exports.fetchAllCategory = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        const fetchAllCategory = await CateGoryModel.find({});
+
+        if (fetchAllCategory.length === 0) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found fetchAllCategory "
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Fetch Sucessfully",
+            fetchAllCategory,
+        })
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAllCategory"
+        })
+    }
+}
+
+
+
+
+exports.createElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { elementName, is_Vltd , elementCategoryName} = req.body;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        if (!elementName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide elementName"
+            })
+        };
+
+        if (!is_Vltd) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide is_Vltd"
+            })
+        };
+
+        const category = await CateGoryModel.findOne({elementCategoryName});
+
+        const element = await ElementModel.create({
+            elementCategoryModelId:category._id,
+            elementName:elementName,
+            is_Vltd:is_Vltd,
+        });
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Element Created Sucessfully",
+            element,
+        })
+
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in createElement"
         })
     }
 }
