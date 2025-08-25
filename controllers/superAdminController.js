@@ -823,20 +823,20 @@ exports.addElementCheckBox = async (req, res) => {
             })
         };
 
-        let icon = null;
+        // let icon = null;
 
-        if (req.files['icon']) {
-            const file = req.files['icon'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw" // keeps PDF as raw
-            });
-            icon = result.secure_url;
-        }
+        // if (req.files['icon']) {
+        //     const file = req.files['icon'][0];
+        //     const result = await cloudinary.uploader.upload(file.path, {
+        //         folder: "profile_pics",
+        //         resource_type: "raw" // keeps PDF as raw
+        //     });
+        //     icon = result.secure_url;
+        // }
 
         const checkBox = await CheckBoxModel.create({
             checkBoxoxName: checkBoxoxName,
-            icon,
+            // icon,
         })
 
 
@@ -855,36 +855,36 @@ exports.addElementCheckBox = async (req, res) => {
 
 
 
-exports.fetchAllElementCheckBox = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        if (!userId) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide UserId"
-            })
-        };
+// exports.fetchAllElementCheckBox = async (req, res) => {
+//     try {
+//         const userId = req.user.userId;
+//         if (!userId) {
+//             return res.status(200).json({
+//                 sucess: false,
+//                 message: "Please Provide UserId"
+//             })
+//         };
 
-        const allCheckBox = await CheckBoxModel.find({});
+//         const allCheckBox = await CheckBoxModel.find({});
 
-        if (!allCheckBox) {
-            return res.status(200).json({
-                sucess: false,
-                message: "allCheckBox Not Found"
-            })
-        };
+//         if (!allCheckBox) {
+//             return res.status(200).json({
+//                 sucess: false,
+//                 message: "allCheckBox Not Found"
+//             })
+//         };
 
-        return res.status(200).json({
-            sucess: true,
-            message: "allCheckBox are Fetched SucessFully",
-            allCheckBox
-        })
+//         return res.status(200).json({
+//             sucess: true,
+//             message: "allCheckBox are Fetched SucessFully",
+//             allCheckBox
+//         })
 
-    } catch (error) {
-        console.log(error, error.message);
-        return res.status(500).json({
-            sucess: false,
-            message: "Server Error in FetchAll CheckBox"
-        })
-    }
-}
+//     } catch (error) {
+//         console.log(error, error.message);
+//         return res.status(500).json({
+//             sucess: false,
+//             message: "Server Error in FetchAll CheckBox"
+//         })
+//     }
+// }

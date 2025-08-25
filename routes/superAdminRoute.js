@@ -40,7 +40,7 @@ router.post("/fetchAllBrands", authMiddelWere, fetchAllBrands);
 router.post("/createElementCategory", authMiddelWere, createElementCategory);
 router.post("/fetchAllCategory",authMiddelWere,fetchAllCategory);
 router.post("/createElement",authMiddelWere,createElement);
-router.post("/addElementCheckBox",upload.fields([{ name: "icon", maxCount: 1 }]),authMiddelWere,addElementCheckBox);
-
+// router.post("/addElementCheckBox",upload.fields([{ name: "icon", maxCount: 1 }]),authMiddelWere,addElementCheckBox);
+router.post("/addElementCheckBox",authMiddelWere,addElementCheckBox);
 
 module.exports = router;
