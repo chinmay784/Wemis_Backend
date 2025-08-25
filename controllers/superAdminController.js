@@ -5,6 +5,7 @@ const { cloudinary } = require("../config/cloudinary");
 const BrandModel = require("../models/CreateBrandModel");
 const CateGoryModel = require('../models/CreateElementCategory');
 const ElementModel = require('../models/CreateElement')
+const CheckBoxModel = require("../models/AddElementCheckBox")
 
 // Controller for registering a super admin
 // This function handles the registration of a super admin user
@@ -732,8 +733,8 @@ exports.fetchAllCategory = async (req, res) => {
         }
 
         return res.status(200).json({
-            sucess:true,
-            message:"Fetch Sucessfully",
+            sucess: true,
+            message: "Fetch Sucessfully",
             fetchAllCategory,
         })
 
@@ -752,7 +753,7 @@ exports.fetchAllCategory = async (req, res) => {
 exports.createElement = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { elementName, is_Vltd , elementCategoryName} = req.body;
+        const { elementName, is_Vltd, elementCategoryName } = req.body;
 
         if (!userId) {
             return res.status(200).json({
@@ -775,17 +776,18 @@ exports.createElement = async (req, res) => {
             })
         };
 
-        const category = await CateGoryModel.findOne({elementCategoryName});
+        const category = await CateGoryModel.findOne({ elementCategoryName });
+        console.log(category._id)
 
         const element = await ElementModel.create({
-            elementCategoryModelId:category._id,
-            elementName:elementName,
-            is_Vltd:is_Vltd,
+            elementCategoryModelId: category._id,
+            elementName: elementName,
+            is_Vltd: is_Vltd,
         });
 
         return res.status(200).json({
-            sucess:true,
-            message:"Element Created Sucessfully",
+            sucess: true,
+            message: "Element Created Sucessfully",
             element,
         })
 
@@ -795,6 +797,100 @@ exports.createElement = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in createElement"
+        })
+    }
+};
+
+
+
+exports.addElementCheckBox = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        const { checkBoxoxName, elementName } = req.body;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "UserId Is Required"
+            })
+        }
+
+        if (!checkBoxoxName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "checkBoxoxName Is Required"
+            })
+        };
+
+        if (!elementName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "elementName Is Required"
+            })
+        };
+
+        const element = await ElementModel.findOne({ elementName });
+
+        if (!element) {
+            return res.status(200).json({
+                sucess: false,
+                message: "element Not Found"
+            })
+        };
+
+        // Every thing is fine then move Forwad
+        const checkBox = await CheckBoxModel.create({
+            elementModelId: element._id,
+            checkBoxoxName: checkBoxoxName,
+        })
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "list Created SucessFully"
+        })
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in AddMultipleLists"
+        })
+    }
+};
+
+
+
+exports.fetchAllElementCheckBox = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        const allCheckBox = await CheckBoxModel.find({});
+
+        if (!allCheckBox) {
+            return res.status(200).json({
+                sucess: false,
+                message: "allCheckBox Not Found"
+            })
+        };
+
+        return res.status(200).json({
+            sucess: true,
+            message: "allCheckBox are Fetched SucessFully",
+            allCheckBox
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAll CheckBox"
         })
     }
 }
