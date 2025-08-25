@@ -855,36 +855,36 @@ exports.addElementCheckBox = async (req, res) => {
 
 
 
-// exports.fetchAllElementCheckBox = async (req, res) => {
-//     try {
-//         const userId = req.user.userId;
-//         if (!userId) {
-//             return res.status(200).json({
-//                 sucess: false,
-//                 message: "Please Provide UserId"
-//             })
-//         };
+exports.fetchAllElementCheckBox = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
 
-//         const allCheckBox = await CheckBoxModel.find({});
+        const allCheckBox = await CheckBoxModel.find({});
 
-//         if (!allCheckBox) {
-//             return res.status(200).json({
-//                 sucess: false,
-//                 message: "allCheckBox Not Found"
-//             })
-//         };
+        if (!allCheckBox) {
+            return res.status(200).json({
+                sucess: false,
+                message: "allCheckBox Not Found"
+            })
+        };
 
-//         return res.status(200).json({
-//             sucess: true,
-//             message: "allCheckBox are Fetched SucessFully",
-//             allCheckBox
-//         })
+        return res.status(200).json({
+            sucess: true,
+            message: "allCheckBox are Fetched SucessFully",
+            allCheckBox
+        })
 
-//     } catch (error) {
-//         console.log(error, error.message);
-//         return res.status(500).json({
-//             sucess: false,
-//             message: "Server Error in FetchAll CheckBox"
-//         })
-//     }
-// }
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAll CheckBox"
+        })
+    }
+}
