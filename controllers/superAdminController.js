@@ -807,7 +807,7 @@ exports.addElementCheckBox = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        const { checkBoxoxName, elementName } = req.body;
+        const { checkBoxoxName } = req.body;
 
         if (!userId) {
             return res.status(200).json({
@@ -823,26 +823,20 @@ exports.addElementCheckBox = async (req, res) => {
             })
         };
 
-        if (!elementName) {
-            return res.status(200).json({
-                sucess: false,
-                message: "elementName Is Required"
-            })
-        };
+        let icon = null;
 
-        const element = await ElementModel.findOne({ elementName });
+        if (req.files['icon']) {
+            const file = req.files['icon'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw" // keeps PDF as raw
+            });
+            icon = result.secure_url;
+        }
 
-        if (!element) {
-            return res.status(200).json({
-                sucess: false,
-                message: "element Not Found"
-            })
-        };
-
-        // Every thing is fine then move Forwad
         const checkBox = await CheckBoxModel.create({
-            elementModelId: element._id,
             checkBoxoxName: checkBoxoxName,
+            icon,
         })
 
 

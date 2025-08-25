@@ -2,13 +2,16 @@ const mongoose = require("mongoose");
 
 
 const AddElementCheckBox = new mongoose.Schema({
-    elementModelId:{
-        type:mongoose.Types.ObjectId,
-        ref:"CreateElement",
-    },
+    // elementModelId:{
+    //     type:mongoose.Types.ObjectId,
+    //     ref:"CreateElement",
+    // },
     checkBoxoxName:{
         type:String,
         trim:"true",
+    },
+    icon:{
+        type:String,
     }
 });
 
