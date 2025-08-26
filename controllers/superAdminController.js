@@ -931,6 +931,49 @@ exports.fetchAllElement = async (req, res) => {
 
 
 
+exports.deleteElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { id } = req.body;
+
+        if (!id || !userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId and id"
+            });
+        }
+
+        const element = await ElementModel.findById(id);
+
+        if (!element) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Element not found"
+            });
+        }
+
+        // ✅ Delete element
+        await ElementModel.findByIdAndDelete(id);
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Element deleted successfully",
+            //deletedElement: element   // returning the deleted doc if you want
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in deleteElement"
+        });
+    }
+};
+
+
+
+
+
 exports.addElementType = async (req, res) => {
     try {
         const userId = req.user.userId;

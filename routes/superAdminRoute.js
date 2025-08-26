@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement } = require('../controllers/superAdminController');
+const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement, deleteElement } = require('../controllers/superAdminController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -44,5 +44,6 @@ router.post("/createElement",authMiddelWere,createElement);
 router.post("/addElementCheckBox",authMiddelWere,addElementCheckBox);
 router.post("/fetchAllElementCheckBox",authMiddelWere,fetchAllElementCheckBox);
 router.post("/fetchAllElement",authMiddelWere,fetchAllElement);
+router.post("/deleteElement", authMiddelWere,deleteElement)
 
 module.exports = router;
