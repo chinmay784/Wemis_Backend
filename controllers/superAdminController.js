@@ -1063,62 +1063,98 @@ exports.fetchAllElementType = async (req, res) => {
 
 
 
-exports.addDeviceModel = async (req, res) =>{
+exports.addDeviceModel = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        const {elementName , elementType, model_No , voltage } = req.body;
+        const { elementName, elementType, model_No, voltage } = req.body;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide userId"
+                sucess: false,
+                message: "Please Provide userId"
             })
         };
-        if(!elementName){
+        if (!elementName) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide elementName"
+                sucess: false,
+                message: "Please Provide elementName"
             })
         };
-         if(!elementType){
+        if (!elementType) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide elementType"
+                sucess: false,
+                message: "Please Provide elementType"
             })
         };
-        if(!model_No){
+        if (!model_No) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide model_No"
+                sucess: false,
+                message: "Please Provide model_No"
             })
         };
-        if(!voltage){
+        if (!voltage) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide voltage"
+                sucess: false,
+                message: "Please Provide voltage"
             })
         };
 
         // create Model here
         const modelCreate = await AddModalNo.create({
-            elementName:elementName,
-            elementType:elementType,
-            model_No:model_No,
-            voltage:voltage,
+            elementName: elementName,
+            elementType: elementType,
+            model_No: model_No,
+            voltage: voltage,
         });
 
 
         return res.status(200).json({
-            sucess:true,
-            message:"Element Model Created SucessFully"
+            sucess: true,
+            message: "Element Model Created SucessFully"
         })
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in AddDeviceModel"
+            sucess: false,
+            message: "Server Error in AddDeviceModel"
+        })
+    }
+};
+
+
+exports.fetchModelElementData = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+        const allFetchModelElementData = await AddModalNo.find({});
+
+        if(!allFetchModelElementData.length === 0){
+            return res.status(200).json({
+                sucess:false,
+                message:"Data Not Found"
+            })
+        };
+
+        return res.status(200).json({
+            sucess:true,
+            message:"allFetchModelElementData Fetched sucessFully",
+            allFetchModelElementData,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchModelElementData"
         })
     }
 }
