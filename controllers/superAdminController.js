@@ -915,7 +915,8 @@ exports.fetchAllElement = async (req, res) => {
 
         return res.status(200).json({
             sucess: true,
-            message: 'AllElement Fetched SucessFully'
+            message: 'AllElement Fetched SucessFully',
+            allElement,
         })
 
     } catch (error) {
