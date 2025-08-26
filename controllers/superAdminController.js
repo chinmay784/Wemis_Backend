@@ -5,7 +5,8 @@ const { cloudinary } = require("../config/cloudinary");
 const BrandModel = require("../models/CreateBrandModel");
 const CateGoryModel = require('../models/CreateElementCategory');
 const ElementModel = require('../models/CreateElement')
-const CheckBoxModel = require("../models/AddElementCheckBox")
+const CheckBoxModel = require("../models/AddElementCheckBox");
+const TypeElementModel = require("../models/AddElementTypeModel")
 
 // Controller for registering a super admin
 // This function handles the registration of a super admin user
@@ -980,11 +981,57 @@ exports.addElementType = async (req, res) => {
 
         const { elementName, sim, elementType } = req.body;
 
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+        if (!elementName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide elementName"
+            })
+        };
+
+        if (!elementType) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide elementType"
+            })
+        };
+
+        const saveType = await TypeElementModel.create({
+            elementName: elementName,
+            elementType: elementType,
+        });
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Element Type Created SucessFully"
+        })
+
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
             sucess: false,
             message: "Server error in addElementType"
+        })
+    }
+};
+
+
+
+
+exports.fetchAllElementType = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in fetchAllElementType"
         })
     }
 }
