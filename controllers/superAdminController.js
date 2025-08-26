@@ -9,8 +9,8 @@ const CheckBoxModel = require("../models/AddElementCheckBox");
 const TypeElementModel = require("../models/AddElementTypeModel");
 const AddModalNo = require("../models/AddElementModelNo")
 
-// Controller for registering a super admin
-// This function handles the registration of a super admin user
+
+
 exports.registerSuperAdmin = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -1006,6 +1006,7 @@ exports.addElementType = async (req, res) => {
         const saveType = await TypeElementModel.create({
             elementName: elementName,
             elementType: elementType,
+            sim:sim,
         });
 
         return res.status(200).json({
