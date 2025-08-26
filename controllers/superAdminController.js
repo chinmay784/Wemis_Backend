@@ -1026,12 +1026,36 @@ exports.addElementType = async (req, res) => {
 
 exports.fetchAllElementType = async (req, res) => {
     try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+        const fetchAllType = await TypeElementModel.find({});
+
+        if (!fetchAllType) {
+            return res.status(200).json({
+                sucess: false,
+                message: "In fetchAllType Data Not Found"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "fetchAllElementType fetched SucessFully",
+            fetchAllType,
+        })
+
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in fetchAllElementType"
+            sucess: false,
+            message: "Server Error in fetchAllElementType"
         })
     }
 }
