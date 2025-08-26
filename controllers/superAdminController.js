@@ -819,7 +819,7 @@ exports.addElementCheckBox = async (req, res) => {
         if (!checkBoxoxName) {
             return res.status(200).json({
                 sucess: false,
-                message: "checkBoxoxName Is Required"
+                message: "checkBoxoxName Is Required",
             })
         };
 
@@ -885,6 +885,62 @@ exports.fetchAllElementCheckBox = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in FetchAll CheckBox"
+        })
+    }
+};
+
+
+
+
+exports.fetchAllElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const allElement = await ElementModel.find({});
+
+        if (!allElement) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Have No elemet"
+            })
+        };
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: 'AllElement Fetched SucessFully'
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAllElement"
+        })
+    }
+}
+
+
+
+
+exports.addElementType = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        const { elementName, sim, elementType } = req.body;
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error in addElementType"
         })
     }
 }

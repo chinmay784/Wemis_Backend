@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox } = require('../controllers/superAdminController');
+const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement } = require('../controllers/superAdminController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -42,6 +42,7 @@ router.post("/fetchAllCategory",authMiddelWere,fetchAllCategory);
 router.post("/createElement",authMiddelWere,createElement);
 // router.post("/addElementCheckBox",upload.fields([{ name: "icon", maxCount: 1 }]),authMiddelWere,addElementCheckBox);
 router.post("/addElementCheckBox",authMiddelWere,addElementCheckBox);
-router.post("/fetchAllElementCheckBox",authMiddelWere,fetchAllElementCheckBox)
+router.post("/fetchAllElementCheckBox",authMiddelWere,fetchAllElementCheckBox);
+router.post("/fetchAllElement",authMiddelWere,fetchAllElement);
 
 module.exports = router;
