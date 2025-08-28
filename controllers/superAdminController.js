@@ -1337,3 +1337,42 @@ exports.addTacNumber = async (req, res) => {
         });
     }
 };
+
+
+
+exports.fetchAllTacNo = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
+
+        const tacNo = await AddTacNo.find({});
+
+        if (!tacNo) {
+            return res.status(200).json(
+                {
+                    sucess: false,
+                    message: "No tacNo Data found"
+                }
+            )
+        };
+
+        return res.status(200).json({
+            sucess:true,
+            message:"tacNo Data Fetched SucessFully",
+            tacNo,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return req.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAllTacNo"
+        })
+    }
+}
