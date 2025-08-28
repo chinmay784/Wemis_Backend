@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const AddTacNoSchema = new mongoose.Schema({
+
+const addCopModel = new mongoose.Schema({
     elementName: {
         type: String,
         trim: true,
@@ -18,9 +19,18 @@ const AddTacNoSchema = new mongoose.Schema({
         trim: true,
     },
     tac_No: {
-        type: [String],   // <-- allows single or multiple strings
+        type: String,   
         trim: true,
-    }
+    },
+    cop_No: {
+        type: [String],  
+        trim: true,
+    },
+    date: {
+        type: [String],  
+        trim: true,
+    },
 });
 
-module.exports = mongoose.model("AddTacNo", AddTacNoSchema);
+
+module.exports = mongoose.model("AddCopNo",addCopModel);

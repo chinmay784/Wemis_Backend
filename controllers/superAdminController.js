@@ -9,7 +9,8 @@ const CheckBoxModel = require("../models/AddElementCheckBox");
 const TypeElementModel = require("../models/AddElementTypeModel");
 const AddModalNo = require("../models/AddElementModelNo");
 const DevicePartNo = require("../models/AddDevicePartModel");
-const AddTacNo = require("../models/AddTacModel")
+const AddTacNo = require("../models/AddTacModel");
+const AddCopNo = require("../models/AddCopModel")
 
 
 
@@ -1363,8 +1364,8 @@ exports.fetchAllTacNo = async (req, res) => {
         };
 
         return res.status(200).json({
-            sucess:true,
-            message:"tacNo Data Fetched SucessFully",
+            sucess: true,
+            message: "tacNo Data Fetched SucessFully",
             tacNo,
         })
 
@@ -1373,6 +1374,91 @@ exports.fetchAllTacNo = async (req, res) => {
         return req.status(500).json({
             sucess: false,
             message: "Server Error in fetchAllTacNo"
+        })
+    }
+}
+
+
+
+
+exports.addCopNumber = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
+
+        const { elementName, elementType, model_No, device_Part_No, tac_No, cop_No, date } = req.body;
+
+        if (!elementName || !elementType || !model_No || !device_Part_No || !tac_No || !cop_No || !date) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide all Fields "
+            })
+        };
+
+
+        const addCop = await AddCopNo.create({
+            elementName: elementName,
+            elementType: elementType,
+            model_No: model_No,
+            device_Part_No: device_Part_No,
+            tac_No: tac_No,
+            cop_No: cop_No,
+            date: date,
+        });
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Cop Created Sucessfully"
+        });
+
+    } catch (error) {
+        console.log(error, error.message)
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in addCopNumber"
+        })
+    }
+};
+
+
+
+
+exports.fetchAllCopNo = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
+
+        const copNo = await AddCopNo.find({});
+
+        if (!copNo) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "FetchAllCopNo Fetched SucessFully ",
+            copNo,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAllCopNo"
         })
     }
 }
