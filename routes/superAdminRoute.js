@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement, deleteElement, addElementType, fetchAllElementType, addDeviceModel, fetchModelElementData } = require('../controllers/superAdminController');
+const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement, deleteElement, addElementType, fetchAllElementType, addDeviceModel, fetchModelElementData, addDevicePart } = require('../controllers/superAdminController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -48,6 +48,7 @@ router.post("/deleteElement", authMiddelWere,deleteElement);
 router.post("/addElementType",authMiddelWere,addElementType);
 router.post("/fetchAllElementType",authMiddelWere,fetchAllElementType);
 router.post("/addDeviceModel",authMiddelWere,addDeviceModel);
-router.post("/fetchModelElementData",authMiddelWere,fetchModelElementData)
+router.post("/fetchModelElementData",authMiddelWere,fetchModelElementData);
+router.post("/addDevicePart",authMiddelWere,addDevicePart)
 
 module.exports = router;

@@ -7,7 +7,8 @@ const CateGoryModel = require('../models/CreateElementCategory');
 const ElementModel = require('../models/CreateElement')
 const CheckBoxModel = require("../models/AddElementCheckBox");
 const TypeElementModel = require("../models/AddElementTypeModel");
-const AddModalNo = require("../models/AddElementModelNo")
+const AddModalNo = require("../models/AddElementModelNo");
+const DevicePartNo = require("../models/AddDevicePartModel")
 
 
 
@@ -1156,6 +1157,72 @@ exports.fetchModelElementData = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in fetchModelElementData"
+        })
+    }
+};
+
+
+
+
+exports.addDevicePart = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+        const {elementName , elementType , model_No , device_Part_No} = req.body;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide userId "
+            })
+        }
+
+        
+        if(!elementName){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide elementName "
+            })
+        }
+
+        if(!elementType){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide elementType "
+            })
+        }
+
+        if(!model_No){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide model_No "
+            })
+        }
+
+        if(!device_Part_No){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide device_Part_No "
+            })
+        }
+
+        const DevicepartNo = await DevicePartNo.create({
+            elementName:elementName,
+            elementType:elementType,
+            model_No:model_No,
+            device_Part_No:device_Part_No,
+        });
+
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Device Created Sucessfully",
+        })
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in addDevicePart"
         })
     }
 }
