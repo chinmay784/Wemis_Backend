@@ -1007,7 +1007,7 @@ exports.addElementType = async (req, res) => {
         const saveType = await TypeElementModel.create({
             elementName: elementName,
             elementType: elementType,
-            sim:sim,
+            sim: sim,
         });
 
         return res.status(200).json({
@@ -1139,16 +1139,16 @@ exports.fetchModelElementData = async (req, res) => {
 
         const allFetchModelElementData = await AddModalNo.find({});
 
-        if(!allFetchModelElementData.length === 0){
+        if (!allFetchModelElementData.length === 0) {
             return res.status(200).json({
-                sucess:false,
-                message:"Data Not Found"
+                sucess: false,
+                message: "Data Not Found"
             })
         };
 
         return res.status(200).json({
-            sucess:true,
-            message:"allFetchModelElementData Fetched sucessFully",
+            sucess: true,
+            message: "allFetchModelElementData Fetched sucessFully",
             allFetchModelElementData,
         })
 
@@ -1164,65 +1164,102 @@ exports.fetchModelElementData = async (req, res) => {
 
 
 
-exports.addDevicePart = async (req, res) =>{
+exports.addDevicePart = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const {elementName , elementType , model_No , device_Part_No} = req.body;
+        const { elementName, elementType, model_No, device_Part_No } = req.body;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide userId "
+                sucess: false,
+                message: "Please Provide userId "
             })
         }
 
-        
-        if(!elementName){
+
+        if (!elementName) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide elementName "
+                sucess: false,
+                message: "Please Provide elementName "
             })
         }
 
-        if(!elementType){
+        if (!elementType) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide elementType "
+                sucess: false,
+                message: "Please Provide elementType "
             })
         }
 
-        if(!model_No){
+        if (!model_No) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide model_No "
+                sucess: false,
+                message: "Please Provide model_No "
             })
         }
 
-        if(!device_Part_No){
+        if (!device_Part_No) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide device_Part_No "
+                sucess: false,
+                message: "Please Provide device_Part_No "
             })
         }
 
         const DevicepartNo = await DevicePartNo.create({
-            elementName:elementName,
-            elementType:elementType,
-            model_No:model_No,
-            device_Part_No:device_Part_No,
+            elementName: elementName,
+            elementType: elementType,
+            model_No: model_No,
+            device_Part_No: device_Part_No,
         });
 
 
         return res.status(200).json({
-            sucess:true,
-            message:"Device Created Sucessfully",
+            sucess: true,
+            message: "Device Created Sucessfully",
         })
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in addDevicePart"
+            sucess: false,
+            message: "Server Error in addDevicePart"
+        })
+    }
+}
+
+
+
+exports.fetchAllDeviceData = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
+
+        const deviceData = await DevicePartNo.find({});
+
+        if (!deviceData) {
+            return res.status(200).json({
+                sucess: false,
+                message: "deviceData Not Found "
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"deviceData Fetched SucessFully ",
+            deviceData,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error In fetchAllDeviceData"
         })
     }
 }
