@@ -8,7 +8,8 @@ const ElementModel = require('../models/CreateElement')
 const CheckBoxModel = require("../models/AddElementCheckBox");
 const TypeElementModel = require("../models/AddElementTypeModel");
 const AddModalNo = require("../models/AddElementModelNo");
-const DevicePartNo = require("../models/AddDevicePartModel")
+const DevicePartNo = require("../models/AddDevicePartModel");
+const AddTacNo = require("../models/AddTacModel")
 
 
 
@@ -1250,8 +1251,8 @@ exports.fetchAllDeviceData = async (req, res) => {
         }
 
         return res.status(200).json({
-            sucess:true,
-            message:"deviceData Fetched SucessFully ",
+            sucess: true,
+            message: "deviceData Fetched SucessFully ",
             deviceData,
         })
 
@@ -1262,4 +1263,77 @@ exports.fetchAllDeviceData = async (req, res) => {
             message: "Server error In fetchAllDeviceData"
         })
     }
-}
+};
+
+
+
+exports.addTacNumber = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        if (!userId) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide userId "
+            });
+        }
+
+        let { elementName, elementType, model_No, device_Part_No, tac_No } = req.body;
+
+        if (!elementName) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide elementName "
+            });
+        }
+        if (!elementType) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide elementType "
+            });
+        }
+        if (!model_No) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide model_No "
+            });
+        }
+        if (!device_Part_No) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide device_Part_No "
+            });
+        }
+        if (!tac_No) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide tac_No "
+            });
+        }
+
+        // ✅ Normalize tac_No to always be an array
+        if (!Array.isArray(tac_No)) {
+            tac_No = [tac_No];
+        }
+
+        const addtac = await AddTacNo.create({
+            elementName,
+            elementType,
+            model_No,
+            device_Part_No,
+            tac_No
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "TAC Number(s) Added Successfully",
+            data: addtac
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server Error in addTacNumber",
+        });
+    }
+};
