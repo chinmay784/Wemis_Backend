@@ -546,8 +546,10 @@ exports.fetchAllAdmins_Elements_wlp = async (req, res) => {
         }
 
         // Fetch all admins
-        const admins = await Admin.find().populate('superAdminId', 'name email');
+        // const admins = await Admin.find().populate('superAdminId', 'name email');
+        const admins = await User.find({ role: "admin" });
         // Fetch all Elements
+        const elements = await ElementModel.find({})
         // fetch all wlp
 
         if (admins.length === 0) {
@@ -556,13 +558,21 @@ exports.fetchAllAdmins_Elements_wlp = async (req, res) => {
                 success: false
             });
         }
+
+        if (elements.length === 0) {
+            return res.status(404).json({
+                message: 'No elements found',
+                success: false
+            });
+        }
+
         res.status(200).json({
             message: 'Admins retrieved successfully',
             success: true,
             admins: admins,
             adminsCount: admins.length,
-            // elements
-            // elementsCount: elements.length,
+            elements,
+            elementsCount: elements.length,
             // wlp
             // wlpCount: wlp.length
         });
