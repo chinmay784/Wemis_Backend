@@ -1472,3 +1472,117 @@ exports.fetchAllCopNo = async (req, res) => {
         })
     }
 }
+
+
+
+exports.fetchAllAdmins = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
+
+        const admins = await User.find({ role: "admin" }).populate("adminId");
+
+        if (!admins) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found In Admin "
+            })
+        };
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "All Admin Fetch SucessFully",
+            admins,
+        })
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAdmins"
+        })
+    }
+}
+
+
+
+exports.assignElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
+
+        // take data from req.body
+        const { elementNameId, adminId } = req.body;
+
+        if (!elementNameId) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide elementNameId "
+            })
+        }
+
+        if (!adminId) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide adminId "
+            })
+        }
+
+        // Find element from AddCopNo collection
+        const element = await AddCopNo.findById(elementNameId);
+        if (!element) {
+            return res.status(404).json({
+                success: false,
+                message: "Element not found"
+            });
+        }
+
+        // Find admin
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({
+                success: false,
+                message: "Admin not found"
+            });
+        }
+
+        // Prepare element data to push
+        const newElement = {
+            elementName: element.elementName || "Traxo",
+            elementType: element.elementType || "as140",
+            model_No: element.model_No || "ASI140_Vltd",
+            device_Part_No: element.device_Part_No || "123456",
+            tac_No: element.tac_No || "555",
+            cop_No: element.cop_No || ["33443"]
+        };
+
+        // Push into array
+        admin.assign_element_list.push(newElement);
+        await admin.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Element assigned successfully",
+        });
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in assignElement"
+        })
+    }
+}

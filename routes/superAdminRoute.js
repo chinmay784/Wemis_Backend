@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement, deleteElement, addElementType, fetchAllElementType, addDeviceModel, fetchModelElementData, addDevicePart, fetchAllDeviceData, addTacNumber, fetchAllTacNo, addCopNumber, fetchAllCopNo } = require('../controllers/superAdminController');
+const { registerSuperAdmin, login, getProfile, createAdmin, getAllAdmins, deleteAdmin, editAdmin, getAdminById, fetchAllAdmins_Elements_wlp, createBrand, fetchAllBrands, createElementCategory, fetchAllCategory, createElement, addElementCheckBox, fetchAllElementCheckBox, fetchAllElement, deleteElement, addElementType, fetchAllElementType, addDeviceModel, fetchModelElementData, addDevicePart, fetchAllDeviceData, addTacNumber, fetchAllTacNo, addCopNumber, fetchAllCopNo, fetchAllAdmins, assignElement } = require('../controllers/superAdminController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -54,6 +54,8 @@ router.post("/fetchAllDeviceData",authMiddelWere,fetchAllDeviceData);
 router.post("/addTacNumber",authMiddelWere,addTacNumber);
 router.post("/fetchAllTacNo",authMiddelWere,fetchAllTacNo);
 router.post("/addCopNumber",authMiddelWere,addCopNumber);
-router.post("/fetchAllCopNo",authMiddelWere,fetchAllCopNo)
+router.post("/fetchAllCopNo",authMiddelWere,fetchAllCopNo);
+router.post("/fetchAllAdmins",authMiddelWere,fetchAllAdmins);
+router.post("/assignElement",authMiddelWere,assignElement)
 
 module.exports = router;

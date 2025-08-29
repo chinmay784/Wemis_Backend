@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const AdminSchema = new mongoose.Schema({
-    superAdminId :{
+    superAdminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
@@ -28,22 +28,35 @@ const AdminSchema = new mongoose.Schema({
     Contact_No: {
         type: String,
     },
-    GST_Certificate:{
-        type:String,
+    GST_Certificate: {
+        type: String,
     },
-    Pan_Card:{
-        type:String,
+    Pan_Card: {
+        type: String,
     },
-    Incorporation_Certificate:{
-        type:String,
+    Incorporation_Certificate: {
+        type: String,
     },
-    Company_Logo:{
-        type:String,
+    Company_Logo: {
+        type: String,
     },
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    assign_element_list: {
+        type: [
+            {
+                elementName: { type: String, trim: true },
+                elementType: { type: String, trim: true },
+                model_No: { type: String, trim: true },
+                device_Part_No: { type: String, trim: true },
+                tac_No: { type: String, trim: true },
+                cop_No: [{ type: String, trim: true }],
+            }
+        ],
+        default: []
     }
 });
 
-module.exports = mongoose.model("Admin" , AdminSchema)
+module.exports = mongoose.model("Admin", AdminSchema)
