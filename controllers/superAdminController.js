@@ -547,7 +547,7 @@ exports.fetchAllAdmins_Elements_wlp = async (req, res) => {
 
         // Fetch all admins
         // const admins = await Admin.find().populate('superAdminId', 'name email');
-        const admins = await User.find({ role: "admin" });
+        const admins = await User.find({ role: "admin" }).populate("adminId");
         // Fetch all Elements
         const elements = await ElementModel.find({})
         // fetch all wlp
@@ -1477,14 +1477,14 @@ exports.fetchAllCopNo = async (req, res) => {
 
 exports.fetchAllAdmins = async (req, res) => {
     try {
-        // const userId = req.user.userId;
+        const userId = req.user.userId;
 
-        // if (!userId) {
-        //     return res.status(200).json({
-        //         sucess: false,
-        //         message: "Please Provide userId "
-        //     })
-        // };
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
 
         const admins = await User.find({ role: "admin" }).populate("adminId");
 
