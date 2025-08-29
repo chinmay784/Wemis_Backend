@@ -1518,32 +1518,27 @@ exports.assignElement = async (req, res) => {
 
         if (!userId) {
             return res.status(200).json({
-                sucess: false,
+                success: false,
                 message: "Please Provide userId "
-            })
-        };
+            });
+        }
 
-        // take data from req.body
         const { elementNameId, adminId } = req.body;
 
-        // Validate inputs
-        // if (!Array.isArray(elementNameId) || elementNameId.length === 0) {
-        //     return res.status(400).json({ success: false, message: "Provide at least one elementNameId" });
-        // }
-         if (elementNameId) {
-            return res.status(400).json({ success: false, message: "Provide elementNameId" });
+        // Correct validation
+        if (!elementNameId || !Array.isArray(elementNameId) || elementNameId.length === 0) {
+            return res.status(400).json({ success: false, message: "Provide at least one elementNameId" });
         }
         if (!adminId) {
             return res.status(400).json({ success: false, message: "Provide adminId" });
         }
 
-        // Find Admin
         const admin = await Admin.findById(adminId);
         if (!admin) {
             return res.status(404).json({ success: false, message: "Admin not found" });
         }
 
-        // Fetch all elements and push to admin list
+        // Push elements to admin's list
         for (const id of elementNameId) {
             const element = await AddCopNo.findById(id);
             if (element) {
@@ -1560,15 +1555,13 @@ exports.assignElement = async (req, res) => {
 
         await admin.save();
         res.status(200).json({ success: true, message: "Elements assigned successfully" });
-
-
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "Server Error in assignElement"
-        })
+        });
     }
-}
+};
 
 
