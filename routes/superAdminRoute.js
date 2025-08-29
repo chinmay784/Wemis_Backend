@@ -56,6 +56,6 @@ router.post("/fetchAllTacNo",authMiddelWere,fetchAllTacNo);
 router.post("/addCopNumber",authMiddelWere,addCopNumber);
 router.post("/fetchAllCopNo",authMiddelWere,fetchAllCopNo);
 router.post("/fetchAllAdmins",authMiddelWere,fetchAllAdmins);
-router.post("/assignElement",authMiddelWere,assignElement)
+router.post("/assignElement",assignElement)
 
 module.exports = router;
