@@ -1527,8 +1527,11 @@ exports.assignElement = async (req, res) => {
         const { elementNameId, adminId } = req.body;
 
         // Validate inputs
-        if (!Array.isArray(elementNameId) || elementNameId.length === 0) {
-            return res.status(400).json({ success: false, message: "Provide at least one elementNameId" });
+        // if (!Array.isArray(elementNameId) || elementNameId.length === 0) {
+        //     return res.status(400).json({ success: false, message: "Provide at least one elementNameId" });
+        // }
+         if (elementNameId) {
+            return res.status(400).json({ success: false, message: "Provide elementNameId" });
         }
         if (!adminId) {
             return res.status(400).json({ success: false, message: "Provide adminId" });
