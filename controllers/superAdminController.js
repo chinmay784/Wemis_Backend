@@ -1524,7 +1524,7 @@ exports.assignElement = async (req, res) => {
         }
 
         const { elementNameId, adminId } = req.body;
-        console.log(elementNameId,adminId)
+        console.log(elementNameId, adminId)
 
         // Validate inputs
         if (!elementNameId || !Array.isArray(elementNameId) || elementNameId.length === 0) {
@@ -1567,3 +1567,39 @@ exports.assignElement = async (req, res) => {
 };
 
 
+
+
+exports.fetchSuperAdminAssignElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                success: false,
+                message: "Please Provide userId"
+            });
+        }
+
+        const assignadmins = await Admin.find({ superAdminId: userId });
+
+        if (assignadmins.length === 0) {
+            return res.status(200).json({
+                success: false,
+                message: "Data Not Found"
+            });
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Fetched SucessFully",
+            assignadmins,
+        })
+
+    } catch (error) {
+        console.log(error, error.message)
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchSuperAdminAssignElement"
+        })
+    }
+}
