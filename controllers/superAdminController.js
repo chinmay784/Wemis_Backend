@@ -1519,13 +1519,14 @@ exports.assignElement = async (req, res) => {
         if (!userId) {
             return res.status(200).json({
                 success: false,
-                message: "Please Provide userId "
+                message: "Please Provide userId"
             });
         }
 
         const { elementNameId, adminId } = req.body;
+        console.log(elementNameId,adminId)
 
-        // Correct validation
+        // Validate inputs
         if (!elementNameId || !Array.isArray(elementNameId) || elementNameId.length === 0) {
             return res.status(400).json({ success: false, message: "Provide at least one elementNameId" });
         }
@@ -1533,6 +1534,7 @@ exports.assignElement = async (req, res) => {
             return res.status(400).json({ success: false, message: "Provide adminId" });
         }
 
+        // Find Admin
         const admin = await Admin.findById(adminId);
         if (!admin) {
             return res.status(404).json({ success: false, message: "Admin not found" });
