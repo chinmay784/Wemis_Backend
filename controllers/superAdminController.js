@@ -1514,14 +1514,14 @@ exports.fetchAllAdmins = async (req, res) => {
 
 exports.assignElement = async (req, res) => {
     try {
-        // const userId = req.user.userId;
+        const userId = req.user.userId;
 
-        // if (!userId) {
-        //     return res.status(200).json({
-        //         sucess: false,
-        //         message: "Please Provide userId "
-        //     })
-        // };
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId "
+            })
+        };
 
         // take data from req.body
         const { elementNameId, adminId } = req.body;
