@@ -1,0 +1,86 @@
+const mongoose = require('mongoose');
+
+
+const WlpSchema = new mongoose.Schema({
+    adminId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin',
+    },
+    country: {
+        type: String,
+        trim: true,
+    },
+    state: {
+        type: String,
+        trim: true,
+    },
+    defaultLanguage: {
+        type: String,
+        trim: true,
+    },
+    organizationName: {
+        type: String,
+        trim: true,
+    },
+    mobileNumber: {
+        type: String,
+        trim: true,
+    },
+    salesMobileNumber: {
+        type: String,
+        trim: true,
+    },
+    landLineNumber: {
+        type: String,
+        trim: true,
+    },
+    email: {
+        type: String,
+        trim: true,
+    },
+    appPackage: {
+        type: String,
+        trim: true,
+    },
+    showPoweredBy: {
+        type: String,
+        default: "yes",
+    },
+    accountLimit: {
+        type: Number,
+        default: 0,
+    },
+    smsGatewayUrl: {
+        type: String,
+        trim: true,
+    },
+    smsGatewayMethod: {
+        type: String,
+        trim: true,
+    },
+    gstinNumber: {
+        type: String,
+        trim: true,
+    },
+    billingEmail: {
+        type: String,
+        trim: true,
+    },
+    websiteUrl: {
+        type: String,
+        trim: true,
+    },
+    logo: {
+        type: String,
+    },
+    address:{
+        type: String,
+        trim: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+
+});
+module.exports = mongoose.model('Wlp', WlpSchema);

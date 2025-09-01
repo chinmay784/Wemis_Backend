@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const UserSchema = new mongoose.Schema({
-    name:{
+    name: {
         type: String,
     },
     email: {
@@ -12,13 +12,17 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
     },
-    role:{
+    role: {
         type: String,
-        enum: ['superadmin', 'admin', 'wlp' , 'manufacturer'],
+        enum: ['superadmin', 'admin', 'wlp', 'manufacturer'],
     },
-    adminId:{
+    adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',
+    },
+    wlpId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wlp',
     },
     createdAt: {
         type: Date,
