@@ -251,3 +251,72 @@ exports.fetchAdminElementsList = async (req, res) => {
         });
     }
 };
+
+
+
+exports.adminDashBoard = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized User"
+            });
+        }
+
+        // Find admin WLP
+        const adminWlp = await Wlp.find({ adminId: userId });
+        if (!adminWlp || adminWlp.length === 0) {
+            return res.status(200).json({
+                success: false,
+                message: "No WLP found for this admin"
+            });
+        }
+
+        // Find the admin user
+        const element = await User.findOne({ _id: userId, role: "admin" });
+        if (!element) {
+            return res.status(200).json({
+                success: false,
+                message: "No Admin found"
+            });
+        }
+
+        // Find admin details
+        const elementData = await Admin.findById(element.adminId);
+        if (!elementData) {
+            return res.status(200).json({
+                success: false,
+                message: "No Admin Details found"
+            });
+        }
+
+        // Fetch elements with createdAt
+        const elementsWithCreatedAt = await Promise.all(
+            elementData.assign_element_list.map(async (item) => {
+                const elementDoc = await CreateElement.findOne({ elementName: item.elementName });
+                return {
+                    ...item.toObject?.() || item,
+                    createdAt: elementDoc ? elementDoc.createdAt : null
+                };
+            })
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Admin WLP fetched successfully",
+            wlp: adminWlp,
+            wlpCount: adminWlp.length,
+            elements: elementsWithCreatedAt,
+            elementCount: elementsWithCreatedAt.length
+        });
+
+    } catch (error) {
+        console.error("Error in adminDashBoard:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server error in adminDashBoard"
+        });
+    }
+};
