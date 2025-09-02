@@ -189,6 +189,82 @@ exports.deleteWlp = async (req, res) => {
 };
 
 
+
+exports.editWlp = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                success: false,
+                message: "Unauthorized User"
+            });
+        }
+
+        const { wlpId, country, state, defaultLanguage, organizationName, mobileNumber, salesMobileNumber, landLineNumber, email, appPackage, showPoweredBy, accountLimit, smsGatewayUrl, smsGatewayMethod, gstinNumber, billingEmail, websiteUrl, address } = req.body;
+
+        if (!wlpId) {
+            return res.status(200).json({
+                success: false,
+                message: "Please provide wlpId"
+            });
+        }
+
+        const wlp = await Wlp.findById(wlpId);
+
+        if (!wlp) {
+            return res.status(200).json({
+                success: false,
+                message: "WLP not found"
+            });
+        }
+
+        // Update fields if provided
+        if (country) wlp.country = country;
+        if (state) wlp.state = state;
+        if (defaultLanguage) wlp.defaultLanguage = defaultLanguage;
+        if (organizationName) wlp.organizationName = organizationName;
+        if (mobileNumber) wlp.mobileNumber = mobileNumber;
+        if (salesMobileNumber) wlp.salesMobileNumber = salesMobileNumber;
+        if (landLineNumber) wlp.landLineNumber = landLineNumber;
+        if (email) wlp.email = email;
+        if (appPackage) wlp.appPackage = appPackage;
+        if (showPoweredBy) wlp.showPoweredBy = showPoweredBy;
+        if (accountLimit) wlp.accountLimit = accountLimit;
+        if (smsGatewayUrl) wlp.smsGatewayUrl = smsGatewayUrl;
+        if (smsGatewayMethod) wlp.smsGatewayMethod = smsGatewayMethod;
+        if (gstinNumber) wlp.gstinNumber = gstinNumber;
+        if (billingEmail) wlp.billingEmail = billingEmail;
+        if (websiteUrl) wlp.websiteUrl = websiteUrl;
+        if (address) wlp.address = address;
+        // Handle logo upload if a new file is provided
+        if (req.files && req.files['logo'] && req.files['logo'].length > 0) {
+            const file = req.files['logo'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            wlp.logo = result.secure_url;
+        }
+        await wlp.save();
+        return res.status(200).json({
+            success: true,
+            message: "WLP updated successfully",
+            wlp
+        });
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error in editWlp"
+        });
+    }
+}
+
+
+
 exports.fetchAdminElementsList = async (req, res) => {
     try {
         const userId = req.user.userId;
