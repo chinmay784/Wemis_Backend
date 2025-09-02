@@ -558,6 +558,7 @@ exports.adminAssignElement = async (req, res) => {
                 device_Part_No: result.device_Part_No,
                 tac_No: result.tac_No,
                 cop_No: result.cop_No,
+                adminId: userId
             });
 
             await wlps.save();

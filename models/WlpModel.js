@@ -86,6 +86,7 @@ const WlpSchema = new mongoose.Schema({
                 device_Part_No: { type: String, trim: true },
                 tac_No: { type: String, trim: true },
                 cop_No: [{ type: String, trim: true }],
+                adminId: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
             }
         ],
         createdAt: {
