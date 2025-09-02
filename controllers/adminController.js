@@ -601,11 +601,15 @@ exports.fetchWlpAssignElementList = async (req, res) => {
             });
         }
 
-        const wlps = await Wlp.find({ adminId: userId });
+        // 🔍 Find WLPs where assign_element_list contains this adminId
+        const wlps = await Wlp.find({
+            "assign_element_list.adminId": userId
+        });
+
         if (!wlps || wlps.length === 0) {
             return res.status(404).json({
                 success: false,
-                message: "No WLPs found for this admin"
+                message: "No WLPs found for this admin inside assign_element_list"
             });
         }
 
@@ -615,7 +619,6 @@ exports.fetchWlpAssignElementList = async (req, res) => {
             wlps
         });
 
-
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
@@ -623,4 +626,6 @@ exports.fetchWlpAssignElementList = async (req, res) => {
             message: "Server error in fetchWlpAssignElementList"
         });
     }
-}
+};
+
+
