@@ -190,7 +190,7 @@ exports.deleteWlp = async (req, res) => {
 
 
 
-exports.getWlpById = async (req, res) =>{
+exports.getWlpById = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -224,7 +224,7 @@ exports.getWlpById = async (req, res) =>{
             message: "WLP fetched successfully",
             wlp
         });
-        
+
 
     } catch (error) {
         console.log(error, error.message);
@@ -586,3 +586,40 @@ exports.adminAssignElement = async (req, res) => {
         });
     }
 };
+
+
+
+exports.fetchWlpAssignElementList = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized User"
+            });
+        }
+
+        const wlps = await Wlp.find({ adminId: userId });
+        if (!wlps || wlps.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No WLPs found for this admin"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "WLPs fetched successfully",
+            wlps
+        });
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server error in fetchWlpAssignElementList"
+        });
+    }
+}
