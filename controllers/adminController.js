@@ -320,3 +320,93 @@ exports.adminDashBoard = async (req, res) => {
         });
     }
 };
+
+
+
+
+exports.fetchAllDaterelatedToassignAdminElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized User"
+            });
+        }
+
+        const findadmin = await User.findById(userId);
+        if (!findadmin || findadmin.role !== "admin") {
+            return res.status(404).json({
+                success: false,
+                message: "Admin user not found"
+            });
+        }
+
+        const adminDetails = await Admin.findById(findadmin.adminId);
+        if (!adminDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "Admin details not found"
+            });
+        }
+
+        // find wlp by admin
+        const wlps = await Wlp.find({ adminId: userId });
+
+        return res.status(200).json({
+            success: true,
+            adminElementList: adminDetails.assign_element_list,
+            wlps
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server error in fetchAllDaterelatedToassignAdminElement"
+        });
+    }
+}
+
+
+
+
+exports.adminAssignElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized User"
+            });
+        }
+
+        const { elementNameId, wlpId } = req.body;
+        if (!elementNameId) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide elementNameId"
+            });
+        }
+
+        if (!wlpId || !Array.isArray(wlpId) || wlpId.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide a valid wlpId array"
+            });
+        }
+
+
+        // FInd elementNameId 
+        
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server error in adminAssignElement"
+        });
+    }
+}

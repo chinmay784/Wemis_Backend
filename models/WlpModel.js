@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const WlpSchema = new mongoose.Schema({
-    adminId:{
+    adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin',
     },
@@ -73,9 +73,22 @@ const WlpSchema = new mongoose.Schema({
     logo: {
         type: String,
     },
-    address:{
+    address: {
         type: String,
         trim: true,
+    },
+    assign_element_list: {
+        type: [
+            {
+                elementName: { type: String, trim: true },
+                elementType: { type: String, trim: true },
+                model_No: { type: String, trim: true },
+                device_Part_No: { type: String, trim: true },
+                tac_No: { type: String, trim: true },
+                cop_No: [{ type: String, trim: true }],
+            }
+        ],
+        default: []
     },
     createdAt: {
         type: Date,
