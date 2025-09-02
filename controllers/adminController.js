@@ -397,10 +397,62 @@ exports.adminAssignElement = async (req, res) => {
             });
         }
 
+        // get element from Admin
+        const elementId = await Admin.findOne({ "assign_element_list._id": elementNameId });
+        if (!elementId) {
+            return res.status(404).json({
+                success: false,
+                message: "Element not found in admin's assigned elements"
+            });
+        }
 
-        // FInd elementNameId 
-        
+        const result = elementId.assign_element_list.id(elementNameId);
 
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: "Element not found"
+            });
+        }
+
+        // Loop through each WLP id
+        const updatedWlps = [];
+        for (const id of wlpId) {
+            const wlps = await Wlp.findById(id);
+            if (!wlps) continue; // skip if not found
+
+            // Check if element already assigned
+            if (wlps.assign_element_list.some(el => el.elementName === result.elementName)) {
+                continue; // skip if already assigned
+            }
+
+            // Push element
+            wlps.assign_element_list.push({
+                elementName: result.elementName,
+                elementType: result.elementType,
+                model_No: result.model_No,
+                device_Part_No: result.device_Part_No,
+                tac_No: result.tac_No,
+                cop_No: result.cop_No,
+            });
+
+            await wlps.save();
+            updatedWlps.push(wlps);
+        }
+
+        if (updatedWlps.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No WLPs were updated (either not found or element already assigned)"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Element assigned to WLP(s) successfully",
+            // updatedWlps,
+            // result,
+        });
 
     } catch (error) {
         console.log(error, error.message);
@@ -409,4 +461,4 @@ exports.adminAssignElement = async (req, res) => {
             message: "Server error in adminAssignElement"
         });
     }
-}
+};
