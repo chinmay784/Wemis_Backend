@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddelWere } = require("../middelwere/authMiddelWere");
-const { createWlp, getAllWlp, deleteWlp, fetchAdminElementsList, adminDashBoard, adminAssignElement, fetchAllDaterelatedToassignAdminElement, editWlp } = require('../controllers/adminController');
+const { createWlp, getAllWlp, deleteWlp, fetchAdminElementsList, adminDashBoard, adminAssignElement, fetchAllDaterelatedToassignAdminElement, editWlp, getWlpById } = require('../controllers/adminController');
 const { upload } = require('../config/cloudinary');
 
 router.post("/createWlp", upload.fields([
@@ -14,5 +14,6 @@ router.post("/adminDashBoard", authMiddelWere, adminDashBoard);
 router.post("/fetchAllDaterelatedToassignAdminElement", authMiddelWere, fetchAllDaterelatedToassignAdminElement);
 router.post("/adminAssignElement", authMiddelWere, adminAssignElement);
 router.post("/editWlp", authMiddelWere, upload.fields([{ name: 'logo', maxCount: 1 }]), editWlp);
+router.post("/getWlpById",authMiddelWere, getWlpById);
 
 module.exports = router;

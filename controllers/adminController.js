@@ -190,6 +190,54 @@ exports.deleteWlp = async (req, res) => {
 
 
 
+exports.getWlpById = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Unauthorized User"
+            })
+        }
+
+        const { wlpId } = req.body;
+
+        if (!wlpId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please provide wlpId"
+            })
+        }
+
+        const wlp = await Wlp.findById(wlpId);
+
+        if (!wlp) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No WLP found"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "WLP fetched successfully",
+            wlp
+        });
+        
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error in getWlpById"
+        })
+    }
+}
+
+
+
+
 exports.editWlp = async (req, res) => {
     try {
         const userId = req.user.userId;
