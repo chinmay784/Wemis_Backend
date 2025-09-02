@@ -88,6 +88,10 @@ const WlpSchema = new mongoose.Schema({
                 cop_No: [{ type: String, trim: true }],
             }
         ],
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
         default: []
     },
     createdAt: {
