@@ -1,5 +1,5 @@
 const express = require('express');
-const { createManuFactur, fetchWlpName } = require('../controllers/wlpController');
+const { createManuFactur, fetchWlpName, fetchManuFactur } = require('../controllers/wlpController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -8,6 +8,7 @@ router.post("/createManuFactur", upload.fields([
     { name: 'logo', maxCount: 1 },
 ]), authMiddelWere, createManuFactur);
 
-router.post("/fetchWlpName",authMiddelWere , fetchWlpName)
+router.post("/fetchWlpName",authMiddelWere , fetchWlpName);
+router.post("/fetchManuFactur",authMiddelWere,fetchManuFactur);
 
 module.exports = router;

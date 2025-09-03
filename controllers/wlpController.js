@@ -127,7 +127,7 @@ exports.createManuFactur = async (req, res) => {
             manufacturId: newManuFactur._id,
             email: email,
             password: mobile_Number, // Assuming mobileNumber is used as a password here, which is
-            role: 'manufacture',
+            role: 'manufacturer',
         })
 
         await mnfSaveInUser.save();
@@ -148,4 +148,32 @@ exports.createManuFactur = async (req, res) => {
             message: "ManuFactur creation failed",
         })
     }
-}
+};
+
+
+
+exports.fetchManuFactur = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                sucess: false,
+                message: "User not authorized",
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "ManuFactur fetched successfully",
+            userId,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            sucess: false,
+            message: "Failed to fetch ManuFactur",
+        })
+    }
+};
