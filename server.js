@@ -4,7 +4,8 @@ require('dotenv').config();
 const app = express();
 const cors = require('cors');
 const superAdminRoutes = require('./routes/superAdminRoute');
-const AdminRoute = require('./routes/adminRoute')
+const AdminRoute = require('./routes/adminRoute');
+const WlpRoute = require('./routes/wlpRoute');
 
 
 app.use(cors({
@@ -21,6 +22,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/superadmin" , superAdminRoutes);
 app.use("/admin",AdminRoute);
+app.use("/wlp",WlpRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wlp',
     },
+    manufacturId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ManuFactur',
+    },
     createdAt: {
         type: Date,
         default: Date.now
