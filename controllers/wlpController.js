@@ -248,3 +248,46 @@ exports.deleteManuFactur = async (req, res) => {
         })
     }
 }
+
+
+exports.findManuFacturById = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                sucess: false,
+                message: "User not authorized",
+            })
+        }
+
+
+        const { manufacturId } = req.body;
+
+        if (!manufacturId) {
+            return res.status(400).json({
+                sucess: false,
+                message: "manufacturId is required",
+            })
+        }
+        const manufactur = await ManuFactur.findById(manufacturId);
+        if (!manufactur) {
+            return res.status(404).json({
+                sucess: false,
+                message: "ManuFactur not found",
+            })
+        }
+        return res.status(200).json({
+            sucess: true,
+            message: "ManuFactur fetched successfully",
+            manufactur,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            sucess: false,
+            message: "Failed to fetch ManuFactur by ID",
+        })
+    }
+}
