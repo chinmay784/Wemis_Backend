@@ -198,3 +198,53 @@ exports.fetchManuFactur = async (req, res) =>{
         })
     }
 };
+
+
+
+exports.deleteManuFactur = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                sucess: false,
+                message: "User not authorized",
+            })
+        }
+
+        const { manufacturId } = req.body;
+
+        if (!manufacturId) {
+
+            return res.status(400).json({
+                sucess: false,
+                message: "manufacturId is required",
+            })
+        }
+
+        const manufactur = await ManuFactur.findOneAndDelete({ _id: manufacturId });
+
+        // Also delete from user collection
+        await User.findOneAndDelete({ manufacturId: manufacturId });
+
+        if (!manufactur) {
+            return res.status(404).json({
+                sucess: false,
+                message: "ManuFactur not found",
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "ManuFactur deleted successfully",
+        })
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            sucess: false,
+            message: "Failed to delete ManuFactur",
+        })
+    }
+}
