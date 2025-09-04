@@ -163,10 +163,31 @@ exports.fetchManuFactur = async (req, res) =>{
             })
         }
 
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                sucess: false,
+                message: "User not found",
+            })
+        }
+
+        const manufactur = await ManuFactur.find({wlpId: userId});
+
+        if (!manufactur) {
+            return res.status(404).json({
+                sucess: false,
+                message: "ManuFactur not found",
+            })
+        }
+
+
+
         return res.status(200).json({
             sucess: true,
             message: "ManuFactur fetched successfully",
-            userId,
+            manufactur,
         })
 
     } catch (error) {
