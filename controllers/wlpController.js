@@ -421,3 +421,152 @@ exports.findElements = async (req, res) => {
 };
 
 
+
+
+exports.AssignElements = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+
+        const { elementNameId, manufacturId } = req.body;
+
+        if (!elementNameId) {
+            return res.status(400).json({
+                success: false,
+                message: "elementNameId  are required",
+            });
+        }
+
+        if (!manufacturId || !Array.isArray(manufacturId) || manufacturId.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide a valid manufacturId array"
+            });
+        }
+
+        // get element from wlp
+        const elementId = await Wlp.findOne({ "assign_element_list._id": elementNameId });
+
+        if (!elementId) {
+            return res.status(404).json({
+                success: false,
+                message: "Element not found in WLP",
+            });
+        }
+
+        const result = elementId.assign_element_list.id(elementNameId);
+
+        if
+            (!result) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Element not found",
+            });
+        }
+
+        // Loop through each manufacturId id
+        const updateManufactur = [];
+        for (const id of manufacturId) {
+            const manufactur = await ManuFactur.findById(id);
+            if (!manufactur) {
+                return res.status(404).json({
+                    success: false,
+                    message: `ManuFactur with ID ${id} not found`,
+                });
+            }
+            // Check if element already exists to avoid duplicates
+            const alreadyAssigned = manufactur.assign_element_list.some(el => el.elementName === result.elementName);
+            if (!alreadyAssigned) {
+                manufactur.assign_element_list.push({
+                    elementName: result.elementName,
+                    elementType: result.elementType,
+                    model_No: result.model_No,
+                    device_Part_No: result.device_Part_No,
+                    tac_No: result.tac_No,
+                    cop_No: result.cop_No,
+                    wlpId: userId,
+                });
+                await manufactur.save();
+                updateManufactur.push(manufactur);
+            }
+        }
+
+
+        if (updateManufactur.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No manufactur were updated (either not found or element already assigned)"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Element assigned to manufactur(s) successfully",
+        });
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to assign elements",
+        });
+    }
+}
+
+
+
+exports.fetchAllDataRelatedtoAssignElements = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+
+
+        const findwlp = await User.findById(userId);
+        if (!findwlp || findwlp.role !== "wlp") {
+            return res.status(404).json({
+                success: false,
+                message: "wlp user not found"
+            });
+        }
+
+
+        const wlpDetails = await Wlp.findById(findwlp.wlpId);
+        if (!wlpDetails) {
+            return res.status(404).json({
+                success: false,
+                message: "wlp details not found"
+            });
+        }
+
+        // find manufactur by wlp
+        const manufactur = await ManuFactur.find({ wlpId: userId });
+
+        return res.status(200).json({
+            success: true,
+            adminElementList: wlpDetails.assign_element_list,
+            manufactur
+        });
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch all data related to assign elements",
+        });
+    }
+}

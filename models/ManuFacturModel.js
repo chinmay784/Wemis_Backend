@@ -2,62 +2,80 @@ const mongoose = require('mongoose');
 
 
 const ManuFacturSchema = new mongoose.Schema({
-    wlpId:{
+    wlpId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wlp',
     },
-    country:{
+    country: {
         type: String,
         trim: true
     },
-    city:{
+    city: {
         type: String,
         trim: true
     },
-    manufactur_code:{
+    manufactur_code: {
         type: String,
         trim: true
     },
-    business_Name:{
+    business_Name: {
         type: String,
         trim: true
     },
-    gst_Number:{
+    gst_Number: {
         type: String,
         trim: true
     },
-    Parent_WLP:{
+    Parent_WLP: {
         type: String,
         trim: true
     },
-    manufacturer_Name:{
+    manufacturer_Name: {
         type: String,
         trim: true
     },
-    mobile_Number:{
+    mobile_Number: {
         type: String,
         trim: true
     },
-    email:{
+    email: {
         type: String,
         trim: true
     },
-    toll_Free_Number:{
+    toll_Free_Number: {
         type: String,
         trim: true
     },
-    website:{
+    website: {
         type: String,
         trim: true
     },
-    address:{
+    address: {
         type: String,
         trim: true
     },
-    logo:{
+    logo: {
         type: String,
         trim: true
-    }
+    },
+    assign_element_list: {
+        type: [
+            {
+                elementName: { type: String, trim: true },
+                elementType: { type: String, trim: true },
+                model_No: { type: String, trim: true },
+                device_Part_No: { type: String, trim: true },
+                tac_No: { type: String, trim: true },
+                cop_No: [{ type: String, trim: true }],
+                wlpId: { type: mongoose.Schema.Types.ObjectId, ref: 'Wlp' },
+            }
+        ],
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        default: []
+    },
 });
 
 module.exports = mongoose.model('ManuFactur', ManuFacturSchema);
