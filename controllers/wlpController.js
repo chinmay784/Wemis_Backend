@@ -570,3 +570,40 @@ exports.fetchAllDataRelatedtoAssignElements = async (req, res) => {
         });
     }
 }
+
+
+
+exports.fetchAssignElement = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+
+        const manufactur = await ManuFactur.find({ wlpId: userId }).select("assign_element_list");
+
+        if (!manufactur) {
+            return res.status(404).json({
+                success: false,
+                message: "No manufactur found for this WLP",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Assign elements fetched successfully",
+            manufactur,
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch assign elements",
+        });
+    }
+}
