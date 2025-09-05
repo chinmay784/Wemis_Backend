@@ -584,7 +584,7 @@ exports.fetchAssignElement = async (req, res) => {
             });
         }
 
-        const manufactur = await ManuFactur.find({ wlpId: userId }).select("assign_element_list");
+        const manufactur = await ManuFactur.find({ "assign_element_list.wlpId": userId })
 
         if (!manufactur) {
             return res.status(404).json({
@@ -604,6 +604,31 @@ exports.fetchAssignElement = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Failed to fetch assign elements",
+        });
+    }
+}
+
+
+
+exports.fetchDashBoardData = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+
+        // find total manufactur
+    const totalManufactur = await ManuFactur.find({wlpId:userId})
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch dashboard data",
         });
     }
 }
