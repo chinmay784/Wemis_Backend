@@ -622,7 +622,24 @@ exports.fetchDashBoardData = async (req, res) => {
         }
 
         // find total manufactur
-    const totalManufactur = await ManuFactur.find({wlpId:userId})
+        const totalManufactur = await ManuFactur.find({ wlpId: userId })
+
+        if (!totalManufactur) {
+            return res.status(404).json({
+                success: false,
+                message: "No manufactur found for this WLP",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "DashBoard data fetched successfully",
+            Manufactur: totalManufactur,
+            totalManufactur: totalManufactur.length,
+        });
+
+
+
 
     } catch (error) {
         console.log(error, error.message);

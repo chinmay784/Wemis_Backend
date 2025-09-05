@@ -1,5 +1,5 @@
 const express = require('express');
-const { createManuFactur, fetchWlpName, fetchManuFactur, deleteManuFactur, findManuFacturById, editManuFactur, findElements, AssignElements, fetchAllDataRelatedtoAssignElements, fetchAssignElement } = require('../controllers/wlpController');
+const { createManuFactur, fetchWlpName, fetchManuFactur, deleteManuFactur, findManuFacturById, editManuFactur, findElements, AssignElements, fetchAllDataRelatedtoAssignElements, fetchAssignElement, fetchDashBoardData } = require('../controllers/wlpController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -18,6 +18,7 @@ router.post("/editManuFactur", upload.fields([
 router.post("/findElements",authMiddelWere,findElements);
 router.post("/AssignElements",authMiddelWere,AssignElements);
 router.post("/fetchAllDataRelatedtoAssignElements",authMiddelWere,fetchAllDataRelatedtoAssignElements);
-router.post("/fetchAssignElement",authMiddelWere, fetchAssignElement)
+router.post("/fetchAssignElement",authMiddelWere, fetchAssignElement);
+router.post("/fetchDashBoardData",authMiddelWere, fetchDashBoardData)
 
 module.exports = router;
