@@ -2,6 +2,7 @@ const { cloudinary } = require("../config/cloudinary");
 const ManuFactur = require("../models/ManuFacturModel");
 const User = require("../models/UserModel");
 const Wlp = require("../models/WlpModel");
+const CreateElement = require("../models/CreateElement");
 
 
 exports.fetchWlpName = async (req, res) => {
@@ -355,3 +356,68 @@ exports.editManuFactur = async (req, res) => {
         })
     }
 }
+
+
+
+exports.findElements = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User not authorized",
+            });
+        }
+
+        // Find user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        // Find WLP by user.wlpId
+        const wlp = await Wlp.findOne({ _id: user.wlpId });
+        if (!wlp) {
+            return res.status(404).json({
+                success: false,
+                message: "WLP not found",
+            });
+        }
+
+        // Extract all element names
+        const names = wlp.assign_element_list.map(el => el.elementName);
+
+        // Find VLTD true elements
+        const vltd = await CreateElement.find({
+            elementName: { $in: names }
+        }).select("elementName is_Vltd");
+
+        // Merge results: every assigned element gets its status
+        const merged = names.map(name => {
+            const found = vltd.find(v => v.elementName === name);
+            return {
+                elementName: name,
+                is_Vltd: found ? found.is_Vltd : false
+            };
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Elements found successfully",
+            elements: merged
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to findElements",
+        });
+    }
+};
+
+

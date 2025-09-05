@@ -1,5 +1,5 @@
 const express = require('express');
-const { createManuFactur, fetchWlpName, fetchManuFactur, deleteManuFactur, findManuFacturById, editManuFactur } = require('../controllers/wlpController');
+const { createManuFactur, fetchWlpName, fetchManuFactur, deleteManuFactur, findManuFacturById, editManuFactur, findElements } = require('../controllers/wlpController');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
@@ -15,5 +15,6 @@ router.post("/findManuFacturById", authMiddelWere, findManuFacturById);
 router.post("/editManuFactur", upload.fields([
     { name: 'logo', maxCount: 1 },
 ]), authMiddelWere, editManuFactur);
+router.post("/findElements",authMiddelWere,findElements)
 
 module.exports = router;
