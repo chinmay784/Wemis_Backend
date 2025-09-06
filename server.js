@@ -6,6 +6,7 @@ const cors = require('cors');
 const superAdminRoutes = require('./routes/superAdminRoute');
 const AdminRoute = require('./routes/adminRoute');
 const WlpRoute = require('./routes/wlpRoute');
+const manufacturRoute = require("./routes/manuFacturRoute")
 
 
 app.use(cors({
@@ -23,6 +24,7 @@ const PORT = process.env.PORT || 3000;
 app.use("/superadmin" , superAdminRoutes);
 app.use("/admin",AdminRoute);
 app.use("/wlp",WlpRoute);
+app.use("/manufactur",manufacturRoute)
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
