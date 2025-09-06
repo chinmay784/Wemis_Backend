@@ -4,7 +4,7 @@ const { createDistributor ,fetchDistributor } = require('../controllers/manuFact
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
 
-router.post("/createDistributor",upload.none(),authMiddelWere,CreateDistributor);
+router.post("/createDistributor",upload.none(),authMiddelWere,createDistributor);
 router.post("/fetchDistributor",authMiddelWere,fetchDistributor)
 
 
