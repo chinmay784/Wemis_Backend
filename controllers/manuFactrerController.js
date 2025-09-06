@@ -81,3 +81,39 @@ exports.createDistributor = async (req, res) =>{
         })
     }
 }
+
+
+exports.fetchDistributor = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide userId"
+            })
+        }
+
+        // find in distributor 
+        const distributor = await Distributor.find({manufacturId:userId});
+
+        if(!distributor){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Distributor Found"
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:'Distributor fetched Sucessfully',
+            distributor, 
+        })
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"server error in Fetch Distributor "
+        })
+    }
+}
