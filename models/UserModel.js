@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['superadmin', 'admin', 'wlp', 'manufacturer'],
+        enum: ['superadmin', 'admin', 'wlp', 'manufacturer','distibutor'],
     },
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -24,9 +24,13 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Wlp',
     },
-    manufacturId:{
+    manufacturId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ManuFactur',
+    },
+    distributorId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Distributor',
     },
     createdAt: {
         type: Date,
