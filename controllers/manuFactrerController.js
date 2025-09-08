@@ -329,7 +329,8 @@ exports.createDelerUnderDistributor = async (req, res) => {
             distributorId: distributorId,
             email: email,
             password: mobile,
-            role: "deler"
+            role: "deler",
+            distributorDelerId:newDel._id
         });
         await delerDistributor.save();
 
@@ -351,38 +352,76 @@ exports.createDelerUnderDistributor = async (req, res) => {
 
 
 
-exports.fetchDelerDistributor = async (req, res) =>{
+exports.fetchDelerDistributor = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide userId"
+                sucess: false,
+                message: "Please Provide userId"
             })
         }
 
         // Find in CreateDelerUnderDistributor collection
-        const fetchAllCreateDelerUnderDistributor = await CreateDelerUnderDistributor.find({manufacturId:userId});
+        const fetchAllCreateDelerUnderDistributor = await CreateDelerUnderDistributor.find({ manufacturId: userId });
 
-        if(!fetchAllCreateDelerUnderDistributor){
+        if (!fetchAllCreateDelerUnderDistributor) {
             return res.status(200).json({
-                sucess:false,
-                message:"No Data Found "
+                sucess: false,
+                message: "No Data Found "
             })
         }
 
         return res.status(200).json({
-            sucess:true,
-            message:"fetchDelerDistributor Data SucessFully",
+            sucess: true,
+            message: "fetchDelerDistributor Data SucessFully",
             fetchAllCreateDelerUnderDistributor,
         })
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in fetchDelerDistributor "
+            sucess: false,
+            message: "Server Error in fetchDelerDistributor "
+        })
+    }
+}
+
+
+exports.deleteDelerDistributor = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+
+        const { delerId } = req.body;
+
+        if (!delerId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide delerId"
+            })
+        }
+
+
+        // Delete in CreateDelerUnderDistributor collection
+        await CreateDelerUnderDistributor.findByIdAndDelete({_id:delerId});
+
+        // and also delete in User Collections
+        await User.findByIdAndDelete({})
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error in deleteDelerDistributor"
         })
     }
 }
