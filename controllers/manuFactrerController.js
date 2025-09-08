@@ -189,8 +189,8 @@ exports.fetchDistributorById = async (req, res) => {
         }
 
         return res.status(200).json({
-            sucess:true,
-            message:"Fetch By Id SucessFully",
+            sucess: true,
+            message: "Fetch By Id SucessFully",
             single
         })
 
@@ -202,6 +202,64 @@ exports.fetchDistributorById = async (req, res) => {
         })
     }
 };
+
+
+
+
+exports.editDistributor = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { distributorId, business_Name, contact_Person_Name, email, gender, mobile, date_of_Birth, age, Map_Device_Edit, pAN_Number, occupation, advance_Payment, languages_Known, country, state, district, address } = req.body;
+
+        const dist = await Distributor.findById(distributorId);
+
+        if (!dist) {
+            return res.status(404).json({
+                sucess: false,
+                message: "dist not found",
+            })
+        }
+
+        if (dist.business_Name) dist.business_Name = business_Name;
+        if (dist.contact_Person_Name) dist.contact_Person_Name = contact_Person_Name;
+        if (dist.email) dist.email = email;
+        if (dist.gender) dist.gender = gender;
+        if (dist.mobile) dist.mobile = mobile;
+        if (dist.date_of_Birth) dist.date_of_Birth = date_of_Birth;
+        if (dist.age) dist.age = age;
+        if (dist.Map_Device_Edit) dist.Map_Device_Edit = Map_Device_Edit;
+        if (dist.pAN_Number) dist.pAN_Number = pAN_Number;
+        if (dist.occupation) dist.occupation = occupation;
+        if (dist.advance_Payment) dist.advance_Payment = advance_Payment;
+        if (dist.languages_Known) dist.languages_Known = languages_Known;
+        if (dist.country) dist.country = country;
+        if (dist.state) dist.state = state;
+        if (dist.district) dist.district = district;
+        if (dist.address) dist.address = address;
+
+        await dist.save();
+        return res.status(200).json({
+            sucess: true,
+            message: "dist edited successfully",
+            dist,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in editDistributor"
+        })
+    }
+}
 
 
 
