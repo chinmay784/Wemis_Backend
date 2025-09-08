@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['superadmin', 'admin', 'wlp', 'manufacturer','distibutor'],
+        enum: ['superadmin', 'admin', 'wlp', 'manufacturer','distibutor','oem','deler'],
     },
     adminId: {
         type: mongoose.Schema.Types.ObjectId,

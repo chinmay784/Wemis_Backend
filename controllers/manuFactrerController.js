@@ -1,5 +1,6 @@
 const Distributor = require("../models/CreateDistributor")
-const User = require("../models/UserModel")
+const User = require("../models/UserModel");
+const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor");
 
 
 exports.createDistributor = async (req, res) => {
@@ -142,6 +143,9 @@ exports.deleteDistributor = async (req, res) => {
 
         const deletedistributor = await Distributor.findByIdAndDelete({ _id: id });
 
+        // and also delete in userCollections
+        await User.findByIdAndDelete({ distributorId: id })
+
         return res.status(200).json({
             sucess: true,
             message: "Distributor Deleted SucessFully"
@@ -264,8 +268,8 @@ exports.editDistributor = async (req, res) => {
 
 
 
-// Not complited
-exports.createOem = async (req, res) => {
+
+exports.createDelerUnderDistributor = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -276,14 +280,69 @@ exports.createOem = async (req, res) => {
             })
         };
 
+        const { distributorId, select_Distributor_Name, business_Name, name, email, gender, mobile, date_of_birth, age, Is_Map_Device_Edit, pan_Number, occupation, Advance_Payment, languages_Known, country, state, district, RTO_Division, Pin_Code, area, address } = req.body;
+
+        if (!distributorId) {
+            return res.state({
+                sucess: false,
+                message: "Please Provide distributorId"
+            })
+        };
 
 
+        const findDel = await CreateDelerUnderDistributor.findOne({ email: email })
+        if (findDel) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Already Exist"
+            })
+        };
+
+        const newDel = new CreateDelerUnderDistributor({
+            manufacturId: userId,
+            distributorId: distributorId,
+            select_Distributor_Name,
+            business_Name,
+            name,
+            email,
+            gender,
+            mobile,
+            date_of_birth,
+            age,
+            Is_Map_Device_Edit,
+            pan_Number,
+            occupation,
+            Advance_Payment,
+            languages_Known,
+            country,
+            state,
+            district,
+            RTO_Division,
+            Pin_Code,
+            area,
+            address
+        })
+
+        await newDel.save();
+        const delerDistributor = new User({
+            manufacturId: userId,
+            distributorId: distributorId,
+            email: email,
+            password: mobile,
+            role: "deler"
+        });
+        await delerDistributor.save();
+
+        return res.status(200).json({
+            sucess: true,
+            message: "created Sucessfully"
+        })
 
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
             sucess: false,
-            message: "server error in createOem "
+            message: "Server Error in createDelerUnderDistributor"
         })
     }
-};
+}
