@@ -343,7 +343,7 @@ exports.createDelerUnderDistributor = async (req, res) => {
             email: email,
             password: mobile,
             role: "deler",
-            distributorDelerId:newDel._id
+            distributorDelerId: newDel._id
         });
         await delerDistributor.save();
 
@@ -425,10 +425,15 @@ exports.deleteDelerDistributor = async (req, res) => {
 
 
         // Delete in CreateDelerUnderDistributor collection
-        await CreateDelerUnderDistributor.findByIdAndDelete({_id:delerId});
+        await CreateDelerUnderDistributor.findByIdAndDelete({ delerId });
 
         // and also delete in User Collections
-        await User.findByIdAndDelete({})
+        await User.findByIdAndDelete({ distributorDelerId: delerId })
+
+        return res.status(200).json({
+            sucess: true,
+            message: "DelerDistributor Deleted SucessFully"
+        })
 
     } catch (error) {
         console.log(error, error.message);
@@ -437,4 +442,4 @@ exports.deleteDelerDistributor = async (req, res) => {
             message: "Server error in deleteDelerDistributor"
         })
     }
-}
+};
