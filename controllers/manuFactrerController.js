@@ -346,3 +346,43 @@ exports.createDelerUnderDistributor = async (req, res) => {
         })
     }
 }
+
+
+
+
+
+exports.fetchDelerDistributor = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide userId"
+            })
+        }
+
+        // Find in CreateDelerUnderDistributor collection
+        const fetchAllCreateDelerUnderDistributor = await CreateDelerUnderDistributor.find({manufacturId:userId});
+
+        if(!fetchAllCreateDelerUnderDistributor){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Data Found "
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"fetchDelerDistributor Data SucessFully",
+            fetchAllCreateDelerUnderDistributor,
+        })
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in fetchDelerDistributor "
+        })
+    }
+}
