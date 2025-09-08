@@ -144,7 +144,9 @@ exports.deleteDistributor = async (req, res) => {
         const deletedistributor = await Distributor.findByIdAndDelete({ _id: id });
 
         // and also delete in userCollections
+        console.log("Before User Delete in Distributor")
         await User.findByIdAndDelete({ distributorId: id })
+        console.log("After User Delete in Distributor")
 
         return res.status(200).json({
             sucess: true,
