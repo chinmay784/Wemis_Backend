@@ -408,38 +408,46 @@ exports.deleteDelerDistributor = async (req, res) => {
 
         if (!userId) {
             return res.status(200).json({
-                sucess: false,
+                success: false,
                 message: "Please Provide UserId"
-            })
+            });
         }
-
 
         const { delerId } = req.body;
 
         if (!delerId) {
             return res.status(200).json({
-                sucess: false,
+                success: false,
                 message: "Please Provide delerId"
-            })
+            });
         }
 
+        // Delete in CreateDelerUnderDistributor collection by custom field
+        const deletedDeler = await CreateDelerUnderDistributor.findOneAndDelete({ delerId });
 
-        // Delete in CreateDelerUnderDistributor collection
-        await CreateDelerUnderDistributor.findByIdAndDelete({ delerId });
+        if (!deletedDeler) {
+            return res.status(404).json({
+                success: false,
+                message: "DelerDistributor not found"
+            });
+        }
 
-        // and also delete in User Collections
-        await User.findByIdAndDelete({ distributorDelerId: delerId })
+        // Delete corresponding user(s) linked with this deler
+        const deletedUser = await User.findOneAndDelete({ distributorDelerId: delerId });
 
         return res.status(200).json({
-            sucess: true,
-            message: "DelerDistributor Deleted SucessFully"
-        })
+            success: true,
+            message: "DelerDistributor Deleted Successfully",
+            deletedDeler,
+            deletedUser
+        });
 
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
-            sucess: false,
-            message: "Server error in deleteDelerDistributor"
-        })
+            success: false,
+            message: "Server error in deleteDelerDistributor",
+            error: error.message
+        });
     }
 };
