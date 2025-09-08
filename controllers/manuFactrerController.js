@@ -155,3 +155,77 @@ exports.deleteDistributor = async (req, res) => {
         })
     }
 }
+
+
+
+
+exports.fetchDistributorById = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { distributorId } = req.body;
+
+        if (!distributorId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide distributorId",
+            })
+        }
+
+        const single = await Distributor.findById(distributorId);
+
+        if (!single) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No distributor Found",
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Fetch By Id SucessFully",
+            single
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchDistributorById"
+        })
+    }
+};
+
+
+
+
+// Not complited
+exports.createOem = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "server error in createOem "
+        })
+    }
+};
