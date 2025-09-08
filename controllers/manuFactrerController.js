@@ -126,41 +126,52 @@ exports.deleteDistributor = async (req, res) => {
 
         if (!userId) {
             return res.status(200).json({
-                sucess: false,
+                success: false,
                 message: "Please Provide userId"
-            })
+            });
         }
 
         const { id } = req.body;
 
         if (!id) {
             return res.status(200).json({
-                sucess: false,
+                success: false,
                 message: "Please Provide id"
-            })
-        };
+            });
+        }
 
+        // Delete Distributor
+        const deletedDistributor = await Distributor.findByIdAndDelete(id);
 
-        const deletedistributor = await Distributor.findByIdAndDelete({ _id: id });
+        if (!deletedDistributor) {
+            return res.status(404).json({
+                success: false,
+                message: "Distributor not found"
+            });
+        }
 
-        // and also delete in userCollections
-        console.log("Before User Delete in Distributor")
-        await User.findByIdAndDelete({ distributorId: id })
-        console.log("After User Delete in Distributor")
+        // Delete linked User by distributorId
+        console.log("Before User Delete in Distributor");
+        const deletedUser = await User.findOneAndDelete({ distributorId: id });
+        console.log("After User Delete in Distributor");
 
         return res.status(200).json({
-            sucess: true,
-            message: "Distributor Deleted SucessFully"
-        })
+            success: true,
+            message: "Distributor Deleted Successfully",
+            deletedDistributor,
+            deletedUser
+        });
 
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
-            sucess: false,
-            message: "server error in deleteDistributor "
-        })
+            success: false,
+            message: "Server error in deleteDistributor",
+            error: error.message
+        });
     }
-}
+};
+
 
 
 
