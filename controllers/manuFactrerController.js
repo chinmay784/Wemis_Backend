@@ -455,7 +455,8 @@ exports.deleteDelerDistributor = async (req, res) => {
 
 
 
-exports.createOem = async (req, res) => {
+exports.
+createOem = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -469,7 +470,7 @@ exports.createOem = async (req, res) => {
 
         const { business_Name, contact_Person_Name, email, gender, mobile, date_of_Birth, age, Map_Device_Edit, pAN_Number, occupation, gst_no, languages_Known, country, state, district, address } = req.body;
 
-        if (!business_Name || !contact_Person_Name || !email || !gender || !mobile || date_of_Birth || !age || !Map_Device_Edit || !pAN_Number || !occupation || !gst_no || !languages_Known || !country || !state || !district || !address) {
+        if (!business_Name || !contact_Person_Name || !email || !gender || !mobile || !date_of_Birth || !age || !Map_Device_Edit || !pAN_Number || !occupation || !gst_no || !languages_Known || !country || !state || !district || !address) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide allFields"
