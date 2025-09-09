@@ -506,6 +506,8 @@ exports.createOem = async (req, res) => {
             address
         })
 
+        console.log("Before Data Save in DataBase")
+
         // ✅ save to DB
         await oemCreate.save();
 
@@ -520,6 +522,7 @@ exports.createOem = async (req, res) => {
 
         // ✅ save to DB
         await oemSaveInUser.save();
+        console.log("After Data Save in DataBase")
 
         return res.status(200).json({
             sucess: true,
