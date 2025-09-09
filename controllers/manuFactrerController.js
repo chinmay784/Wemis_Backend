@@ -514,6 +514,10 @@ exports.createOem = async (req, res) => {
         });
 
 
+        // ✅ save to DB
+        await oemCreate.save();
+        await oemSaveInUser.save();
+
         return res.status(200).json({
             sucess: true,
             message: "Oem Created SucessFully"
