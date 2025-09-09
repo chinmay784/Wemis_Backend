@@ -1,7 +1,8 @@
 const Distributor = require("../models/CreateDistributor")
 const User = require("../models/UserModel");
 const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor");
-const OemModelSchema = require("../models/CreateOemModel")
+const OemModelSchema = require("../models/CreateOemModel");
+const CreateOemModel = require("../models/CreateOemModel");
 
 
 exports.createDistributor = async (req, res) => {
@@ -535,6 +536,43 @@ exports.createOem = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server error in createOem"
+        })
+    }
+}
+
+
+exports.fetchOems = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        // const res
+        const oems = await CreateOemModel.find({ manufacturId: userId });
+
+        if (!oems) {
+            return res.status(200).json({
+                sucess: false,
+                message: "oems Not Found",
+            })
+        };
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Oems Fetch SucessFully",
+            oems
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "server Error in fetchOems "
         })
     }
 }

@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
-const { createDistributor ,fetchDistributor ,deleteDistributor, fetchDistributorById,editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem} = require('../controllers/manuFactrerController');
+const { createDistributor ,fetchDistributor ,deleteDistributor, fetchDistributorById,editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems} = require('../controllers/manuFactrerController');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
 
@@ -12,7 +12,8 @@ router.post("/editDistributor",authMiddelWere,editDistributor);
 router.post("/createDelerUnderDistributor",authMiddelWere,createDelerUnderDistributor)
 router.post("/fetchDelerDistributor",authMiddelWere,fetchDelerDistributor);
 router.post("/deleteDelerDistributor",authMiddelWere,deleteDelerDistributor);
-router.post("/createOem",authMiddelWere,createOem)
+router.post("/createOem",authMiddelWere,createOem);
+router.post("/fetchOems",authMiddelWere, fetchOems)
 
 
 module.exports = router;
