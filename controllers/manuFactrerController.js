@@ -600,17 +600,17 @@ exports.deleteOems = async (req, res) => {
 
 
         // delete in CreateOemsModel _id
-        const deleteId = await CreateOemModel.findOneAndDelete({oemsId});
+        const deleteId = await CreateOemModel.findOneAndDelete({ oemsId });
 
-        if(!deleteId){
+        if (!deleteId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Oem not Found"
+                sucess: false,
+                message: "Oem not Found"
             })
         }
 
         // delete in User Collections
-        const UserDelet = await User.findOneAndDelete({oemId:oemsId})
+        const UserDelet = await User.findOneAndDelete({ oemId: oemsId })
 
         return res.status(200).json({
             sucess: true,
@@ -622,6 +622,53 @@ exports.deleteOems = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in DeletOems"
+        })
+    }
+}
+
+
+
+exports.getOemsById = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { oemsId } = req.body;
+
+        if (!oemsId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide oemsId",
+            })
+        };
+
+        // Find in Oems Collection Model
+        const oemsById = await CreateOemModel.findById(oemsId);
+
+        if (!oemsById) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found In oemsById",
+            })
+        };
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Fetchd SucessFully",
+            oemsById,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in GetOemsBy Id"
         })
     }
 }
