@@ -12,7 +12,7 @@ router.post("/editDistributor",authMiddelWere,editDistributor);
 router.post("/createDelerUnderDistributor",authMiddelWere,createDelerUnderDistributor)
 router.post("/fetchDelerDistributor",authMiddelWere,fetchDelerDistributor);
 router.post("/deleteDelerDistributor",authMiddelWere,deleteDelerDistributor);
-router.post("/createOem",authMiddelWere,createOem)
+router.post("/createOem",upload.none(),authMiddelWere,createOem)
 
 
 module.exports = router;
