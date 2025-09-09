@@ -563,8 +563,8 @@ exports.fetchOems = async (req, res) => {
         };
 
         return res.status(200).json({
-            sucess:true,
-            message:"Oems Fetch SucessFully",
+            sucess: true,
+            message: "Oems Fetch SucessFully",
             oems
         })
 
@@ -573,6 +573,55 @@ exports.fetchOems = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "server Error in fetchOems "
+        })
+    }
+}
+
+
+exports.deleteOems = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { oemsId } = req.body;
+
+        if (!oemsId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide OemsId"
+            })
+        };
+
+
+        // delete in CreateOemsModel _id
+        const deleteId = await CreateOemModel.findOneAndDelete({oemsId});
+
+        if(!deleteId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Oem not Found"
+            })
+        }
+
+        // delete in User Collections
+        const UserDelet = await User.findOneAndDelete({oemId:oemsId})
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Oem Deleted SucessFully"
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in DeletOems"
         })
     }
 }
