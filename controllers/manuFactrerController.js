@@ -659,8 +659,8 @@ exports.getOemsById = async (req, res) => {
         };
 
         return res.status(200).json({
-            sucess:true,
-            message:"Fetchd SucessFully",
+            sucess: true,
+            message: "Fetchd SucessFully",
             oemsById,
         })
 
@@ -669,6 +669,64 @@ exports.getOemsById = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in GetOemsBy Id"
+        })
+    }
+}
+
+
+
+exports.editOemsById = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { oemsId, business_Name, contact_Person_Name, email, gender, mobile, date_of_Birth, age, Map_Device_Edit, pAN_Number, occupation, gst_no, languages_Known, country, state, district, address } = req.body;
+
+        const oems = await CreateOemModel.findById(oemsId);
+
+        if (!oems) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found"
+            })
+        };
+
+        if(oems.business_Name) oems.business_Name = business_Name;
+        if(oems.contact_Person_Name) oems.contact_Person_Name = contact_Person_Name;
+        if(oems.email) oems.email = email;
+        if(oems.gender) oems.gender = gender;
+        if(oems.mobile) oems.mobile = mobile;
+        if(oems.date_of_Birth) oems.date_of_Birth = date_of_Birth;
+        if(oems.age) oems.age = age;
+        if(oems.Map_Device_Edit) oems.Map_Device_Edit = Map_Device_Edit;
+        if(oems.pAN_Number) oems.pAN_Number = pAN_Number;
+        if(oems.occupation) oems.occupation = occupation;
+        if(oems.gst_no) oems.gst_no = gst_no;
+        if(oems.languages_Known) oems.languages_Known = languages_Known;
+        if(oems.country) oems.country = country;
+        if(oems.state) oems.state = state;
+        if(oems.district) oems.district = district;
+        if(oems.address) oems.address = address;
+
+
+        await oems.save();
+
+        return res.status(200).json({
+            sucess:true,
+            message:"oems Edited SucessFully"
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "server Error in editOemsById"
         })
     }
 }
