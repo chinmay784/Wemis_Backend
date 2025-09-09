@@ -586,45 +586,45 @@ exports.deleteOems = async (req, res) => {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide userId",
-            })
-        };
+            });
+        }
 
         const { oemsId } = req.body;
 
         if (!oemsId) {
             return res.status(200).json({
                 sucess: false,
-                message: "Please Provide OemsId"
-            })
-        };
+                message: "Please Provide oemsId",
+            });
+        }
 
-
-        // delete in CreateOemsModel _id
-        const deleteId = await CreateOemModel.findOneAndDelete({ oemsId });
+        // ✅ delete in CreateOemsModel using _id
+        const deleteId = await CreateOemModel.findByIdAndDelete(oemsId);
 
         if (!deleteId) {
             return res.status(200).json({
                 sucess: false,
-                message: "Oem not Found"
-            })
+                message: "Oem not Found",
+            });
         }
 
-        // delete in User Collections
-        const UserDelet = await User.findOneAndDelete({ oemId: oemsId })
+        // ✅ delete in User Collections
+        await User.findOneAndDelete({ oemId: oemsId });
 
         return res.status(200).json({
             sucess: true,
-            message: "Oem Deleted SucessFully"
-        })
+            message: "Oem Deleted Successfully",
+        });
 
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
             sucess: false,
-            message: "Server Error in DeletOems"
-        })
+            message: "Server Error in deleteOems",
+        });
     }
-}
+};
+
 
 
 
