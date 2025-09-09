@@ -48,8 +48,8 @@ const OemModelSchema = new mongoose.Schema({
         trim: true,
     },
     gst_no: {
-        type: Number,
-        default: 0
+         type: String,
+        trim: true,
     },
     languages_Known: {
         type: String,
