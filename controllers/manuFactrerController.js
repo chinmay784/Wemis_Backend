@@ -505,6 +505,10 @@ exports.createOem = async (req, res) => {
             district,
             address
         })
+
+        // ✅ save to DB
+        await oemCreate.save();
+
         // and also save in User Collections
         const oemSaveInUser = new User({
             oemId: oemCreate._id,
@@ -515,7 +519,6 @@ exports.createOem = async (req, res) => {
 
 
         // ✅ save to DB
-        await oemCreate.save();
         await oemSaveInUser.save();
 
         return res.status(200).json({
