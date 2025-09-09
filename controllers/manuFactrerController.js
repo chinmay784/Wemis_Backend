@@ -455,8 +455,7 @@ exports.deleteDelerDistributor = async (req, res) => {
 
 
 
-exports.
-createOem = async (req, res) => {
+exports.createOem = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -525,7 +524,6 @@ createOem = async (req, res) => {
         await oemSaveInUser.save();
         console.log("After Data Save in DataBase")
 
-        console.log(oemCreate , "user -" , oemSaveInUser)
 
         return res.status(200).json({
             sucess: true,
