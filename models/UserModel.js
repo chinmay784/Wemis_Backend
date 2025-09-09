@@ -32,6 +32,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Distributor',
     },
+    oemId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'OemModelSchema',
+    },
     distributorDelerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CreateDelerUnderDistributor',

@@ -1,6 +1,7 @@
 const Distributor = require("../models/CreateDistributor")
 const User = require("../models/UserModel");
 const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor");
+const OemModelSchema = require("../models/CreateOemModel")
 
 
 exports.createDistributor = async (req, res) => {
@@ -451,3 +452,78 @@ exports.deleteDelerDistributor = async (req, res) => {
         });
     }
 };
+
+
+
+exports.createOem = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+
+        const { business_Name, contact_Person_Name, email, gender, mobile, date_of_Birth, age, Map_Device_Edit, pAN_Number, occupation, gst_no, languages_Known, country, state, district, address } = req.body;
+
+        if (!business_Name || !contact_Person_Name || !email || !gender || !mobile || date_of_Birth || !age || Map_Device_Edit || !pAN_Number || !occupation || !gst_no || !languages_Known || !country || !state || !district || !address) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide allFields"
+            })
+        }
+
+
+        const newOem = await OemModelSchema.findOne({ email });
+
+        if (newOem) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Oem Already Exist"
+            })
+        }
+
+        const oemCreate = new OemModelSchema({
+            manufacturId: userId,
+            business_Name,
+            contact_Person_Name,
+            email,
+            gender,
+            mobile,
+            date_of_Birth,
+            age,
+            Map_Device_Edit,
+            pAN_Number,
+            occupation,
+            gst_no,
+            languages_Known,
+            country,
+            state,
+            district,
+            address
+        })
+        // and also save in User Collections
+        const oemSaveInUser = new User({
+            oemId: oemCreate._id,
+            email: email,
+            password: mobile,
+            role: "oem"
+        });
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Oem Created SucessFully"
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server error in createOem"
+        })
+    }
+}
