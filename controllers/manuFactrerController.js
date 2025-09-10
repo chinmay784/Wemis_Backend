@@ -867,35 +867,35 @@ exports.deleteDelerUnderOems = async (req, res) => {
 
         const { oemsId } = req.body;
 
-         if (!oemsId) {
+        if (!oemsId) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide oemsId",
             })
         };
 
-        console.log("Before Delete in CreateDelerUnderOems Collections")
+
 
         // Delete in CreateDelerUnderOems Collections
         const deleteOems = await CreateDelerUnderOems.findByIdAndDelete(oemsId)
 
-        if(!deleteOems){
+        if (!deleteOems) {
             return res.status(200).json({
-                sucess:false,
-                message:"Data Not Found"
+                sucess: false,
+                message: "Data Not Found"
             })
         };
-         console.log("After Delete in CreateDelerUnderOems Collections")
 
 
-          console.log("Before Delete in User Collections")
+
+
         // Delete in User Collections
-        const userDelerDelet = await User.findOneAndDelete({oemsDelerId:oemsId});
-           console.log("After Delete in User Collections")
+        const userDelerDelet = await User.findOneAndDelete({ oemsDelerId: oemsId });
+
 
         return res.status(200).json({
-            sucess:true,
-            message:'OemDeler Deleted SucessFully'
+            sucess: true,
+            message: 'OemDeler Deleted SucessFully'
         });
 
     } catch (error) {
@@ -903,6 +903,115 @@ exports.deleteDelerUnderOems = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in deleteDelerUnderOems"
+        })
+    }
+}
+
+
+
+exports.getDelerUnderOemsById = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { oemsId } = req.body;
+
+        if (!oemsId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide oemsId",
+            })
+        };
+
+        const findByIdInOems = await CreateDelerUnderOems.findById(oemsId);
+
+        if (!findByIdInOems) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found"
+            })
+        };
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Fetch By Id SucessFully",
+            findByIdInOems,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in getDelerUnderOemsById"
+        })
+    }
+}
+
+
+
+
+exports.editDelerOem = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { oemsId, select_Oems_Name, business_Name, name, email, gender, mobile, date_of_birth, age, Is_Map_Device_Edit, pan_Number, occupation, Advance_Payment, languages_Known, country, state, district, RTO_Division, Pin_Code, area, address } = req.body;
+
+        // find in CreateDelerUnderOems collections
+        const findByIdInOems = await CreateDelerUnderOems.findById(oemsId);
+
+        if (!findByIdInOems) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found"
+            })
+        };
+
+        if(findByIdInOems.select_Oems_Name) findByIdInOems.select_Oems_Name = select_Oems_Name;
+        if(findByIdInOems.business_Name) findByIdInOems.business_Name = business_Name;
+        if(findByIdInOems.name) findByIdInOems.name = name;
+        if(findByIdInOems.email) findByIdInOems.email = email;
+        if(findByIdInOems.gender) findByIdInOems.gender = gender;
+        if(findByIdInOems.mobile) findByIdInOems.mobile = mobile;
+        if(findByIdInOems.date_of_birth) findByIdInOems.date_of_birth = date_of_birth;
+        if(findByIdInOems.age) findByIdInOems.age = age;
+        if(findByIdInOems.Is_Map_Device_Edit) findByIdInOems.Is_Map_Device_Edit = Is_Map_Device_Edit;
+        if(findByIdInOems.pan_Number) findByIdInOems.pan_Number = pan_Number;
+        if(findByIdInOems.occupation) findByIdInOems.occupation = occupation;
+        if(findByIdInOems.Advance_Payment) findByIdInOems.Advance_Payment = Advance_Payment;
+        if(findByIdInOems.languages_Known) findByIdInOems.languages_Known = languages_Known;
+        if(findByIdInOems.country) findByIdInOems.country = country;
+        if(findByIdInOems.state) findByIdInOems.state = state;
+        if(findByIdInOems.district) findByIdInOems.district = district;
+        if(findByIdInOems.RTO_Division) findByIdInOems.RTO_Division = RTO_Division;
+        if(findByIdInOems.Pin_Code) findByIdInOems.Pin_Code = Pin_Code;
+        if(findByIdInOems.area) findByIdInOems.area = area;
+        if(findByIdInOems.address) findByIdInOems.address = address;
+
+        await findByIdInOems.save();
+
+        return res.status(200).json({
+            sucess:false,
+            message:"Edited SucessFully"
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in editDelerOem"
         })
     }
 }
