@@ -852,3 +852,51 @@ exports.fetchDelerUnderOems = async (req, res) => {
         })
     }
 }
+
+
+exports.deleteDelerUnderOems = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId",
+            })
+        };
+
+        const { oemsId } = req.body;
+
+         if (!oemsId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide oemsId",
+            })
+        };
+
+        // Delete in CreateDelerUnderOems Collections
+        const deleteOems = await CreateDelerUnderOems.findOneAndDelete({oemsId})
+
+        if(!deleteOems){
+            return res.status(200).json({
+                sucess:false,
+                message:"Data Not Found"
+            })
+        };
+
+        // Delete in User Collections
+        const userDelerDelet = await User.findOneAndDelete({oemsDelerId:oemsId});
+
+        return res.status(200).json({
+            sucess:true,
+            message:'OemDeler Deleted SucessFully'
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in deleteDelerUnderOems"
+        })
+    }
+}
