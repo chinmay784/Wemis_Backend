@@ -971,6 +971,7 @@ exports.editDelerOem = async (req, res) => {
 
         // find in CreateDelerUnderOems collections
         const findByIdInOems = await CreateDelerUnderOems.findById(oemsId);
+        console.log(oemsId)
 
         if (!findByIdInOems) {
             return res.status(200).json({
@@ -1001,6 +1002,7 @@ exports.editDelerOem = async (req, res) => {
         if(findByIdInOems.address) findByIdInOems.address = address;
 
         await findByIdInOems.save();
+        console.log("Save in dataBase")
 
         return res.status(200).json({
             sucess:false,
