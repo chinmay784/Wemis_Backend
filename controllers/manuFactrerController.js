@@ -814,3 +814,41 @@ exports.createDelerUnderOems = async (req, res) => {
         })
     }
 }
+
+
+
+exports.fetchDelerUnderOems = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+        // find userId in CreateDelerUnderOems collections
+        const delerOems = await CreateDelerUnderOems.find({ manufacturId: userId });
+
+        if (!delerOems) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "DelerUnderOems Fetched SucessFully",
+            delerOems,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchDelerUnderOems"
+        })
+    }
+}
