@@ -874,8 +874,10 @@ exports.deleteDelerUnderOems = async (req, res) => {
             })
         };
 
+        console.log("Before Delete in CreateDelerUnderOems Collections")
+
         // Delete in CreateDelerUnderOems Collections
-        const deleteOems = await CreateDelerUnderOems.findOneAndDelete({oemsId})
+        const deleteOems = await CreateDelerUnderOems.findByIdAndDelete(oemsId)
 
         if(!deleteOems){
             return res.status(200).json({
@@ -883,9 +885,13 @@ exports.deleteDelerUnderOems = async (req, res) => {
                 message:"Data Not Found"
             })
         };
+         console.log("After Delete in CreateDelerUnderOems Collections")
 
+
+          console.log("Before Delete in User Collections")
         // Delete in User Collections
         const userDelerDelet = await User.findOneAndDelete({oemsDelerId:oemsId});
+           console.log("After Delete in User Collections")
 
         return res.status(200).json({
             sucess:true,
