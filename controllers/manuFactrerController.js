@@ -3,6 +3,7 @@ const User = require("../models/UserModel");
 const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor");
 const OemModelSchema = require("../models/CreateOemModel");
 const CreateOemModel = require("../models/CreateOemModel");
+const CreateDelerUnderOems = require("../models/CreateDelerUnderOems")
 
 
 exports.createDistributor = async (req, res) => {
@@ -697,29 +698,29 @@ exports.editOemsById = async (req, res) => {
             })
         };
 
-        if(oems.business_Name) oems.business_Name = business_Name;
-        if(oems.contact_Person_Name) oems.contact_Person_Name = contact_Person_Name;
-        if(oems.email) oems.email = email;
-        if(oems.gender) oems.gender = gender;
-        if(oems.mobile) oems.mobile = mobile;
-        if(oems.date_of_Birth) oems.date_of_Birth = date_of_Birth;
-        if(oems.age) oems.age = age;
-        if(oems.Map_Device_Edit) oems.Map_Device_Edit = Map_Device_Edit;
-        if(oems.pAN_Number) oems.pAN_Number = pAN_Number;
-        if(oems.occupation) oems.occupation = occupation;
-        if(oems.gst_no) oems.gst_no = gst_no;
-        if(oems.languages_Known) oems.languages_Known = languages_Known;
-        if(oems.country) oems.country = country;
-        if(oems.state) oems.state = state;
-        if(oems.district) oems.district = district;
-        if(oems.address) oems.address = address;
+        if (oems.business_Name) oems.business_Name = business_Name;
+        if (oems.contact_Person_Name) oems.contact_Person_Name = contact_Person_Name;
+        if (oems.email) oems.email = email;
+        if (oems.gender) oems.gender = gender;
+        if (oems.mobile) oems.mobile = mobile;
+        if (oems.date_of_Birth) oems.date_of_Birth = date_of_Birth;
+        if (oems.age) oems.age = age;
+        if (oems.Map_Device_Edit) oems.Map_Device_Edit = Map_Device_Edit;
+        if (oems.pAN_Number) oems.pAN_Number = pAN_Number;
+        if (oems.occupation) oems.occupation = occupation;
+        if (oems.gst_no) oems.gst_no = gst_no;
+        if (oems.languages_Known) oems.languages_Known = languages_Known;
+        if (oems.country) oems.country = country;
+        if (oems.state) oems.state = state;
+        if (oems.district) oems.district = district;
+        if (oems.address) oems.address = address;
 
 
         await oems.save();
 
         return res.status(200).json({
-            sucess:true,
-            message:"oems Edited SucessFully"
+            sucess: true,
+            message: "oems Edited SucessFully"
         });
 
     } catch (error) {
@@ -727,6 +728,89 @@ exports.editOemsById = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "server Error in editOemsById"
+        })
+    }
+}
+
+
+
+exports.createDelerUnderOems = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide userId"
+            })
+        };
+
+        const { oemsId, select_Oems_Name, business_Name, name, email, gender, mobile, date_of_birth, age, Is_Map_Device_Edit, pan_Number, occupation, Advance_Payment, languages_Known, country, state, district, RTO_Division, Pin_Code, area, address } = req.body;
+
+        if (!oemsId) {
+            return res.state({
+                sucess: false,
+                message: "Please Provide oemsId"
+            })
+        };
+
+
+        // check already exist or Not
+        const findOem = await CreateDelerUnderOems.findOne({ email: email })
+        if (findOem) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Oem Already Exist"
+            })
+        };
+
+        const newOem = new CreateDelerUnderOems({
+            manufacturId: userId,
+            oemsId: oemsId,
+            select_Oems_Name,
+            business_Name,
+            name,
+            email,
+            gender,
+            mobile,
+            date_of_birth,
+            age,
+            Is_Map_Device_Edit,
+            pan_Number,
+            occupation,
+            Advance_Payment,
+            languages_Known,
+            country,
+            state,
+            district,
+            RTO_Division,
+            Pin_Code,
+            area,
+            address
+        })
+
+        await newOem.save();
+
+        const delerOem = new User({
+            manufacturId: userId,
+            oemId: oemsId,
+            email: email,
+            password: mobile,
+            role: "deler",
+            oemsDelerId: delerOem._id
+        });
+        await delerOem.save();
+
+        return res.status(200).json({
+            sucess: true,
+            message: "created Sucessfully"
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in createDelerUnderOems"
         })
     }
 }
