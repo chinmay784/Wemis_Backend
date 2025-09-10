@@ -797,7 +797,7 @@ exports.createDelerUnderOems = async (req, res) => {
             email: email,
             password: mobile,
             role: "deler",
-            oemsDelerId: delerOem._id
+            oemsDelerId: newOem._id
         });
         await delerOem.save();
 
