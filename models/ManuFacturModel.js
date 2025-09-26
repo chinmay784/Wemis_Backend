@@ -64,6 +64,7 @@ const ManuFacturSchema = new mongoose.Schema({
                 elementName: { type: String, trim: true },
                 elementType: { type: String, trim: true },
                 model_No: { type: String, trim: true },
+                sim:{type: Number,default:0},
                 device_Part_No: { type: String, trim: true },
                 tac_No: { type: String, trim: true },
                 cop_No: [{ type: String, trim: true }],
