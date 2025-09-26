@@ -554,6 +554,7 @@ exports.adminAssignElement = async (req, res) => {
             wlps.assign_element_list.push({
                 elementName: result.elementName,
                 elementType: result.elementType,
+                sim:result.sim,
                 model_No: result.model_No,
                 device_Part_No: result.device_Part_No,
                 tac_No: result.tac_No,

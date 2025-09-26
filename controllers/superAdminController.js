@@ -1550,6 +1550,7 @@ exports.assignElement = async (req, res) => {
                 admin.assign_element_list.push({
                     elementName: element.elementName,
                     elementType: element.elementType,
+                    sim:element.sim,
                     model_No: element.model_No,
                     device_Part_No: element.device_Part_No,
                     tac_No: element.tac_No,
