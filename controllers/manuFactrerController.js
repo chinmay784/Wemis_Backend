@@ -3,7 +3,8 @@ const User = require("../models/UserModel");
 const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor");
 const OemModelSchema = require("../models/CreateOemModel");
 const CreateOemModel = require("../models/CreateOemModel");
-const CreateDelerUnderOems = require("../models/CreateDelerUnderOems")
+const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
+const createBarCode = require("../models/CreateBrandModel");
 
 
 exports.createDistributor = async (req, res) => {
@@ -980,33 +981,33 @@ exports.editDelerOem = async (req, res) => {
             })
         };
 
-        if(findByIdInOems.select_Oems_Name) findByIdInOems.select_Oems_Name = select_Oems_Name;
-        if(findByIdInOems.business_Name) findByIdInOems.business_Name = business_Name;
-        if(findByIdInOems.name) findByIdInOems.name = name;
-        if(findByIdInOems.email) findByIdInOems.email = email;
-        if(findByIdInOems.gender) findByIdInOems.gender = gender;
-        if(findByIdInOems.mobile) findByIdInOems.mobile = mobile;
-        if(findByIdInOems.date_of_birth) findByIdInOems.date_of_birth = date_of_birth;
-        if(findByIdInOems.age) findByIdInOems.age = age;
-        if(findByIdInOems.Is_Map_Device_Edit) findByIdInOems.Is_Map_Device_Edit = Is_Map_Device_Edit;
-        if(findByIdInOems.pan_Number) findByIdInOems.pan_Number = pan_Number;
-        if(findByIdInOems.occupation) findByIdInOems.occupation = occupation;
-        if(findByIdInOems.Advance_Payment) findByIdInOems.Advance_Payment = Advance_Payment;
-        if(findByIdInOems.languages_Known) findByIdInOems.languages_Known = languages_Known;
-        if(findByIdInOems.country) findByIdInOems.country = country;
-        if(findByIdInOems.state) findByIdInOems.state = state;
-        if(findByIdInOems.district) findByIdInOems.district = district;
-        if(findByIdInOems.RTO_Division) findByIdInOems.RTO_Division = RTO_Division;
-        if(findByIdInOems.Pin_Code) findByIdInOems.Pin_Code = Pin_Code;
-        if(findByIdInOems.area) findByIdInOems.area = area;
-        if(findByIdInOems.address) findByIdInOems.address = address;
+        if (findByIdInOems.select_Oems_Name) findByIdInOems.select_Oems_Name = select_Oems_Name;
+        if (findByIdInOems.business_Name) findByIdInOems.business_Name = business_Name;
+        if (findByIdInOems.name) findByIdInOems.name = name;
+        if (findByIdInOems.email) findByIdInOems.email = email;
+        if (findByIdInOems.gender) findByIdInOems.gender = gender;
+        if (findByIdInOems.mobile) findByIdInOems.mobile = mobile;
+        if (findByIdInOems.date_of_birth) findByIdInOems.date_of_birth = date_of_birth;
+        if (findByIdInOems.age) findByIdInOems.age = age;
+        if (findByIdInOems.Is_Map_Device_Edit) findByIdInOems.Is_Map_Device_Edit = Is_Map_Device_Edit;
+        if (findByIdInOems.pan_Number) findByIdInOems.pan_Number = pan_Number;
+        if (findByIdInOems.occupation) findByIdInOems.occupation = occupation;
+        if (findByIdInOems.Advance_Payment) findByIdInOems.Advance_Payment = Advance_Payment;
+        if (findByIdInOems.languages_Known) findByIdInOems.languages_Known = languages_Known;
+        if (findByIdInOems.country) findByIdInOems.country = country;
+        if (findByIdInOems.state) findByIdInOems.state = state;
+        if (findByIdInOems.district) findByIdInOems.district = district;
+        if (findByIdInOems.RTO_Division) findByIdInOems.RTO_Division = RTO_Division;
+        if (findByIdInOems.Pin_Code) findByIdInOems.Pin_Code = Pin_Code;
+        if (findByIdInOems.area) findByIdInOems.area = area;
+        if (findByIdInOems.address) findByIdInOems.address = address;
 
         await findByIdInOems.save();
         console.log("Save in dataBase")
 
         return res.status(200).json({
-            sucess:false,
-            message:"Edited SucessFully"
+            sucess: false,
+            message: "Edited SucessFully"
         })
 
     } catch (error) {
@@ -1014,6 +1015,105 @@ exports.editDelerOem = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in editDelerOem"
+        })
+    }
+}
+
+
+
+exports.createBarCode = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        // to create BarCode Things will be rquired
+        const { elementName, elementType, elementModelNo, elementPartNo, elementTacNo, elementCopNo, copValid, voltage, batchNo, baecodeCreationType, barCodeNo, is_Renew, deviceSerialNo, simNo, iccidNo, validityDate, operator } = req.body;
+
+        // ✅ Required field checks
+        if (!elementName) return res.status(200).json({ success: false, message: "Please provide elementName" });
+        if (!elementType) return res.status(200).json({ success: false, message: "Please provide elementType" });
+        if (!elementModelNo) return res.status(200).json({ success: false, message: "Please provide elementModelNo" });
+        if (!elementPartNo) return res.status(200).json({ success: false, message: "Please provide elementPartNo" });
+        if (!elementTacNo) return res.status(200).json({ success: false, message: "Please provide elementTacNo" });
+        if (!elementCopNo) return res.status(200).json({ success: false, message: "Please provide elementCopNo" });
+        if (!copValid) return res.status(200).json({ success: false, message: "Please provide copValid" });
+        if (!voltage) return res.status(200).json({ success: false, message: "Please provide voltage" });
+        if (!batchNo) return res.status(200).json({ success: false, message: "Please provide batchNo" });
+        if (!baecodeCreationType) return res.status(200).json({ success: false, message: "Please provide baecodeCreationType" });
+        if (!barCodeNo) return res.status(200).json({ success: false, message: "Please provide barCodeNo" });
+        if (!is_Renew) return res.status(200).json({ success: false, message: "Please provide is_Renew" });
+        if (!deviceSerialNo) return res.status(200).json({ success: false, message: "Please provide deviceSerialNo" });
+        if (!simNo) return res.status(200).json({ success: false, message: "Please provide simNo" });
+        if (!iccidNo) return res.status(200).json({ success: false, message: "Please provide iccidNo" });
+        if (!validityDate) return res.status(200).json({ success: false, message: "Please provide validityDate" });
+        if (!operator) return res.status(200).json({ success: false, message: "Please provide operator" });
+
+
+        // create BarCode And Save in DataBase
+        const newBarCode = new createBarCode({
+            manufacturId: userId,
+            elementName,
+            elementType,
+            elementModelNo,
+            elementPartNo,
+            elementTacNo,
+            elementCopNo,
+            copValid,
+            voltage,
+            batchNo,
+            baecodeCreationType,
+            barCodeNo,
+            is_Renew,
+            deviceSerialNo,
+            simDetails: [
+                {
+                    simNo,
+                    iccidNo,
+                    validityDate,
+                    operator
+                }
+            ]
+        });
+
+        await newBarCode.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "BarCode created successfully",
+        });
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in createBarCode"
+        })
+    }
+};
+
+
+exports.fetchBarCode = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetch Barcode"
         })
     }
 }
