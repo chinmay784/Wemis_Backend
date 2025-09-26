@@ -10,6 +10,10 @@ const addCopModel = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    sim: {
+        type: Number,
+        default: 0,
+    },
     model_No: {
         type: String,
         trim: true,
@@ -19,18 +23,18 @@ const addCopModel = new mongoose.Schema({
         trim: true,
     },
     tac_No: {
-        type: String,   
+        type: String,
         trim: true,
     },
     cop_No: {
-        type: [String],  
+        type: [String],
         trim: true,
     },
     date: {
-        type: [Date],  
+        type: [Date],
         trim: true,
     },
 });
 
 
-module.exports = mongoose.model("AddCopNo",addCopModel);
+module.exports = mongoose.model("AddCopNo", addCopModel);

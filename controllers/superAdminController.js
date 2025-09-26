@@ -1410,10 +1410,13 @@ exports.addCopNumber = async (req, res) => {
             })
         };
 
+        
+        const Sim = await TypeElementModel.findOne({elementType});
 
         const addCop = await AddCopNo.create({
             elementName: elementName,
             elementType: elementType,
+            sim:Sim.sim,
             model_No: model_No,
             device_Part_No: device_Part_No,
             tac_No: tac_No,
