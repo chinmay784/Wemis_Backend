@@ -1026,20 +1026,20 @@ exports.fetchAllAssignElementDataRelatedToCreateBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide UserId"
+                sucess: false,
+                message: "Please Provide UserId"
             })
         }
 
 
         // Find in User on the Basis of userId And Find manufacturID in manufactur in collections
         const manuF = await User.findById(userId);
-        if(!manuF){
+        if (!manuF) {
             return res.status(200).json({
-                sucess:false,
-                message:"Manufactur Not Found"
+                sucess: false,
+                message: "Manufactur Not Found"
             })
         };
 
@@ -1047,17 +1047,17 @@ exports.fetchAllAssignElementDataRelatedToCreateBarCode = async (req, res) => {
         // find manuF.manufacturId in manufactur Collection and search in assign List Elements
         const assignelementDetails = await ManuFactur.findById(manuF.manufacturId);
 
-        if(!assignelementDetails){
+        if (!assignelementDetails) {
             return res.status(200).json({
-                sucess:false,
-                message:"ManuFactur Not Found",
+                sucess: false,
+                message: "ManuFactur Not Found",
             })
         };
 
 
         return res.status(200).json({
-            sucess:true,
-            assignelements:assignelementDetails.assign_element_list
+            sucess: true,
+            assignelements: assignelementDetails.assign_element_list
         })
 
     } catch (error) {
@@ -1084,7 +1084,7 @@ exports.createBarCode = async (req, res) => {
         };
 
         // to create BarCode Things will be rquired
-        const { elementName, elementType, elementModelNo, elementPartNo, elementTacNo, elementCopNo, copValid, voltage, batchNo, baecodeCreationType, barCodeNo, is_Renew, deviceSerialNo, simNo, iccidNo, validityDate, operator } = req.body;
+        const { elementName, elementType, elementModelNo, elementPartNo, elementTacNo, elementCopNo, copValid, voltage, batchNo, baecodeCreationType, barCodeNo, is_Renew, deviceSerialNo, simDetails } = req.body;
 
         // ✅ Required field checks
         if (!elementName) return res.status(200).json({ success: false, message: "Please provide elementName" });
@@ -1100,10 +1100,9 @@ exports.createBarCode = async (req, res) => {
         if (!barCodeNo) return res.status(200).json({ success: false, message: "Please provide barCodeNo" });
         if (!is_Renew) return res.status(200).json({ success: false, message: "Please provide is_Renew" });
         if (!deviceSerialNo) return res.status(200).json({ success: false, message: "Please provide deviceSerialNo" });
-        if (!simNo) return res.status(200).json({ success: false, message: "Please provide simNo" });
-        if (!iccidNo) return res.status(200).json({ success: false, message: "Please provide iccidNo" });
-        if (!validityDate) return res.status(200).json({ success: false, message: "Please provide validityDate" });
-        if (!operator) return res.status(200).json({ success: false, message: "Please provide operator" });
+        if (!simDetails || !Array.isArray(simDetails) || simDetails.length === 0) {
+            return res.status(200).json({ success: false, message: "Please provide at least one SIM detail" });
+        }
 
 
         // create BarCode And Save in DataBase
@@ -1122,14 +1121,7 @@ exports.createBarCode = async (req, res) => {
             barCodeNo,
             is_Renew,
             deviceSerialNo,
-            simDetails: [
-                {
-                    simNo,
-                    iccidNo,
-                    validityDate,
-                    operator
-                }
-            ]
+            simDetails // 👈 store directly as array
         });
 
         await newBarCode.save();
@@ -1167,4 +1159,34 @@ exports.fetchBarCode = async (req, res) => {
             message: "Server Error in fetch Barcode"
         })
     }
-}
+};
+
+
+exports.fetchAllBarCode = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+
+        // Next Forward to show all barCode in Ui In ManuFactur BarCode Page
+        const allBarCods = await createBarCode.find({});
+
+        if (!allBarCods) {
+
+        }
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAllBarCode"
+        })
+    }
+};
