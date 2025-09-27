@@ -1100,9 +1100,9 @@ exports.createBarCode = async (req, res) => {
         if (!barCodeNo) return res.status(200).json({ success: false, message: "Please provide barCodeNo" });
         if (!is_Renew) return res.status(200).json({ success: false, message: "Please provide is_Renew" });
         if (!deviceSerialNo) return res.status(200).json({ success: false, message: "Please provide deviceSerialNo" });
-        if (!simDetails || !Array.isArray(simDetails) || simDetails.length === 0) {
-            return res.status(200).json({ success: false, message: "Please provide at least one SIM detail" });
-        }
+        // if (!simDetails || !Array.isArray(simDetails) || simDetails.length === 0) {
+        //     return res.status(200).json({ success: false, message: "Please provide at least one SIM detail" });
+        // }
 
 
         // create BarCode And Save in DataBase
