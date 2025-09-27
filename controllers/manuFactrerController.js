@@ -4,7 +4,7 @@ const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistribut
 const OemModelSchema = require("../models/CreateOemModel");
 const CreateOemModel = require("../models/CreateOemModel");
 const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
-const createBarCode = require("../models/CreateBrandModel");
+const createBarCode = require("../models/CreateBarCodeModel");
 const ManuFactur = require("../models/ManuFacturModel");
 
 
