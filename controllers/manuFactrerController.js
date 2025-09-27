@@ -5,6 +5,7 @@ const OemModelSchema = require("../models/CreateOemModel");
 const CreateOemModel = require("../models/CreateOemModel");
 const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
 const createBarCode = require("../models/CreateBrandModel");
+const ManuFactur = require("../models/ManuFacturModel");
 
 
 exports.createDistributor = async (req, res) => {
@@ -1018,6 +1019,56 @@ exports.editDelerOem = async (req, res) => {
         })
     }
 }
+
+
+
+exports.fetchAllAssignElementDataRelatedToCreateBarCode = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide UserId"
+            })
+        }
+
+
+        // Find in User on the Basis of userId And Find manufacturID in manufactur in collections
+        const manuF = await User.findById(userId);
+        if(!manuF){
+            return res.status(200).json({
+                sucess:false,
+                message:"Manufactur Not Found"
+            })
+        };
+
+
+        // find manuF.manufacturId in manufactur Collection and search in assign List Elements
+        const assignelementDetails = await ManuFactur.findById(manuF.manufacturId);
+
+        if(!assignelementDetails){
+            return res.status(200).json({
+                sucess:false,
+                message:"ManuFactur Not Found",
+            })
+        };
+
+
+        return res.status(200).json({
+            sucess:true,
+            assignelements:assignelementDetails.assign_element_list
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAllAssignElementDataRelatedToCreateBarCode",
+        })
+    }
+}
+
 
 
 
