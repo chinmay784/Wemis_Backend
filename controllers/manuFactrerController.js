@@ -1175,19 +1175,19 @@ exports.fetchAllBarCode = async (req, res) => {
 
 
         // Next Forward to show all barCode in Ui In ManuFactur BarCode Page
-        const allBarCods = await createBarCode.find({manufacturId:userId});
+        const allBarCods = await createBarCode.find({ manufacturId: userId });
 
         if (!allBarCods) {
             return res.status(200).json({
-                sucess:false,
-                message:"BarCodes Not Found",
+                sucess: false,
+                message: "BarCodes Not Found",
             })
         };
 
 
         return res.status(200).json({
-            sucess:true,
-            message:"Barcode Fetched SucessFully",
+            sucess: true,
+            message: "Barcode Fetched SucessFully",
             allBarCods,
         })
 
@@ -1199,3 +1199,27 @@ exports.fetchAllBarCode = async (req, res) => {
         })
     }
 };
+
+
+
+exports.AllocateBarCode = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide UserId"
+            })
+        };
+
+        
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in AllocateBarcode"
+        })
+    }
+}

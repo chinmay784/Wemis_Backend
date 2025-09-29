@@ -64,11 +64,15 @@ const createBarCode = new mongoose.Schema({
         validityDate: String,
         operator: String
     }],
-    status:{
-        type:String,
-        enum:["used","active","allocated"],
-        default:"active"
-    }
+    status: {
+        type: String,
+        enum: ["used", "active", "allocated"],
+        default: "active"
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 });
 
 
