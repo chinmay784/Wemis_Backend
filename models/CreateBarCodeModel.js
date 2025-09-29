@@ -63,7 +63,12 @@ const createBarCode = new mongoose.Schema({
         iccidNo: String,
         validityDate: String,
         operator: String
-    }]
+    }],
+    status:{
+        type:String,
+        enum:["used","active","allocated"],
+        default:"active"
+    }
 });
 
 
