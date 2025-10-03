@@ -26,6 +26,7 @@ const allocateBarCodeSchema = new mongoose.Schema({
             trim: true,
         }
     ],
+    status: { type: String, trim: true, default: 'used' },
     createdAt: { type: Date, default: Date.now },
     manufacturAllocateId: { type: mongoose.Schema.Types.ObjectId, ref: 'ManuFactur' },
     allocatedDistributorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Distributor' },

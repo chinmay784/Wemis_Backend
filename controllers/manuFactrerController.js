@@ -1545,3 +1545,7 @@ exports.AllocateBarCode = async (req, res) => {
         })
     }
 }
+
+
+
+exports.fetchAll
