@@ -35,7 +35,7 @@ exports.authMiddelWere = (req, res, next) => {
             });
         }
 
-        const token = authHeader.split(" ")[1]; // after Bearer
+        const token = authHeader
         const verified = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
 
         req.user = verified; // attach decoded user info
