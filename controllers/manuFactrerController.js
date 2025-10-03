@@ -1202,6 +1202,52 @@ exports.fetchAllBarCode = async (req, res) => {
 
 
 
+exports.fetchElementData = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const elementData = await User.findById(userId);
+        if(!elementData){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Data Found"
+            })
+        }
+
+        // also find in manuFactur collections 
+        const manuF = await ManuFactur.findById(elementData.manufacturId);
+        if(!manuF){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Data Found in ManuFactur Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Element Data Fetched SucessFully",
+            elementData:manuF.assign_element_list
+        });
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error while fetching element data"
+        })
+    }
+}
+
+
+
+
 exports.AllocateBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
