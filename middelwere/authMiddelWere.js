@@ -28,7 +28,7 @@ exports.authMiddelWere = (req, res, next) => {
     try {
         const authHeader = req.header("Authorization");
 
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        if (!authHeader ) {
             return res.status(401).json({
                 success: false,
                 message: "Access Denied: No or invalid token provided",
