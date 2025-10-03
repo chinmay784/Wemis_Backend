@@ -1373,80 +1373,66 @@ exports.findOemUnderManufactur = async (req, res) => {
 
 
 
+// exports.AllocateBarCode = async (req, res) => {
+//     // Assuming you have imported your Mongoose models:
+//     // const Distributor = require('../models/DistributorModel');
+//     // const OemModelSchema = require('../models/OemModel');
+//     // const createBarCode = require('../models/BarcodeModel'); // Only needed for deletion/update, not for fetching allocated barcodes
+
 exports.AllocateBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
 
         if (!userId) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide UserId"
-            })
-        };
+            return res.status(401).json({ // Use 401 for Unauthorized
+                success: false,
+                message: "Authentication failed: Please Provide UserId"
+            });
+        }
 
+        // Destructure all required fields, including the partner-specific ones and 'barcodes'
         const { country, state, checkBoxValue, distributor, oem, deler, element, elementType, modelNo, Voltege, partNo, type, barcodes } = req.body;
 
-        if (!country) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide Country"
-            })
-        }
-        if (!state) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide State"
-            })
-        }
-        if (!checkBoxValue) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide CheckBoxValue"
-            })
+        // --- 1. Basic Field Validation ---
+        // (Combined for brevity and efficiency)
+        const requiredFields = {
+            country: "Country", state: "State", checkBoxValue: "Partner Type (checkBoxValue)", deler: "Dealer",
+            element: "Element", elementType: "ElementType", modelNo: "ModelNo", Voltege: "Voltege",
+            partNo: "PartNo", type: "Type"
+        };
+
+        for (const [key, label] of Object.entries(requiredFields)) {
+            if (!req.body[key]) {
+                return res.status(200).json({ // Keeping 200 status as per original code for validation errors
+                    success: false,
+                    message: `Please Provide ${label}`
+                });
+            }
         }
 
-        if (!element) {
+        // --- 2. Barcode Validation (Moved outside the 'if' block) ---
+        if (!barcodes || !Array.isArray(barcodes) || barcodes.length === 0) {
             return res.status(200).json({
-                sucess: false,
-                message: "Please Provide Element"
-            })
-        }
-        if (!elementType) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide ElementType"
-            })
-        }
-        if (!modelNo) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide ModelNo"
-            })
-        }
-        if (!Voltege) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide Voltege"
-            })
-        }
-        if (!partNo) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide PartNo"
-            })
-        }
-        if (!type) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide Type"
-            })
+                success: false,
+                message: "Please provide barcodes (array of strings) for allocation."
+            });
         }
 
+        // Optional: Ensure all elements in the array are non-empty strings
+        if (barcodes.some(b => typeof b !== 'string' || b.trim() === '')) {
+            return res.status(200).json({
+                success: false,
+                message: "All provided barcodes must be non-empty strings."
+            });
+        }
+
+
+        // --- 3. Conditional Partner Logic and Allocation ---
         if (checkBoxValue === "Distributor") {
             if (!distributor) {
                 return res.status(200).json({
-                    sucess: false,
-                    message: "Please Provide Distributor"
+                    success: false,
+                    message: "Please Provide Distributor ID"
                 });
             }
 
@@ -1454,95 +1440,88 @@ exports.AllocateBarCode = async (req, res) => {
 
             if (!dist) {
                 return res.status(404).json({
-                    sucess: false,
+                    success: false,
                     message: "Distributor not found",
                 });
             }
 
-            // ✅ Example: barcodes coming from req.body
-            //const { barcodes } = req.body; // barcodes should be an array like ["12345","67890"]
+            console.log(`Allocating ${barcodes.length} Barcodes to Distributor:`, distributor);
 
-
-            // Barcodes are comming on the basis of an api call
-            // const elementName = await createBarCode.findOne({ elementName: element });
-
-            // const barcodes = elementName ? elementName.barCodeNo : [];
-
-            console.log("Barcodes to allocate:", barcodes);
-            // ✅ Validate barcodes
-
-
-
-            if (!barcodes || !Array.isArray(barcodes) || barcodes.length === 0) {
-                return res.status(200).json({
-                    sucess: false,
-                    message: "Please provide barcodes (array of strings)"
-                });
-            }
-
-            // ✅ Push barcodes into distributor.allocateBarcodes
+            // ✅ Correctly push barcodes from req.body
             dist.allocateBarcodes.push(...barcodes);
 
             await dist.save();
 
+            // Optional: Remove allocated barcodes from the 'available' list (e.g., in a Barcode model)
+            // await createBarCode.updateMany(
+            //     { barCodeNo: { $in: barcodes } },
+            //     { $set: { status: 'ALLOCATED', distributorId: distributor } } // Example
+            // );
+
             return res.status(200).json({
-                sucess: true,
-                message: "Barcodes allocated successfully",
+                success: true,
+                message: "Barcodes allocated successfully to Distributor",
                 data: dist
             });
-        } else {
+        }
+
+        // --- 4. OEM Allocation ---
+        else if (checkBoxValue === "OEM") {
             if (!oem) {
                 return res.status(200).json({
-                    sucess: false,
-                    message: "Please Provide oem"
+                    success: false,
+                    message: "Please Provide OEM ID"
                 });
             }
 
+            // Note: Assuming OemModelSchema is imported as OemModelSchema
             const OeM = await OemModelSchema.findById(oem);
 
             if (!OeM) {
                 return res.status(404).json({
-                    sucess: false,
-                    message: "OeM not found",
+                    success: false,
+                    message: "OEM not found",
                 });
             }
 
-            // Barcodes are comming on the basis of an api call
-            const elementName = await createBarCode.findOne({ elementName: element });
+            // 🛑 CRITICAL FIX: Use 'barcodes' from req.body, DO NOT fetch from another model
+            // Original incorrect logic removed: 
+            // const elementName = await createBarCode.findOne({ elementName: element });
+            // const barcodes = elementName ? elementName.barCodeNo : [];
 
-            const barcodes = elementName ? elementName.barCodeNo : [];
+            console.log(`Allocating ${barcodes.length} Barcodes to OEM:`, oem);
 
-            console.log("Barcodes to allocate:", barcodes);
-            // ✅ Validate barcodes
-
-
-
-            if (!barcodes || !Array.isArray(barcodes) || barcodes.length === 0) {
-                return res.status(200).json({
-                    sucess: false,
-                    message: "Please provide barcodes (array of strings)"
-                });
-            }
-
-            // ✅ Push barcodes into distributor.allocateBarcodes
+            // ✅ Correctly push barcodes from req.body
             OeM.allocateBarcodes.push(...barcodes);
 
             await OeM.save();
 
+            // Optional: Remove allocated barcodes from the 'available' list (e.g., in a Barcode model)
+            // await createBarCode.updateMany(
+            //     { barCodeNo: { $in: barcodes } },
+            //     { $set: { status: 'ALLOCATED', oemId: oem } } // Example
+            // );
+
             return res.status(200).json({
-                sucess: true,
-                message: "Barcodes allocated successfully",
+                success: true,
+                message: "Barcodes allocated successfully to OEM",
                 data: OeM
             });
 
+        } else {
+            // Handle case where checkBoxValue is neither "Distributor" nor "OEM"
+            return res.status(200).json({
+                success: false,
+                message: "Invalid Partner Type specified by CheckBoxValue. Must be 'Distributor' or 'OEM'."
+            });
         }
 
     } catch (error) {
-        console.log(error, error.message);
+        console.error("Error in AllocateBarCode:", error, error.message);
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "Server Error in AllocateBarcode"
-        })
+        });
     }
 }
 
