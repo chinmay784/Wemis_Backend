@@ -1555,6 +1555,8 @@ exports.assignElement = async (req, res) => {
                     device_Part_No: element.device_Part_No,
                     tac_No: element.tac_No,
                     cop_No: element.cop_No,
+                    voltage: element.voltage,
+                    copValidity: element.copValidity,
                 });
             }
         }

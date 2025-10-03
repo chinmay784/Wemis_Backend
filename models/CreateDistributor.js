@@ -69,7 +69,13 @@ const distributorSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
-    }
+    },
+    allocateBarcodes: [
+        {
+            type: String,
+            trim: true,
+        }
+    ]
 });
 
 

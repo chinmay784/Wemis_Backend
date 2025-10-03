@@ -48,7 +48,7 @@ const OemModelSchema = new mongoose.Schema({
         trim: true,
     },
     gst_no: {
-         type: String,
+        type: String,
         trim: true,
     },
     languages_Known: {
@@ -70,8 +70,14 @@ const OemModelSchema = new mongoose.Schema({
     address: {
         type: String,
         trim: true,
-    }
+    },
+    allocateBarcodes: [
+        {
+            type: String,
+            trim: true,
+        }
+    ]
 });
 
 
-module.exports = mongoose.model("OemModelSchema",OemModelSchema);
+module.exports = mongoose.model("OemModelSchema", OemModelSchema);

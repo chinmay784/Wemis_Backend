@@ -1206,14 +1206,165 @@ exports.AllocateBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide UserId"
+                sucess: false,
+                message: "Please Provide UserId"
             })
         };
 
-        
+        const { country, state, checkBoxValue, distributor, oem, deler, element, elementType, modelNo, Voltege, partNo, type } = req.body;
+
+        if (!country) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Country"
+            })
+        }
+        if (!state) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide State"
+            })
+        }
+        if (!checkBoxValue) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide CheckBoxValue"
+            })
+        }
+
+        if (!element) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Element"
+            })
+        }
+        if (!elementType) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide ElementType"
+            })
+        }
+        if (!modelNo) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide ModelNo"
+            })
+        }
+        if (!Voltege) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Voltege"
+            })
+        }
+        if (!partNo) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide PartNo"
+            })
+        }
+        if (!type) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Type"
+            })
+        }
+
+        if (checkBoxValue === "distributor") {
+            if (!distributor) {
+                return res.status(200).json({
+                    sucess: false,
+                    message: "Please Provide Distributor"
+                });
+            }
+
+            const dist = await Distributor.findById(distributor);
+
+            if (!dist) {
+                return res.status(404).json({
+                    sucess: false,
+                    message: "Distributor not found",
+                });
+            }
+
+            // ✅ Example: barcodes coming from req.body
+            //const { barcodes } = req.body; // barcodes should be an array like ["12345","67890"]
+
+
+            // Barcodes are comming on the basis of an api call
+            const elementName = await createBarCode.findOne({ elementName: element });
+
+            const barcodes = elementName ? elementName.barCodeNo : [];
+
+            console.log("Barcodes to allocate:", barcodes);
+            // ✅ Validate barcodes
+
+
+
+            if (!barcodes || !Array.isArray(barcodes) || barcodes.length === 0) {
+                return res.status(200).json({
+                    sucess: false,
+                    message: "Please provide barcodes (array of strings)"
+                });
+            }
+
+            // ✅ Push barcodes into distributor.allocateBarcodes
+            dist.allocateBarcodes.push(...barcodes);
+
+            await dist.save();
+
+            return res.status(200).json({
+                sucess: true,
+                message: "Barcodes allocated successfully",
+                data: dist
+            });
+        } else {
+            if (!oem) {
+                return res.status(200).json({
+                    sucess: false,
+                    message: "Please Provide oem"
+                });
+            }
+
+            const OeM = await OemModelSchema.findById(oem);
+
+            if (!OeM) {
+                return res.status(404).json({
+                    sucess: false,
+                    message: "OeM not found",
+                });
+            }
+
+            // Barcodes are comming on the basis of an api call
+            const elementName = await createBarCode.findOne({ elementName: element });
+
+            const barcodes = elementName ? elementName.barCodeNo : [];
+
+            console.log("Barcodes to allocate:", barcodes);
+            // ✅ Validate barcodes
+
+
+
+            if (!barcodes || !Array.isArray(barcodes) || barcodes.length === 0) {
+                return res.status(200).json({
+                    sucess: false,
+                    message: "Please provide barcodes (array of strings)"
+                });
+            }
+
+            // ✅ Push barcodes into distributor.allocateBarcodes
+            OeM.allocateBarcodes.push(...barcodes);
+
+            await OeM.save();
+
+            return res.status(200).json({
+                sucess: true,
+                message: "Barcodes allocated successfully",
+                data: OeM
+            });
+
+        }
 
     } catch (error) {
         console.log(error, error.message);

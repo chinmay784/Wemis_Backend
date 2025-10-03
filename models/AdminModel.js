@@ -54,6 +54,8 @@ const AdminSchema = new mongoose.Schema({
                 device_Part_No: { type: String, trim: true },
                 tac_No: { type: String, trim: true },
                 cop_No: [{ type: String, trim: true }],
+                voltage: { type: String, trim: true },
+                copValidity: { type: String, trim: true},
             }
         ],
         default: []
