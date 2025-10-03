@@ -1570,4 +1570,49 @@ exports.AllocateBarCode = async (req, res) => {
 
 
 
-exports.fetchAll
+exports.fetchAllAllocatedBarcode = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        // find AllocatedBarCodes
+        const userLogin = await User.findById(userId);
+
+        if(!userLogin){
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in User Collections"
+            })
+        }
+
+        // In Barcodes Collection is work Now
+        const allBarcodes = await AllocateBarCode.find({ manufacturAllocateId: userLogin.manufacturId });
+
+        if(!allBarcodes){
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in AllocateBarCode Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "All Allocated BarCodes Fetched SucessFully",
+            allBarcodes,
+        })
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAllBarcode"
+        })
+    }
+}

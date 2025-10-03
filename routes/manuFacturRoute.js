@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
-const { createDistributor ,fetchDistributor ,deleteDistributor, fetchDistributorById,editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems, deleteOems, getOemsById, editOemsById, createDelerUnderOems, fetchDelerUnderOems, deleteDelerUnderOems, getDelerUnderOemsById, editDelerOem, createBarCode, fetchAllAssignElementDataRelatedToCreateBarCode, fetchAllBarCode, AllocateBarCode, fetchElementData, fetchAllBarCodesNumber, findDistributorUnderManufactur, findOemUnderManufactur} = require('../controllers/manuFactrerController');
+const { createDistributor ,fetchDistributor ,deleteDistributor, fetchDistributorById,editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems, deleteOems, getOemsById, editOemsById, createDelerUnderOems, fetchDelerUnderOems, deleteDelerUnderOems, getDelerUnderOemsById, editDelerOem, createBarCode, fetchAllAssignElementDataRelatedToCreateBarCode, fetchAllBarCode, AllocateBarCode, fetchElementData, fetchAllBarCodesNumber, findDistributorUnderManufactur, findOemUnderManufactur, fetchAllAllocatedBarcode} = require('../controllers/manuFactrerController');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
 
@@ -29,7 +29,8 @@ router.post("/AllocateBarCode",authMiddelWere,AllocateBarCode);
 router.post("/fetchElementData",authMiddelWere,fetchElementData);
 router.post("/fetchAllBarCode",authMiddelWere,fetchAllBarCodesNumber);
 router.post("/findDistributorUnderManufactur",authMiddelWere,findDistributorUnderManufactur);
-router.post("/findOemUnderManufactur",authMiddelWere,findOemUnderManufactur)
+router.post("/findOemUnderManufactur",authMiddelWere,findOemUnderManufactur);
+router.post("/fetchAllAllocatedBarcode",authMiddelWere,fetchAllAllocatedBarcode)
 
 
 module.exports = router;
