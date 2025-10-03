@@ -1582,17 +1582,17 @@ exports.fetchAllAllocatedBarcode = async (req, res) =>{
         }
 
         // find AllocatedBarCodes
-        const userLogin = await User.findById(userId);
+        // const userLogin = await User.findById(userId);
 
-        if(!userLogin){
-            return res.status(200).json({
-                sucess: false,
-                message: "No Data Found in User Collections"
-            })
-        }
+        // if(!userLogin){
+        //     return res.status(200).json({
+        //         sucess: false,
+        //         message: "No Data Found in User Collections"
+        //     })
+        // }
 
         // In Barcodes Collection is work Now
-        const allBarcodes = await AllocateBarCode.find({ manufacturAllocateId: userLogin.manufacturId });
+        const allBarcodes = await AllocateBarCode.find({ manufacturAllocateId: userId });
 
         if(!allBarcodes){
             return res.status(200).json({
