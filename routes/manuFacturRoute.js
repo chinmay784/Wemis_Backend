@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
-const { createDistributor ,fetchDistributor ,deleteDistributor, fetchDistributorById,editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems, deleteOems, getOemsById, editOemsById, createDelerUnderOems, fetchDelerUnderOems, deleteDelerUnderOems, getDelerUnderOemsById, editDelerOem, createBarCode, fetchAllAssignElementDataRelatedToCreateBarCode, fetchAllBarCode, AllocateBarCode, fetchElementData} = require('../controllers/manuFactrerController');
+const { createDistributor ,fetchDistributor ,deleteDistributor, fetchDistributorById,editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems, deleteOems, getOemsById, editOemsById, createDelerUnderOems, fetchDelerUnderOems, deleteDelerUnderOems, getDelerUnderOemsById, editDelerOem, createBarCode, fetchAllAssignElementDataRelatedToCreateBarCode, fetchAllBarCode, AllocateBarCode, fetchElementData, fetchAllBarCodesNumber} = require('../controllers/manuFactrerController');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
 
@@ -26,7 +26,8 @@ router.post("/createBarCode",authMiddelWere,createBarCode);
 router.post("/fetchAllAssignElementDataRelatedToCreateBarCode",authMiddelWere,fetchAllAssignElementDataRelatedToCreateBarCode)
 router.post("/fetchAllBarCode",authMiddelWere,fetchAllBarCode);
 router.post("/AllocateBarCode",authMiddelWere,AllocateBarCode);
-router.post("/fetchElementData",authMiddelWere,fetchElementData)
+router.post("/fetchElementData",authMiddelWere,fetchElementData);
+router.post("/fetchAllBarCode",authMiddelWere,fetchAllBarCodesNumber)
 
 
 module.exports = router;
