@@ -6,6 +6,7 @@ const CreateOemModel = require("../models/CreateOemModel");
 const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
 const createBarCode = require("../models/CreateBarCodeModel");
 const ManuFactur = require("../models/ManuFacturModel");
+const AllocateBarCode = require("../models/AllocateBarCode")
 
 
 exports.createDistributor = async (req, res) => {
@@ -1452,6 +1453,29 @@ exports.AllocateBarCode = async (req, res) => {
 
             await dist.save();
 
+            // also create AllocateBarcode
+            const allocated = await AllocateBarCode.create({
+                country,
+                state,
+                checkBoxValue,
+                // distributor,
+                // oem,
+                // deler,
+                status: "used",
+                element,
+                elementType,
+                modelNo,
+                Voltege,
+                partNo,
+                type,
+                barcodes,
+                manufacturAllocateId: userId,
+                allocatedDistributorId: distributor,
+                allocatedOemId: null,
+                // allocatedDelerId: deler
+            })
+
+
             // Optional: Remove allocated barcodes from the 'available' list (e.g., in a Barcode model)
             // await createBarCode.updateMany(
             //     { barCodeNo: { $in: barcodes } },
@@ -1495,6 +1519,25 @@ exports.AllocateBarCode = async (req, res) => {
             OeM.allocateBarcodes.push(...barcodes);
 
             await OeM.save();
+
+
+            const allocated = await AllocateBarCode.create({
+                country,
+                state,
+                checkBoxValue,
+                status: "used",
+                element,
+                elementType,
+                modelNo,
+                Voltege,
+                partNo,
+                type,
+                barcodes,
+                manufacturAllocateId: userId,
+                allocatedDistributorId: null,
+                allocatedOemId: oem,
+                // allocatedDelerId: deler,
+            })
 
             // Optional: Remove allocated barcodes from the 'available' list (e.g., in a Barcode model)
             // await createBarCode.updateMany(
