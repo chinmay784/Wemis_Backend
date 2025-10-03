@@ -1271,7 +1271,7 @@ exports.AllocateBarCode = async (req, res) => {
             })
         }
 
-        if (checkBoxValue === "distributor") {
+        if (checkBoxValue === "Distributor") {
             if (!distributor) {
                 return res.status(200).json({
                     sucess: false,
