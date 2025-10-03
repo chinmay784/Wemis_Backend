@@ -1297,6 +1297,82 @@ exports.fetchAllBarCodesNumber = async (req, res) => {
 
 
 
+
+exports.findDistributorUnderManufactur = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        // find in Distributor Collections
+        const dist = await Distributor.find({ manufacturId: userId });
+        if (!dist) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in Distributor Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Distributor Fetched SucessFully",
+            dist,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in findDistributorUnderManufactur"
+        })
+    }
+}
+
+
+
+exports.findOemUnderManufactur = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        // find in OEM Collections
+        const oem = await OemModelSchema.find({ manufacturId: userId });
+        if (!oem) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in oem Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "oem Fetched SucessFully",
+            oem,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in findOemUnderManufactur"
+        })
+    }
+}
+
+
+
+
 exports.AllocateBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1308,7 +1384,7 @@ exports.AllocateBarCode = async (req, res) => {
             })
         };
 
-        const { country, state, checkBoxValue, distributor, oem, deler, element, elementType, modelNo, Voltege, partNo, type } = req.body;
+        const { country, state, checkBoxValue, distributor, oem, deler, element, elementType, modelNo, Voltege, partNo, type, barcodes } = req.body;
 
         if (!country) {
             return res.status(200).json({
@@ -1388,9 +1464,9 @@ exports.AllocateBarCode = async (req, res) => {
 
 
             // Barcodes are comming on the basis of an api call
-            const elementName = await createBarCode.findOne({ elementName: element });
+            // const elementName = await createBarCode.findOne({ elementName: element });
 
-            const barcodes = elementName ? elementName.barCodeNo : [];
+            // const barcodes = elementName ? elementName.barCodeNo : [];
 
             console.log("Barcodes to allocate:", barcodes);
             // ✅ Validate barcodes

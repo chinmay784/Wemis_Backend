@@ -1,3 +1,8 @@
 ::1 - - [03/Oct/2025:09:40:57 +0000] "POST /manufactur/fetchAllBarCode HTTP/1.1" 401 73 "-" "PostmanRuntime/7.48.0"
 ::1 - - [03/Oct/2025:09:41:26 +0000] "POST /manufactur/fetchAllBarCode HTTP/1.1" 401 73 "-" "PostmanRuntime/7.48.0"
 ::1 - - [03/Oct/2025:09:50:37 +0000] "POST /manufactur/fetchAllBarCode HTTP/1.1" 401 73 "-" "PostmanRuntime/7.48.0"
+::1 - - [03/Oct/2025:10:38:14 +0000] "POST /manufactur/findDistributorUnderManufactur HTTP/1.1" 200 69 "-" "PostmanRuntime/7.48.0"
+::1 - - [03/Oct/2025:10:40:48 +0000] "POST /manufactur/findDistributorUnderManufactur HTTP/1.1" 200 69 "-" "PostmanRuntime/7.48.0"
+::1 - - [03/Oct/2025:10:42:37 +0000] "POST /manufactur/findDistributorUnderManufactur HTTP/1.1" 200 69 "-" "PostmanRuntime/7.48.0"
+::1 - - [03/Oct/2025:10:43:48 +0000] "POST /manufactur/findDistributorUnderManufactur HTTP/1.1" 200 639 "-" "PostmanRuntime/7.48.0"
+::1 - - [03/Oct/2025:10:51:46 +0000] "POST /manufactur/findDistributorUnderManufactur HTTP/1.1" 200 639 "-" "PostmanRuntime/7.48.0"
