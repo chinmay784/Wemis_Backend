@@ -1249,48 +1249,51 @@ exports.fetchElementData = async (req, res) => {
 
 exports.fetchAllBarCodesNumber = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.userId; // make sure req.user exists
 
         if (!userId) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide UserId"
-            })
+            return res.status(401).json({ // 🔥 Use 401 instead of 200
+                success: false,
+                message: "Unauthorized: Please Provide UserId"
+            });
         }
 
         const elementData = await User.findById(userId);
 
         if (!elementData) {
-            return res.status(200).json({
-                sucess: false,
-                message: "No Data Found"
-            })
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
         }
 
-        // also find in manuFactur collections
+        // find all barcodes for that manufacturId
         const manuF = await createBarCode.find({ manufacturId: elementData.manufacturId });
-        if (!manuF) {
-            return res.status(200).json({
-                sucess: false,
+
+        if (!manuF || manuF.length === 0) {
+            return res.status(404).json({
+                success: false,
                 message: "No Data Found in ManuFactur Collections"
-            })
+            });
         }
+
+        // collect all barcodes from all docs
+        const allBarcodes = manuF.flatMap(doc => doc.barCodeNo);
 
         return res.status(200).json({
-            sucess: true,
-            message: "Element Data Fetched SucessFully",
-            elementData: manuF.barCodeNo,
+            success: true,
+            message: "Element Data Fetched Successfully",
+            elementData: allBarcodes,
         });
-
 
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "Server Error while fetching element data"
-        })
+        });
     }
-}
+};
 
 
 
