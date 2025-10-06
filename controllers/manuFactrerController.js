@@ -1616,3 +1616,51 @@ exports.fetchAllAllocatedBarcode = async (req, res) =>{
         })
     }
 }
+
+
+
+//in this code will give copilot (not write by me or)
+exports.rollBackAllocatedBarCode = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+        
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const { allocateId } = req.body;
+        if(!allocateId){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide allocateId"
+            })
+        }
+
+        // find in AllocateBarCode Collections
+        const findAllocate = await AllocateBarCode.findById(allocateId);
+
+        if(!findAllocate){
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in AllocateBarCode Collections"
+            })
+        }
+        await AllocateBarCode.findByIdAndDelete(allocateId);
+        return res.status(200).json({
+            sucess: true,
+            message: "Deleted SucessFully"
+        })
+
+
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in rollBackAllocatedBarCode"
+        });
+    }
+}
