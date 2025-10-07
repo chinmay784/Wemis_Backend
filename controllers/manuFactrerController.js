@@ -1377,7 +1377,7 @@ exports.findDelerUnderDistributor = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId) {
+        if (!userId) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide UserId"
@@ -1386,7 +1386,7 @@ exports.findDelerUnderDistributor = async (req, res) => {
 
         const { distributorIde } = req.body;
 
-        if(!distributorIde) {
+        if (!distributorIde) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide distributorId"
@@ -1394,9 +1394,9 @@ exports.findDelerUnderDistributor = async (req, res) => {
         }
 
         // find in CreateDelerUnderDistributor Collections
-         const deler = await CreateDelerUnderDistributor.find({ manufacturId: userId, distributorId: distributorIde });
+        const deler = await CreateDelerUnderDistributor.find({ manufacturId: userId, distributorId: distributorIde });
 
-        if(!deler) {
+        if (!deler) {
             return res.status(200).json({
                 sucess: false,
                 message: "No deler Found in CreateDelerUnderDistributor Collections"
@@ -1426,7 +1426,7 @@ exports.findDelerUnderOem = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId) {
+        if (!userId) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide UserId"
@@ -1435,7 +1435,7 @@ exports.findDelerUnderOem = async (req, res) => {
 
         const { oemId } = req.body;
 
-        if(!oemId) {
+        if (!oemId) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide oemId"
@@ -1446,7 +1446,7 @@ exports.findDelerUnderOem = async (req, res) => {
         // find in CreateDelerUnderOems Collections
         const oem = await CreateDelerUnderOems.find({ manufacturId: userId, oemsId: oemId });
 
-        if(!oem) {
+        if (!oem) {
             return res.status(200).json({
                 sucess: false,
                 message: "No Oem Found in CreateDelerUnderOems Collections"
@@ -1457,7 +1457,7 @@ exports.findDelerUnderOem = async (req, res) => {
             sucess: true,
             message: "Deler Fetched SucessFully",
             oem,
-        }) 
+        })
 
     } catch (error) {
         console.log(error, error.message)
@@ -1765,6 +1765,7 @@ exports.rollBackAllocatedBarCode = async (req, res) => {
 }
 
 
+// This is Code is Not Be Complited right Now
 exports.fetchAllRealloCatedBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
