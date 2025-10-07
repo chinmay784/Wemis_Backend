@@ -1755,7 +1755,7 @@ exports.rollBackAllocatedBarCode = async (req, res) => {
             allocatedDistributorId: distributor,
             state,
             element,
-            type: barCode_Type
+            // type: barCode_Type
         });
 
         if (!allocatedRecords || allocatedRecords.length === 0) {
