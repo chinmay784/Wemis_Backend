@@ -6,7 +6,8 @@ const CreateOemModel = require("../models/CreateOemModel");
 const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
 const createBarCode = require("../models/CreateBarCodeModel");
 const ManuFactur = require("../models/ManuFacturModel");
-const AllocateBarCode = require("../models/AllocateBarCode")
+const AllocateBarCode = require("../models/AllocateBarCode"); 
+const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode")
 
 
 exports.createDistributor = async (req, res) => {
@@ -1725,44 +1726,76 @@ exports.rollBackAllocatedBarCode = async (req, res) => {
 
         if (!userId) {
             return res.status(200).json({
-                sucess: false,
+                success: false,
                 message: "Please Provide UserId"
-            })
+            });
         }
 
-        const { allocateId } = req.body;
-        if (!allocateId) {
+        const { state, distributor, element, barCode_Type } = req.body;
+
+        // 🔸 Validation
+        if (!state || !distributor || !element || !barCode_Type) {
             return res.status(200).json({
-                sucess: false,
-                message: "Please Provide allocateId"
-            })
+                success: false,
+                message: "Please Provide State, Distributor, Element and barCode_Type"
+            });
         }
 
-        // find in AllocateBarCode Collections
-        const findAllocate = await AllocateBarCode.findById(allocateId);
-
-        if (!findAllocate) {
+        // 🔸 Find Distributor
+        const dist = await Distributor.findById(distributor);
+        if (!dist) {
             return res.status(200).json({
-                sucess: false,
-                message: "No Data Found in AllocateBarCode Collections"
-            })
+                success: false,
+                message: "No Data Found in Distributor Collection"
+            });
         }
-        await AllocateBarCode.findByIdAndDelete(allocateId);
+
+        // 🔸 Find allocated barcodes in AllocateBarCode collection
+        const allocatedRecords = await AllocateBarCode.find({
+            allocatedDistributorId: distributor,
+            state,
+            element,
+            type: barCode_Type
+        });
+
+        if (!allocatedRecords || allocatedRecords.length === 0) {
+            return res.status(200).json({
+                success: false,
+                message: "No allocated barcodes found for this distributor and element"
+            });
+        }
+
+        // 🔸 Collect all barcodes to rollback
+        const barcodesToRemove = allocatedRecords.flatMap(rec => rec.barcodes);
+
+        // 🔸 Remove barcodes from distributor.allocateBarcodes
+        dist.allocateBarcodes = dist.allocateBarcodes.filter(b => !barcodesToRemove.includes(b));
+        await dist.save();
+
+        // 🔸 Delete those allocations from AllocateBarCode collection
+        await AllocateBarCode.deleteMany({
+            allocatedDistributorId: distributor,
+            state,
+            element,
+            type: barCode_Type
+        });
+
         return res.status(200).json({
-            sucess: true,
-            message: "Deleted SucessFully"
-        })
-
-
+            success: true,
+            message: "Rolled back all allocated barcodes for this distributor successfully",
+            removedBarcodes: barcodesToRemove,
+            updatedDistributor: dist
+        });
 
     } catch (error) {
-        console.log(error, error.message);
+        console.error("Error in rollBackAllocatedBarCode:", error);
         return res.status(500).json({
-            sucess: false,
+            success: false,
             message: "Server Error in rollBackAllocatedBarCode"
         });
     }
-}
+};
+
 
 
 // This is Code is Not Be Complited right Now
