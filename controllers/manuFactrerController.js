@@ -1373,6 +1373,105 @@ exports.findOemUnderManufactur = async (req, res) => {
 
 
 
+exports.findDelerUnderDistributor = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if(!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const { distributorIde } = req.body;
+
+        if(!distributorIde) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide distributorId"
+            })
+        }
+
+        // find in CreateDelerUnderDistributor Collections
+         const deler = await CreateDelerUnderDistributor.find({ manufacturId: userId, distributorId: distributorIde });
+
+        if(!deler) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No deler Found in CreateDelerUnderDistributor Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Deler Fetched SucessFully",
+            deler,
+        })
+
+
+    } catch (error) {
+        console.log(error, error.message)
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in findDelerUnderDistributor"
+        })
+    }
+}
+
+
+
+
+exports.findDelerUnderOem = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if(!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const { oemId } = req.body;
+
+        if(!oemId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide oemId"
+            })
+        }
+
+
+        // find in CreateDelerUnderOems Collections
+        const oem = await CreateDelerUnderOems.find({ manufacturId: userId, oemsId: oemId });
+
+        if(!oem) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Oem Found in CreateDelerUnderOems Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Deler Fetched SucessFully",
+            oem,
+        }) 
+
+    } catch (error) {
+        console.log(error, error.message)
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in findDelerUnderOem"
+        })
+    }
+}
+
+
+
+
+
 
 // exports.AllocateBarCode = async (req, res) => {
 //     // Assuming you have imported your Mongoose models:
@@ -1468,7 +1567,7 @@ exports.AllocateBarCode = async (req, res) => {
                 Voltege,
                 partNo,
                 type,
-                allocatedBarCode:barcodes,
+                allocatedBarCode: barcodes,
                 manufacturAllocateId: userId,
                 allocatedDistributorId: distributor,
                 allocatedOemId: null,
@@ -1532,7 +1631,7 @@ exports.AllocateBarCode = async (req, res) => {
                 Voltege,
                 partNo,
                 type,
-                allocatedBarCode:barcodes,
+                allocatedBarCode: barcodes,
                 manufacturAllocateId: userId,
                 allocatedDistributorId: null,
                 allocatedOemId: oem,
@@ -1570,7 +1669,7 @@ exports.AllocateBarCode = async (req, res) => {
 
 
 
-exports.fetchAllAllocatedBarcode = async (req, res) =>{
+exports.fetchAllAllocatedBarcode = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -1594,7 +1693,7 @@ exports.fetchAllAllocatedBarcode = async (req, res) =>{
         // In Barcodes Collection is work Now
         const allBarcodes = await AllocateBarCode.find({ manufacturAllocateId: userId });
 
-        if(!allBarcodes){
+        if (!allBarcodes) {
             return res.status(200).json({
                 sucess: false,
                 message: "No Data Found in AllocateBarCode Collections"
@@ -1620,10 +1719,10 @@ exports.fetchAllAllocatedBarcode = async (req, res) =>{
 
 
 //in this code will give copilot (not write by me or)
-exports.rollBackAllocatedBarCode = async (req, res) =>{
+exports.rollBackAllocatedBarCode = async (req, res) => {
     try {
         const userId = req.user.userId;
-        
+
         if (!userId) {
             return res.status(200).json({
                 sucess: false,
@@ -1632,7 +1731,7 @@ exports.rollBackAllocatedBarCode = async (req, res) =>{
         }
 
         const { allocateId } = req.body;
-        if(!allocateId){
+        if (!allocateId) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide allocateId"
@@ -1642,7 +1741,7 @@ exports.rollBackAllocatedBarCode = async (req, res) =>{
         // find in AllocateBarCode Collections
         const findAllocate = await AllocateBarCode.findById(allocateId);
 
-        if(!findAllocate){
+        if (!findAllocate) {
             return res.status(200).json({
                 sucess: false,
                 message: "No Data Found in AllocateBarCode Collections"
@@ -1657,10 +1756,49 @@ exports.rollBackAllocatedBarCode = async (req, res) =>{
 
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
             sucess: false,
             message: "Server Error in rollBackAllocatedBarCode"
         });
+    }
+}
+
+
+exports.fetchAllRealloCatedBarCode = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please UserId"
+            })
+        }
+
+        let ReallocateBarCode;
+
+        const reallocated = await ReallocateBarCode.find({ manufacturReallocateId: userId });
+
+        if (!reallocated) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in ReallocateBarCode Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Reallocated BarCode Fetched SucessFully",
+            reallocated,
+        });
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchRealloCatedBarCode"
+        })
     }
 }
