@@ -1571,7 +1571,7 @@ exports.AllocateBarCode = async (req, res) => {
                 manufacturAllocateId: userId,
                 allocatedDistributorId: distributor,
                 allocatedOemId: null,
-                // allocatedDelerId: deler
+                allocatedDelerId: deler
             })
 
 
@@ -1635,7 +1635,7 @@ exports.AllocateBarCode = async (req, res) => {
                 manufacturAllocateId: userId,
                 allocatedDistributorId: null,
                 allocatedOemId: oem,
-                // allocatedDelerId: deler,
+                allocatedDelerId: deler,
             })
 
             // Optional: Remove allocated barcodes from the 'available' list (e.g., in a Barcode model)
