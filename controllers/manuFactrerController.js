@@ -7,7 +7,8 @@ const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
 const createBarCode = require("../models/CreateBarCodeModel");
 const ManuFactur = require("../models/ManuFacturModel");
 const AllocateBarCode = require("../models/AllocateBarCode"); 
-const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode")
+const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
+const createSubscription = require("../models/CreateNewSubscriptions");
 
 
 exports.createDistributor = async (req, res) => {
@@ -1833,6 +1834,98 @@ exports.fetchAllRealloCatedBarCode = async (req, res) => {
         return res.status(500).json({
             sucess: false,
             message: "Server Error in fetchRealloCatedBarCode"
+        })
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// Here we started new Subscriptions Plans API
+exports.createNewSubscription = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please UserId"
+            })
+        }
+
+        const {packageType , packageName , billingCycle , price , description , renewal} = req.body;
+
+        // createSubscription
+
+        if(!packageType){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide PackageType"
+            })
+        }
+        if(!packageName){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide PackageName"
+            })
+        }
+
+        if(!billingCycle){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide BillingCycle"
+            })
+        }
+        if(!price){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Price"
+            })
+        }
+        if(!description){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Description"
+            })
+        }
+        if(!renewal){
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide Renewal"
+            })
+        }
+
+        const newSubscription = new createSubscription({
+            manufacturId: userId,
+            packageType,
+            packageName,
+            billingCycle,
+            price,
+            description,
+            renewal,
+        });
+
+        await newSubscription.save();
+
+        return res.status(200).json({
+            sucess: true,
+            message: "New Subscription Created SucessFully",
+        })
+        
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in createNewSubscription"
         })
     }
 }
