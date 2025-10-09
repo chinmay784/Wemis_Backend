@@ -13,8 +13,8 @@ const createSubscription = new mongoose.Schema({
         trim: true,
     },
     billingCycle: {
-        type: Number,
-        default: 0
+        type: String,
+        trim: true,
     },
     packageName: {
         type: String,
