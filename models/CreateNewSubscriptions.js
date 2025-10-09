@@ -12,6 +12,10 @@ const createSubscription = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    billingCycle: {
+        type: Number,
+        default: 0
+    },
     packageName: {
         type: String,
         trim: true,
@@ -22,11 +26,11 @@ const createSubscription = new mongoose.Schema({
     },
     description: {
         type: String,
-        trim: true, 
+        trim: true,
     },
-    renewal:{
-        type:Boolean,
-        default:false
+    renewal: {
+        type: Boolean,
+        default: false
     },
     createdAt: {
         type: Date,
