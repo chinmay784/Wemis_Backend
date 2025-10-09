@@ -1945,7 +1945,21 @@ exports.fetchAllSubscriptionPlans = async (req, res) =>{
         }
 
         // Fetch AllSubscriptionPlans on The Basis of ManufacturerId
+        const allSubscription = await createSubscription.find({manuFacturId: userId});
 
+        if(!allSubscription){
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in createSubscription Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            message: "All Subscription Fetched SucessFully",
+            allSubscription,
+        })
+        
 
     } catch (error) {
         console.log(error,error.message);
