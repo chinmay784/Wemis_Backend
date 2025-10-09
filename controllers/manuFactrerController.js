@@ -1904,7 +1904,7 @@ exports.createNewSubscription = async (req, res) =>{
         }
 
         const newSubscription = new createSubscription({
-            manufacturId: userId,
+            manuFacturId: userId,
             packageType,
             packageName,
             billingCycle,
@@ -1926,6 +1926,32 @@ exports.createNewSubscription = async (req, res) =>{
         return res.status(500).json({
             sucess: false,
             message: "Server Error in createNewSubscription"
+        })
+    }
+}
+
+
+
+
+exports.fetchAllSubscriptionPlans = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please UserId"
+            })
+        }
+
+        // Fetch AllSubscriptionPlans on The Basis of ManufacturerId
+
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAllSubscriptionPlans"
         })
     }
 }
