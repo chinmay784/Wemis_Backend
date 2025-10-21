@@ -2021,3 +2021,62 @@ exports.findSubScriptionById = async (req, res) =>{
         })
     }
 }
+
+
+
+exports.editSubscriptionById = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide UserId"
+            })
+        }
+
+
+        const {subscriptionId , packageType , packageName , billingCycle , price , description , renewal} = req.body;
+
+        if(!subscriptionId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide subscriptionId"
+            })
+        }
+
+        const findByIdInSubscription = await createSubscription.findById(subscriptionId);
+
+        if(!findByIdInSubscription){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Data Found in createSubscription Collections"
+            })
+        }
+
+
+        // Edit Here
+        if(findByIdInSubscription.packageType) findByIdInSubscription.packageType = packageType;
+        if(findByIdInSubscription.packageName) findByIdInSubscription.packageName = packageName;
+        if(findByIdInSubscription.billingCycle) findByIdInSubscription.billingCycle = billingCycle;
+        if(findByIdInSubscription.price) findByIdInSubscription.price = price;
+        if(findByIdInSubscription.description) findByIdInSubscription.description = description;
+        if(findByIdInSubscription.renewal) findByIdInSubscription.renewal = renewal;
+
+        await findByIdInSubscription.save();
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Subscription Edited SucessFully",
+            findByIdInSubscription,
+        })
+
+
+    } catch (error) {
+        console.log(error,error.message)
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in editSubscriptionById"
+        })
+    }
+}
