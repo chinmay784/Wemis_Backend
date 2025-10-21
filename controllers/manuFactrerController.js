@@ -2080,3 +2080,18 @@ exports.editSubscriptionById = async (req, res) =>{
         })
     }
 }
+
+
+
+
+exports.manuFacture_Map_A_device = async (req,res) =>{
+    try {
+        
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in Map_A_Device"
+        })
+    }
+} 
