@@ -29,8 +29,8 @@ const createSubscription = new mongoose.Schema({
         trim: true,
     },
     renewal: {
-        type: Boolean,
-        default: false
+        type: String,
+        trim:true,
     },
     createdAt: {
         type: Date,
