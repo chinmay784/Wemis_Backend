@@ -1968,4 +1968,56 @@ exports.fetchAllSubscriptionPlans = async (req, res) =>{
             message: "Server Error in fetchAllSubscriptionPlans"
         })
     }
+};
+
+
+
+
+
+exports.findSubScriptionById = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                mess
+            })
+        }
+
+
+        const {subscriptionId} = req.body;
+
+        if(!subscriptionId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide subscriptionId"
+            })
+        }
+
+
+        const findSubscription = await createSubscription.findById(subscriptionId);
+
+        if(!findSubscription){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Data Found in createSubscription Collections"
+            })
+        }
+
+        return res.status(200).json({
+            sucess:true,
+            message:"Subscription Fetched SucessFully",
+            findSubscription,
+        })
+        
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in findSubScriptionById"
+        })
+    }
 }
