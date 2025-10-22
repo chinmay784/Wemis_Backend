@@ -2299,14 +2299,14 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             DriverLicenseNo,
             MappedDate,
             NoOfPanicButtons,
-            VechileIDocument:vc,
-            RcDocument:Rc,
-            DeviceDocument:Dc,
-            PanCardDocument:Pc,
-            AdharCardDocument:Ac,
-            InvoiceDocument:Ic,
-            SignatureDocument:Sc,
-            PanicButtonWithSticker:Ps
+            VechileIDocument: vc,
+            RcDocument: Rc,
+            DeviceDocument: Dc,
+            PanCardDocument: Pc,
+            AdharCardDocument: Ac,
+            InvoiceDocument: Ic,
+            SignatureDocument: Sc,
+            PanicButtonWithSticker: Ps
         })
 
 
@@ -2326,3 +2326,100 @@ exports.manuFacturMAPaDevice = async (req, res) => {
     }
 }
 
+
+
+exports.fetchDistributorOnBasisOfState = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const { state } = req.body;
+
+        if (!state) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide state"
+            })
+        }
+
+
+        // find in in distributor collection on the basis of state
+        const distributors = await Distributor.find({ state: state });
+
+        if (!distributors) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in Distributors",
+            })
+        }
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "fetch all distributors on Basis of state",
+            distributor: distributors.contact_Person_Name,
+        })
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchDistributorOnBasisOfState"
+        })
+    }
+}
+
+exports.fetchdelerOnBasisOfDistributor = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const { distributorName } = req.body;
+
+        if (!distributorName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide distributorName"
+            })
+        };
+
+
+        // find all deler under distributor
+        const delers = await CreateDelerUnderDistributor.find({ select_Distributor_Name: distributorName });
+
+        if (!delers) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found in delers",
+            })
+        }
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "fetch all delers on Basis of distributor",
+            deler: delers.name,
+        })
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchdelerOnBasisOfDistributor"
+        })
+    }
+};
