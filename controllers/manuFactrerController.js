@@ -6,9 +6,10 @@ const CreateOemModel = require("../models/CreateOemModel");
 const CreateDelerUnderOems = require("../models/CreateDelerUnderOems");
 const createBarCode = require("../models/CreateBarCodeModel");
 const ManuFactur = require("../models/ManuFacturModel");
-const AllocateBarCode = require("../models/AllocateBarCode"); 
+const AllocateBarCode = require("../models/AllocateBarCode");
 const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
 const createSubscription = require("../models/CreateNewSubscriptions");
+const MapDevice = require("../models/mapADeviceModel");
 
 
 exports.createDistributor = async (req, res) => {
@@ -1850,7 +1851,7 @@ exports.fetchAllRealloCatedBarCode = async (req, res) => {
 
 
 // Here we started new Subscriptions Plans API
-exports.createNewSubscription = async (req, res) =>{
+exports.createNewSubscription = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -1861,42 +1862,42 @@ exports.createNewSubscription = async (req, res) =>{
             })
         }
 
-        const {packageType , packageName , billingCycle , price , description , renewal} = req.body;
+        const { packageType, packageName, billingCycle, price, description, renewal } = req.body;
 
         // createSubscription
 
-        if(!packageType){
+        if (!packageType) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide PackageType"
             })
         }
-        if(!packageName){
+        if (!packageName) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide PackageName"
             })
         }
 
-        if(!billingCycle){
+        if (!billingCycle) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide BillingCycle"
             })
         }
-        if(!price){
+        if (!price) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide Price"
             })
         }
-        if(!description){
+        if (!description) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide Description"
             })
         }
-        if(!renewal){
+        if (!renewal) {
             return res.status(200).json({
                 sucess: false,
                 message: "Please Provide Renewal"
@@ -1919,10 +1920,10 @@ exports.createNewSubscription = async (req, res) =>{
             sucess: true,
             message: "New Subscription Created SucessFully",
         })
-        
+
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
             sucess: false,
             message: "Server Error in createNewSubscription"
@@ -1933,7 +1934,7 @@ exports.createNewSubscription = async (req, res) =>{
 
 
 
-exports.fetchAllSubscriptionPlans = async (req, res) =>{
+exports.fetchAllSubscriptionPlans = async (req, res) => {
     try {
         const userId = req.user.userId;
 
@@ -1945,9 +1946,9 @@ exports.fetchAllSubscriptionPlans = async (req, res) =>{
         }
 
         // Fetch AllSubscriptionPlans on The Basis of ManufacturerId
-        const allSubscription = await createSubscription.find({manuFacturId: userId});
+        const allSubscription = await createSubscription.find({ manuFacturId: userId });
 
-        if(!allSubscription){
+        if (!allSubscription) {
             return res.status(200).json({
                 sucess: false,
                 message: "No Data Found in createSubscription Collections"
@@ -1959,10 +1960,10 @@ exports.fetchAllSubscriptionPlans = async (req, res) =>{
             message: "All Subscription Fetched SucessFully",
             allSubscription,
         })
-        
+
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
             sucess: false,
             message: "Server Error in fetchAllSubscriptionPlans"
@@ -1974,124 +1975,236 @@ exports.fetchAllSubscriptionPlans = async (req, res) =>{
 
 
 
-exports.findSubScriptionById = async (req, res) =>{
+exports.findSubScriptionById = async (req, res) => {
     try {
         const userId = req.user.userId;
 
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
+                sucess: false,
                 mess
             })
         }
 
 
-        const {subscriptionId} = req.body;
+        const { subscriptionId } = req.body;
 
-        if(!subscriptionId){
+        if (!subscriptionId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide subscriptionId"
+                sucess: false,
+                message: "Please Provide subscriptionId"
             })
         }
 
 
         const findSubscription = await createSubscription.findById(subscriptionId);
 
-        if(!findSubscription){
+        if (!findSubscription) {
             return res.status(200).json({
-                sucess:false,
-                message:"No Data Found in createSubscription Collections"
+                sucess: false,
+                message: "No Data Found in createSubscription Collections"
             })
         }
 
         return res.status(200).json({
-            sucess:true,
-            message:"Subscription Fetched SucessFully",
+            sucess: true,
+            message: "Subscription Fetched SucessFully",
             findSubscription,
         })
-        
+
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in findSubScriptionById"
+            sucess: false,
+            message: "Server Error in findSubScriptionById"
         })
     }
 }
 
 
 
-exports.editSubscriptionById = async (req, res) =>{
+exports.editSubscriptionById = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide UserId"
+                sucess: false,
+                message: "Please Provide UserId"
             })
         }
 
 
-        const {subscriptionId , packageType , packageName , billingCycle , price , description , renewal} = req.body;
+        const { subscriptionId, packageType, packageName, billingCycle, price, description, renewal } = req.body;
 
-        if(!subscriptionId){
+        if (!subscriptionId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide subscriptionId"
+                sucess: false,
+                message: "Please Provide subscriptionId"
             })
         }
 
         const findByIdInSubscription = await createSubscription.findById(subscriptionId);
 
-        if(!findByIdInSubscription){
+        if (!findByIdInSubscription) {
             return res.status(200).json({
-                sucess:false,
-                message:"No Data Found in createSubscription Collections"
+                sucess: false,
+                message: "No Data Found in createSubscription Collections"
             })
         }
 
 
         // Edit Here
-        if(findByIdInSubscription.packageType) findByIdInSubscription.packageType = packageType;
-        if(findByIdInSubscription.packageName) findByIdInSubscription.packageName = packageName;
-        if(findByIdInSubscription.billingCycle) findByIdInSubscription.billingCycle = billingCycle;
-        if(findByIdInSubscription.price) findByIdInSubscription.price = price;
-        if(findByIdInSubscription.description) findByIdInSubscription.description = description;
-        if(findByIdInSubscription.renewal) findByIdInSubscription.renewal = renewal;
+        if (findByIdInSubscription.packageType) findByIdInSubscription.packageType = packageType;
+        if (findByIdInSubscription.packageName) findByIdInSubscription.packageName = packageName;
+        if (findByIdInSubscription.billingCycle) findByIdInSubscription.billingCycle = billingCycle;
+        if (findByIdInSubscription.price) findByIdInSubscription.price = price;
+        if (findByIdInSubscription.description) findByIdInSubscription.description = description;
+        if (findByIdInSubscription.renewal) findByIdInSubscription.renewal = renewal;
 
         await findByIdInSubscription.save();
 
         return res.status(200).json({
-            sucess:true,
-            message:"Subscription Edited SucessFully",
+            sucess: true,
+            message: "Subscription Edited SucessFully",
             findByIdInSubscription,
         })
 
 
     } catch (error) {
-        console.log(error,error.message)
+        console.log(error, error.message)
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in editSubscriptionById"
+            sucess: false,
+            message: "Server Error in editSubscriptionById"
         })
     }
 }
 
 
 
-
-exports.manuFacture_Map_A_device = async (req,res) =>{
+// Here Implement manufactur Map A device
+exports.manuFacturMAPaDevice = async (req, res) => {
     try {
-        
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        // ✅ Extract all fields from req.body
+        const {
+            country,
+            state,
+            distributorName,
+            delerName,
+            deviceType,
+            deviceNo,
+            voltage,
+            elementType,
+            batchNo,
+            simDetails,
+            VechileBirth,
+            RegistrationNo,
+            date,
+            ChassisNumber,
+            EngineNumber,
+            VehicleType,
+            MakeModel,
+            ModelYear,
+            InsuranceRenewDate,
+            PollutionRenewdate,
+            fullName,
+            email,
+            mobileNo,
+            GstinNo,
+            Customercountry,
+            Customerstate,
+            Customerdistrict,
+            Rto,
+            PinCode,
+            CompliteAddress,
+            AdharNo,
+            PanNo,
+            Packages,
+            InvoiceNo,
+            VehicleKMReading,
+            DriverLicenseNo,
+            MappedDate,
+            NoOfPanicButtons,
+        } = req.body;
+
+
+        // ✅ Check if deviceNo already exists
+        const existingDevice = await MapDevice.findOne({ deviceNo });
+        if (existingDevice) {
+            return res.status(409).json({
+                success: false,
+                message: `Device with deviceNo "${deviceNo}" already exists.`,
+            });
+        };
+
+
+        // Then save in dataBase
+        const newMapDevice = new MapDevice({
+            manufacturId: userId,
+            country,
+            state,
+            distributorName,
+            delerName,
+            deviceType,
+            deviceNo,
+            voltage,
+            elementType,
+            batchNo,
+            simDetails,
+            VechileBirth,
+            RegistrationNo,
+            date,
+            ChassisNumber,
+            EngineNumber,
+            VehicleType,
+            MakeModel,
+            ModelYear,
+            InsuranceRenewDate,
+            PollutionRenewdate,
+            fullName,
+            email,
+            mobileNo,
+            GstinNo,
+            Customercountry,
+            Customerstate,
+            Customerdistrict,
+            Rto,
+            PinCode,
+            CompliteAddress,
+            AdharNo,
+            PanNo,
+            Packages,
+            InvoiceNo,
+            VehicleKMReading,
+            DriverLicenseNo,
+            MappedDate,
+            NoOfPanicButtons,
+        })
+
+
+        await newMapDevice.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "New Device Mapped Successfully",
+        });
+
     } catch (error) {
         console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in Map_A_Device"
+            sucess: false,
+            message: "Server Error in manuFactur_Map_A_device"
         })
     }
-} 
+}
