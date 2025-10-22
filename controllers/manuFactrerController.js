@@ -2363,7 +2363,7 @@ exports.fetchDistributorOnBasisOfState = async (req, res) => {
         return res.status(200).json({
             sucess: true,
             message: "fetch all distributors on Basis of state",
-            distributor: distributors.contact_Person_Name,
+            distributors,
         })
 
 
