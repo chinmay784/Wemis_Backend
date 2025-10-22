@@ -17,7 +17,8 @@ const manufacturRoutes = require("./routes/manuFacturRoute");
 const app = express();
 
 // ✅ Tell Express to trust proxy headers (important for real client IPs)
-app.set("trust proxy", true);
+// ✅ If using Render, Nginx, or a load balancer
+app.set('trust proxy', 1);
 
 // ✅ Security Middlewares
 app.use(helmet()); // Secure HTTP headers
