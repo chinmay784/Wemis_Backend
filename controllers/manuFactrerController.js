@@ -2136,6 +2136,14 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             DriverLicenseNo,
             MappedDate,
             NoOfPanicButtons,
+            VechileIDocument,
+            RcDocument,
+            DeviceDocument,
+            PanCardDocument,
+            AdharCardDocument,
+            InvoiceDocument,
+            SignatureDocument,
+            PanicButtonWithSticker
         } = req.body;
 
 
@@ -2147,6 +2155,107 @@ exports.manuFacturMAPaDevice = async (req, res) => {
                 message: `Device with deviceNo "${deviceNo}" already exists.`,
             });
         };
+
+
+
+        // Ensure all files are uploaded
+        const requiredFiles = ['Vechile_Doc', 'Rc_Doc', 'Pan_Card', 'Device_Doc', 'Adhar_Card', 'Invious_Doc', 'Signature_Doc', 'Panic_Sticker'];
+        for (let field of requiredFiles) {
+            if (!req.files[field] || req.files[field].length === 0) {
+                return res.status(400).json({
+                    message: `${field} file is required`,
+                    success: false
+                });
+            }
+        }
+
+
+
+        // ✅ Upload files separately
+        let vc = null;
+        let Rc = null;
+        let Pc = null;
+        let Dc = null;
+        let Ac = null;
+        let Ic = null;
+        let Sc = null;
+        let Ps = null;
+
+
+
+
+        if (req.files['Vechile_Doc']) {
+            const file = req.files['Vechile_Doc'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw" // keeps PDF as raw
+            });
+            vc = result.secure_url;
+        }
+
+        if (req.files['Rc_Doc']) {
+            const file = req.files['Rc_Doc'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Rc = result.secure_url;
+        }
+
+        if (req.files['Pan_Card']) {
+            const file = req.files['Pan_Card'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Pc = result.secure_url;
+        }
+
+        if (req.files['Device_Doc']) {
+            const file = req.files['Device_Doc'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Dc = result.secure_url;
+        }
+
+        if (req.files['Adhar_Card']) {
+            const file = req.files['Adhar_Card'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Ac = result.secure_url;
+        }
+
+        if (req.files['Invious_Doc']) {
+            const file = req.files['Invious_Doc'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Ic = result.secure_url;
+        }
+
+        if (req.files['Signature_Doc']) {
+            const file = req.files['Signature_Doc'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Sc = result.secure_url;
+        }
+
+        if (req.files['Panic_Sticker']) {
+            const file = req.files['Panic_Sticker'][0];
+            const result = await cloudinary.uploader.upload(file.path, {
+                folder: "profile_pics",
+                resource_type: "raw"
+            });
+            Ps = result.secure_url;
+        }
+
 
 
         // Then save in dataBase
@@ -2190,6 +2299,14 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             DriverLicenseNo,
             MappedDate,
             NoOfPanicButtons,
+            VechileIDocument:vc,
+            RcDocument:Rc,
+            DeviceDocument:Dc,
+            PanCardDocument:Pc,
+            AdharCardDocument:Ac,
+            InvoiceDocument:Ic,
+            SignatureDocument:Sc,
+            PanicButtonWithSticker:Ps
         })
 
 
@@ -2208,3 +2325,4 @@ exports.manuFacturMAPaDevice = async (req, res) => {
         })
     }
 }
+

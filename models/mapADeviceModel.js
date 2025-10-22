@@ -60,7 +60,7 @@ const mapDeviceSchema = new mongoose.Schema({
                 // required: true
             },
             packageName: { type: String, trim: true },
-            packageType: { type: String, trim:true},
+            packageType: { type: String, trim: true },
             billingCycle: { type: String, trim: true }, // e.g. "30 days"
             price: { type: Number, default: 0 },
             // startDate: { type: String, trim: true },
@@ -74,7 +74,19 @@ const mapDeviceSchema = new mongoose.Schema({
     VehicleKMReading: { type: Number, default: 0 },
     DriverLicenseNo: { type: String, trim: true },
     MappedDate: { type: String, trim: true },
-    NoOfPanicButtons: { type: Number, default: 0 }
+    NoOfPanicButtons: { type: Number, default: 0 },
+
+    // Vehicle Document (* document)
+    VechileIDocument: {
+        type: String, trim: true
+    },
+    RcDocument: { type: String, trim: true },
+    DeviceDocument: { type: String, trim: true },
+    PanCardDocument: { type: String, trim: true },
+    AdharCardDocument: { type: String, trim: true },
+    InvoiceDocument: { type: String, trim: true },
+    SignatureDocument: { type: String, trim: true },
+    PanicButtonWithSticker: { type: String, trim: true },
 });
 
 module.exports = mongoose.model("MapDevice", mapDeviceSchema);

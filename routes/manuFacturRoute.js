@@ -39,7 +39,16 @@ router.post("/createNewSubscription",authMiddelWere,createNewSubscription);
 router.post("/fetchAllSubscriptionPlans",authMiddelWere,fetchAllSubscriptionPlans);
 router.post("/findSubScriptionById",authMiddelWere , findSubScriptionById);
 router.post("/editSubscriptionById",authMiddelWere,editSubscriptionById);
-router.post("/manuFacturMAPaDevice",authMiddelWere,manuFacturMAPaDevice)
+router.post("/manuFacturMAPaDevice",authMiddelWere,upload.fields([
+        { name: 'Vechile_Doc', maxCount: 1 },
+        { name: 'Rc_Doc', maxCount: 1 },
+        { name: 'Pan_Card', maxCount: 1 },
+        { name: 'Device_Doc', maxCount: 1 },
+        { name: 'Adhar_Card', maxCount: 1 },
+        { name: 'Invious_Doc', maxCount: 1 },
+        { name: 'Signature_Doc', maxCount: 1 },
+        { name: 'Panic_Sticker', maxCount: 1 },
+    ]),manuFacturMAPaDevice)
 
 
 
