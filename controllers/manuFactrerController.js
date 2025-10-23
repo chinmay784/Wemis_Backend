@@ -1626,6 +1626,7 @@ exports.AllocateBarCode = async (req, res) => {
                 });
             }
 
+            // Map full barcode objects
             const formattedBarcodes = barcodeObjects.map(b => ({
                 manufacturId: b.manufacturId,
                 elementName: b.elementName,
@@ -1644,8 +1645,16 @@ exports.AllocateBarCode = async (req, res) => {
                 simDetails: b.simDetails
             }));
 
-            dist.allocatedBarCode.push(...formattedBarcodes);
+            // ✅ Ensure the array exists
+            if (!Array.isArray(dist.allocateBarcodes)) {
+                dist.allocateBarcodes = [];
+            }
+
+            // ✅ Push all barcode objects
+            dist.allocateBarcodes.push(...formattedBarcodes);
+
             await dist.save();
+
 
 
             // ✅ Also create AllocateBarcode entry
@@ -1789,8 +1798,13 @@ exports.AllocateBarCode = async (req, res) => {
                 simDetails: b.simDetails
             }));
 
+            // ✅ Ensure the array exists
+            if (!Array.isArray(dist.allocateBarcodes)) {
+                dist.allocateBarcodes = [];
+            }
+
             // ✅ Push the full barcode objects into OeM.allocatedBarCode array
-            OeM.allocatedBarCode.push(...formattedBarcodes);
+            OeM.allocateBarcodes.push(...formattedBarcodes);
 
             await OeM.save();
 
