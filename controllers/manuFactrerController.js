@@ -1628,6 +1628,7 @@ exports.AllocateBarCode = async (req, res) => {
 
             // ✅ Push full objects (or specific fields if you want)
             dist.allocateBarcodes.push(...barcodeObjects);
+            console.log(barcodeObjects)
 
             // Save Distributor
             await dist.save();
