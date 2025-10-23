@@ -53,7 +53,7 @@ const allocateBarCodeSchema = new mongoose.Schema({
         //         }
         //     ]
         // }
-        {trim:true}
+        // {trim:true}
     ],
     status: { type: String, trim: true, default: 'used' },
     createdAt: { type: Date, default: Date.now },
