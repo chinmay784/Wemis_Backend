@@ -1626,12 +1626,27 @@ exports.AllocateBarCode = async (req, res) => {
                 });
             }
 
-            // ✅ Push full objects (or specific fields if you want)
-            dist.allocateBarcodes.push(...barcodeObjects);
-            console.log(barcodeObjects)
+            const formattedBarcodes = barcodeObjects.map(b => ({
+                manufacturId: b.manufacturId,
+                elementName: b.elementName,
+                elementType: b.elementType,
+                elementModelNo: b.elementModelNo,
+                elementPartNo: b.elementPartNo,
+                elementTacNo: b.elementTacNo,
+                elementCopNo: b.elementCopNo,
+                copValid: b.copValid,
+                voltage: b.voltage,
+                batchNo: b.batchNo,
+                baecodeCreationType: b.baecodeCreationType,
+                barCodeNo: b.barCodeNo,
+                is_Renew: b.is_Renew,
+                deviceSerialNo: b.deviceSerialNo,
+                simDetails: b.simDetails
+            }));
 
-            // Save Distributor
+            dist.allocatedBarCode.push(...formattedBarcodes);
             await dist.save();
+
 
             // ✅ Also create AllocateBarcode entry
             await AllocateBarCode.create({
@@ -1753,8 +1768,29 @@ exports.AllocateBarCode = async (req, res) => {
                 });
             }
 
+
+
+
+            const formattedBarcodes = barcodeObjects.map(b => ({
+                manufacturId: b.manufacturId,
+                elementName: b.elementName,
+                elementType: b.elementType,
+                elementModelNo: b.elementModelNo,
+                elementPartNo: b.elementPartNo,
+                elementTacNo: b.elementTacNo,
+                elementCopNo: b.elementCopNo,
+                copValid: b.copValid,
+                voltage: b.voltage,
+                batchNo: b.batchNo,
+                baecodeCreationType: b.baecodeCreationType,
+                barCodeNo: b.barCodeNo,
+                is_Renew: b.is_Renew,
+                deviceSerialNo: b.deviceSerialNo,
+                simDetails: b.simDetails
+            }));
+
             // ✅ Push the full barcode objects into OeM.allocatedBarCode array
-            OeM.allocatedBarCode.push(...barcodeObjects);
+            OeM.allocatedBarCode.push(...formattedBarcodes);
 
             await OeM.save();
 
