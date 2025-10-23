@@ -1800,7 +1800,7 @@ exports.AllocateBarCode = async (req, res) => {
 
             // ✅ Ensure the array exists
             if (!Array.isArray(dist.allocateBarcodes)) {
-                dist.allocateBarcodes = [];
+                OeM.allocateBarcodes = [];
             }
 
             // ✅ Push the full barcode objects into OeM.allocatedBarCode array
