@@ -1331,15 +1331,28 @@ exports.findDistributorUnderManufactur = async (req, res) => {
                 message: "Please Provide UserId"
             })
         }
+        
+        const {state} = req.body;
 
         // find in Distributor Collections
-        const dist = await Distributor.find({ manufacturId: userId });
-        if (!dist) {
+        // const dist = await Distributor.find({ manufacturId: userId });
+        // if (!dist) {
+        //     return res.status(200).json({
+        //         sucess: false,
+        //         message: "No Data Found in Distributor Collections"
+        //     })
+        // }
+
+        const dist = await Distributor.find({state:state});
+
+       
+        if(!dist){
             return res.status(200).json({
-                sucess: false,
-                message: "No Data Found in Distributor Collections"
+                sucess:false,
+                message:"No data Found"
             })
         }
+        
 
         return res.status(200).json({
             sucess: true,
