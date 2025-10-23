@@ -89,6 +89,7 @@ const distributorSchema = new mongoose.Schema({
             barCodeNo: { type: String, trim: true },
             is_Renew: { type: String, trim: true },
             deviceSerialNo: { type: String, trim: true },
+            status:{type: String},
 
             simDetails: [
                 {

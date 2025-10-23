@@ -1642,7 +1642,8 @@ exports.AllocateBarCode = async (req, res) => {
                 barCodeNo: b.barCodeNo,
                 is_Renew: b.is_Renew,
                 deviceSerialNo: b.deviceSerialNo,
-                simDetails: b.simDetails
+                simDetails: b.simDetails,
+                status:b.status
             }));
 
             // ✅ Ensure the array exists
@@ -1795,7 +1796,8 @@ exports.AllocateBarCode = async (req, res) => {
                 barCodeNo: b.barCodeNo,
                 is_Renew: b.is_Renew,
                 deviceSerialNo: b.deviceSerialNo,
-                simDetails: b.simDetails
+                simDetails: b.simDetails,
+                status:b.status
             }));
 
             // ✅ Ensure the array exists
@@ -1882,9 +1884,12 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
         // }
 
         // In Barcodes Collection is work Now
-        const allBarcodes = await AllocateBarCode.find({ manufacturAllocateId: userId });
+        const allAllocatedBarcodes = await Distributor.find({
+            "allocateBarcodes.manufacturId": userId
+        });
 
-        if (!allBarcodes) {
+
+        if (!allAllocatedBarcodes) {
             return res.status(200).json({
                 sucess: false,
                 message: "No Data Found in AllocateBarCode Collections"
@@ -1894,7 +1899,7 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
         return res.status(200).json({
             sucess: true,
             message: "All Allocated BarCodes Fetched SucessFully",
-            allBarcodes,
+            allAllocatedBarcodes,
         })
 
 

@@ -90,7 +90,7 @@ const OemModelSchema = new mongoose.Schema({
             barCodeNo: { type: String, trim: true },
             is_Renew: { type: String, trim: true },
             deviceSerialNo: { type: String, trim: true },
-
+            status: { type: String },
             simDetails: [
                 {
                     simNo: { type: String, trim: true },
