@@ -1110,7 +1110,28 @@ exports.createBarCode = async (req, res) => {
 
 
         // create BarCode And Save in DataBase
-        const newBarCode = new createBarCode({
+        // const newBarCode = new createBarCode({
+        //     manufacturId: userId,
+        //     elementName,
+        //     elementType,
+        //     elementModelNo,
+        //     elementPartNo,
+        //     elementTacNo,
+        //     elementCopNo,
+        //     copValid,
+        //     voltage,
+        //     batchNo,
+        //     baecodeCreationType,
+        //     barCodeNo,
+        //     is_Renew,
+        //     deviceSerialNo,
+        //     simDetails // 👈 store directly as array
+        // });
+
+        // await newBarCode.save();
+
+
+        const newBarCode = await createBarCode.create({
             manufacturId: userId,
             elementName,
             elementType,
@@ -1126,9 +1147,7 @@ exports.createBarCode = async (req, res) => {
             is_Renew,
             deviceSerialNo,
             simDetails // 👈 store directly as array
-        });
-
-        await newBarCode.save();
+        })
 
         return res.status(200).json({
             success: true,
