@@ -62,7 +62,7 @@ const allocateBarCodeSchema = new mongoose.Schema({
     },
     delerModelType: {
         type: String,
-        enum: ['Distributor', 'OemModelSchema'], // possible models
+        enum: ['CreateDelerUnderDistributor', 'createDelerUnderOems'], // possible models
     }
 
 
