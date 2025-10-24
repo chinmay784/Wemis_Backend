@@ -56,14 +56,14 @@ const allocateBarCodeSchema = new mongoose.Schema({
     manufacturAllocateId: { type: mongoose.Schema.Types.ObjectId, ref: 'ManuFactur' },
     allocatedDistributorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Distributor' },
     allocatedOemId: { type: mongoose.Schema.Types.ObjectId, ref: 'OemModelSchema' },
-    allocatedDistributorDelerId: {
+    allocatedDelerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CreateDelerUnderDistributor'
+        refPath: 'delerModelType'
     },
-    allocatedOemDelerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'createDelerUnderOems'
-    },
+    delerModelType: {
+        type: String,
+        enum: ['CreateDelerUnderDistributor', 'createDelerUnderOems'], // possible models
+    }
 
 
 });
