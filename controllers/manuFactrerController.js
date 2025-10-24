@@ -1830,7 +1830,7 @@ exports.AllocateBarCode = async (req, res) => {
 
             console.log(deler)
             // find deler name 
-            const delername = await CreateDelerUnderDistributor.findById(deler);
+            const delername = await CreateDelerUnderOems.findById(deler);
 
 
             // 🧾 Also create AllocateBarCode record for tracking
