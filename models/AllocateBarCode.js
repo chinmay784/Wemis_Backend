@@ -63,8 +63,10 @@ const allocateBarCodeSchema = new mongoose.Schema({
     delerModelType: {
         type: String,
         enum: ['CreateDelerUnderDistributor', 'createDelerUnderOems'], // possible models
+    },
+    delerName: {
+        type: String, trim: true,
     }
-
 
 });
 module.exports = mongoose.model('AllocateBarCode', allocateBarCodeSchema);

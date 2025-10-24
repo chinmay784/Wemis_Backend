@@ -10,7 +10,7 @@ const AllocateBarCode = require("../models/AllocateBarCode");
 const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
 const createSubscription = require("../models/CreateNewSubscriptions");
 const MapDevice = require("../models/mapADeviceModel");
-const AllallocateBarcodes = require("../models/AllocateBarCode")
+const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor")
 
 
 exports.createDistributor = async (req, res) => {
@@ -1824,6 +1824,11 @@ exports.AllocateBarCode = async (req, res) => {
 
             await OeM.save();
 
+            console.log(deler)
+            // find deler name 
+            const delername = await CreateDelerUnderDistributor.findById(deler);
+
+
             // 🧾 Also create AllocateBarCode record for tracking
             const allocated = await AllocateBarCode.create({
                 country,
@@ -1841,6 +1846,7 @@ exports.AllocateBarCode = async (req, res) => {
                 allocatedDistributorId: null,
                 allocatedOemId: oem,
                 allocatedDelerId: deler,
+                delerName : delername.name
             });
 
             // 🔁 Optionally mark these barcodes as allocated in their own collection
