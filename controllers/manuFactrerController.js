@@ -1908,8 +1908,8 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
 
         const allAllocatedBarcodes = await AllocateBarCode.find({})
             .populate("allocatedDistributorId", "contact_Person_Name")  // only fetch 'name' field
-            .populate("allocatedDelerId", "business_Name")        // only fetch 'name' field
-            .populate("allocatedOemId" , "name")
+            .populate("allocatedDelerId", "name")        // only fetch 'name' field
+            .populate("allocatedOemId" , "contact_Person_Name")
             .select("allocatedBarCode barCodeNo status createdAt");
 
 
