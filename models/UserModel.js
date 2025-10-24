@@ -44,6 +44,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'createDelerUnderOems',
     },
+    technicienId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Technicien',
+    },
     createdAt: {
         type: Date,
         default: Date.now

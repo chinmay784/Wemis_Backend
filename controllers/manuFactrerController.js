@@ -10,6 +10,7 @@ const AllocateBarCode = require("../models/AllocateBarCode");
 const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
 const createSubscription = require("../models/CreateNewSubscriptions");
 const MapDevice = require("../models/mapADeviceModel");
+const Technicien = require("../models/CreateTechnicien")
 
 
 
@@ -1073,6 +1074,162 @@ exports.fetchAllAssignElementDataRelatedToCreateBarCode = async (req, res) => {
         })
     }
 }
+
+
+
+
+
+
+exports.fetchAllDistributors = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "please provide userId"
+            })
+        }
+
+        // fetchAll Distributors
+        const allDistributors = await Distributor.find({ manufacturId: userId });
+
+        if (!allDistributors) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found"
+            })
+        };
+
+        return res.status(200).json({
+            sucess: false,
+            message: "all Distributor fetched sucessfully",
+            allDistributors,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAllDistributors"
+        })
+    }
+}
+// THis is not Complite or Implemented right Now
+exports.fetchAlldelersUnderDistributor = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please provide userId"
+            })
+        };
+
+
+        const { distributorName } = req.body
+        if (!distributorName) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please provide distributorName"
+            })
+        };
+
+        const deler = await CreateDelerUnderDistributor.find({})
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAlldelersUnderDistributor"
+        })
+    }
+}
+
+// here Manufacturer can create Techenican 
+exports.createTechnician = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        const { distributorName, delerName, name, gender, email, mobile, adhar, dateOfBirth, qualification, distributorId, delerId } = req.body;
+
+        if (!distributorName || !delerName || !name || !gender || !email || !mobile || !adhar || !dateOfBirth || !qualification || !distributorId || !delerId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide All The Fields"
+            })
+        }
+
+
+        // check already technicien exist in db
+        const technician = await Technicien.findOne({ email });
+        if (technician) {
+            return res.status(200).json({
+                sucess: false,
+                message: "technician Already Exist"
+            })
+        }
+
+
+        // Here I have to save Technicien in db collections
+        const newtechnician = await Technicien.create({
+            manufacturId: userId,
+            distributorName,
+            delerName,
+            name,
+            gender,
+            email,
+            mobile,
+            adhar,
+            dateOfBirth,
+            qualification,
+            distributorId: distributorId,
+            distributorUnderDelerId: delerId
+        });
+
+
+        // also save in userCollections
+        const newTechnicianUser = await User.create({
+            technicienId: newtechnician._id,
+            email: email,
+            password: mobile,
+            role: "technicien"
+        })
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Technicien Created SucessFully"
+        })
+
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in Create Technician"
+        })
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
