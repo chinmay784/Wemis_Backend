@@ -1128,15 +1128,29 @@ exports.fetchAlldelersUnderDistributor = async (req, res) => {
         };
 
 
-        const { distributorName } = req.body
-        if (!distributorName) {
+        const { distributorId } = req.body
+        if (!distributorId) {
             return res.status(200).json({
                 sucess: false,
-                message: "Please provide distributorName"
+                message: "Please provide distributorId"
             })
         };
 
-        const deler = await CreateDelerUnderDistributor.find({})
+        const delers = await CreateDelerUnderDistributor.find({ distributorId: distributorId });
+
+        if (!delers) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Deler Found under Didtributor"
+            })
+        }
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "Deler Fetched SucessFully",
+            delers,
+        })
 
 
     } catch (error) {
