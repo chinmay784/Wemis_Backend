@@ -1671,6 +1671,9 @@ exports.AllocateBarCode = async (req, res) => {
             await dist.save();
 
 
+            console.log(deler)
+            // find deler name 
+            const delername = await CreateDelerUnderDistributor.findById(deler);
 
             // ✅ Also create AllocateBarcode entry
             await AllocateBarCode.create({
@@ -1688,7 +1691,8 @@ exports.AllocateBarCode = async (req, res) => {
                 manufacturAllocateId: userId,
                 allocatedDistributorId: distributor,
                 allocatedOemId: null,
-                allocatedDelerId: deler
+                allocatedDelerId: deler,
+                delerName: delername.name
             });
 
             return res.status(200).json({
@@ -1846,7 +1850,7 @@ exports.AllocateBarCode = async (req, res) => {
                 allocatedDistributorId: null,
                 allocatedOemId: oem,
                 allocatedDelerId: deler,
-                delerName : delername.name
+                delerName: delername.name
             });
 
             // 🔁 Optionally mark these barcodes as allocated in their own collection
