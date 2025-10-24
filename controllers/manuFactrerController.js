@@ -1906,11 +1906,15 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
 
         // Here I have to find in AllocatedBarcode Schema collections
 
-        const allAllocatedBarcodes = await AllocateBarCode.find({})
-            .populate("allocatedDistributorId", "contact_Person_Name")  // only fetch 'name' field
-            .populate("allocatedDelerId", "name")        // only fetch 'name' field
-            .populate("allocatedOemId" , "contact_Person_Name")
-            .select("allocatedBarCode barCodeNo status createdAt");
+        const allAllocatedBarcodes = await AllocateBarCode.find()
+            .populate("allocatedDistributorId", "contact_Person_Name")
+            .populate("allocatedOemId", "contact_Person_Name")
+            .populate({
+                path: "allocatedDelerId",
+                select: "name business_Name email",
+            })
+            .select("allocatedBarCode status createdAt");
+
 
 
         if (!allAllocatedBarcodes) {
@@ -1934,7 +1938,7 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
             message: "Server Error in FetchAllBarcode"
         })
     }
-}    
+}
 
 
 
