@@ -39,7 +39,7 @@ const allocateBarCodeSchema = new mongoose.Schema({
             barCodeNo: { type: String, trim: true },
             is_Renew: { type: String, trim: true },
             deviceSerialNo: { type: String, trim: true },
-            status:{type:String},
+            status: { type: String },
             simDetails: [
                 {
                     simNo: { type: String, trim: true },
@@ -56,7 +56,15 @@ const allocateBarCodeSchema = new mongoose.Schema({
     manufacturAllocateId: { type: mongoose.Schema.Types.ObjectId, ref: 'ManuFactur' },
     allocatedDistributorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Distributor' },
     allocatedOemId: { type: mongoose.Schema.Types.ObjectId, ref: 'OemModelSchema' },
-    allocatedDelerId: { type: mongoose.Schema.Types.ObjectId },
+    allocatedDelerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'delerModelType'
+    },
+    delerModelType: {
+        type: String,
+        enum: ['Distributor', 'OemModelSchema'], // possible models
+    }
+
 
 });
 module.exports = mongoose.model('AllocateBarCode', allocateBarCodeSchema);

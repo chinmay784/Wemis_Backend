@@ -10,6 +10,7 @@ const AllocateBarCode = require("../models/AllocateBarCode");
 const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
 const createSubscription = require("../models/CreateNewSubscriptions");
 const MapDevice = require("../models/mapADeviceModel");
+const AllallocateBarcodes = require("../models/AllocateBarCode")
 
 
 exports.createDistributor = async (req, res) => {
@@ -1331,8 +1332,8 @@ exports.findDistributorUnderManufactur = async (req, res) => {
                 message: "Please Provide UserId"
             })
         }
-        
-        const {state} = req.body;
+
+        const { state } = req.body;
 
         // find in Distributor Collections
         // const dist = await Distributor.find({ manufacturId: userId });
@@ -1343,16 +1344,16 @@ exports.findDistributorUnderManufactur = async (req, res) => {
         //     })
         // }
 
-        const dist = await Distributor.find({state:state});
+        const dist = await Distributor.find({ state: state });
 
-       
-        if(!dist){
+
+        if (!dist) {
             return res.status(200).json({
-                sucess:false,
-                message:"No data Found"
+                sucess: false,
+                message: "No data Found"
             })
         }
-        
+
 
         return res.status(200).json({
             sucess: true,
@@ -1656,7 +1657,7 @@ exports.AllocateBarCode = async (req, res) => {
                 is_Renew: b.is_Renew,
                 deviceSerialNo: b.deviceSerialNo,
                 simDetails: b.simDetails,
-                status:b.status
+                status: b.status
             }));
 
             // ✅ Ensure the array exists
@@ -1810,7 +1811,7 @@ exports.AllocateBarCode = async (req, res) => {
                 is_Renew: b.is_Renew,
                 deviceSerialNo: b.deviceSerialNo,
                 simDetails: b.simDetails,
-                status:b.status
+                status: b.status
             }));
 
             // ✅ Ensure the array exists
@@ -1897,9 +1898,19 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
         // }
 
         // In Barcodes Collection is work Now
-        const allAllocatedBarcodes = await Distributor.find({
-            "allocateBarcodes.manufacturId": userId
-        });
+        // const allAllocatedBarcodes = await Distributor.find({
+        //     "allocateBarcodes.manufacturId": userId
+        // });
+
+
+
+        // Here I have to find in AllocatedBarcode Schema collections
+
+        const allAllocatedBarcodes = await AllocateBarCode.find({})
+            .populate("allocatedDistributorId", "contact_Person_Name")  // only fetch 'name' field
+            .populate("allocatedDelerId", "business_Name")        // only fetch 'name' field
+            .populate("allocatedOemId" , "name")
+            .select("allocatedBarCode barCodeNo status createdAt");
 
 
         if (!allAllocatedBarcodes) {
@@ -1923,7 +1934,7 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
             message: "Server Error in FetchAllBarcode"
         })
     }
-}
+}    
 
 
 
