@@ -10,7 +10,7 @@ const AllocateBarCode = require("../models/AllocateBarCode");
 const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
 const createSubscription = require("../models/CreateNewSubscriptions");
 const MapDevice = require("../models/mapADeviceModel");
-const CreateDelerUnderDistributor = require("../models/CreateDelerUnderDistributor")
+
 
 
 exports.createDistributor = async (req, res) => {
