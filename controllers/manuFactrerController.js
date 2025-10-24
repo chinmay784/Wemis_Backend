@@ -1923,7 +1923,8 @@ exports.fetchAllAllocatedBarcode = async (req, res) => {
                 path: "allocatedDelerId",
                 select: "name business_Name email",
             })
-            .select("allocatedBarCode status createdAt");
+            .select("allocatedBarCode status createdAt delerName");
+
 
 
 
