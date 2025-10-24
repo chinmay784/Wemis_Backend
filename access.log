@@ -43,3 +43,4 @@
 ::1 - - [24/Oct/2025:06:43:43 +0000] "POST /manufactur/fetchAllAllocatedBarcode HTTP/1.1" 200 1108 "-" "PostmanRuntime/7.49.0"
 ::1 - - [24/Oct/2025:06:55:31 +0000] "POST /manufactur/fetchAllAllocatedBarcode HTTP/1.1" 200 1108 "-" "PostmanRuntime/7.49.0"
 ::1 - - [24/Oct/2025:07:02:25 +0000] "POST /manufactur/fetchAllAllocatedBarcode HTTP/1.1" 200 1108 "-" "PostmanRuntime/7.49.0"
+::1 - - [24/Oct/2025:07:06:11 +0000] "POST /manufactur/fetchAllAllocatedBarcode HTTP/1.1" 200 1128 "-" "PostmanRuntime/7.49.0"

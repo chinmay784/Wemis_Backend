@@ -1819,7 +1819,7 @@ exports.AllocateBarCode = async (req, res) => {
             }));
 
             // ✅ Ensure the array exists
-            if (!Array.isArray(dist.allocateBarcodes)) {
+            if (!Array.isArray(OeM.allocateBarcodes)) {
                 OeM.allocateBarcodes = [];
             }
 
