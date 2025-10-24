@@ -1,6 +1,6 @@
 const express = require('express');
 const { authMiddelWere } = require('../middelwere/authMiddelWere');
-const { createDistributor, fetchDistributor, deleteDistributor, fetchDistributorById, editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems, deleteOems, getOemsById, editOemsById, createDelerUnderOems, fetchDelerUnderOems, deleteDelerUnderOems, getDelerUnderOemsById, editDelerOem, createBarCode, fetchAllAssignElementDataRelatedToCreateBarCode, fetchAllBarCode, AllocateBarCode, fetchElementData, fetchAllBarCodesNumber, findDistributorUnderManufactur, findOemUnderManufactur, fetchAllAllocatedBarcode, rollBackAllocatedBarCode, findDelerUnderDistributor, findDelerUnderOem, createNewSubscription, fetchAllSubscriptionPlans, findSubScriptionById, editSubscriptionById, manuFacturMAPaDevice, fetchDistributorOnBasisOfState, fetchdelerOnBasisOfDistributor, createTechnician, fetchAllDistributors, fetchAlldelersUnderDistributor } = require('../controllers/manuFactrerController');
+const { createDistributor, fetchDistributor, deleteDistributor, fetchDistributorById, editDistributor, createDelerUnderDistributor, fetchDelerDistributor, deleteDelerDistributor, createOem, fetchOems, deleteOems, getOemsById, editOemsById, createDelerUnderOems, fetchDelerUnderOems, deleteDelerUnderOems, getDelerUnderOemsById, editDelerOem, createBarCode, fetchAllAssignElementDataRelatedToCreateBarCode, fetchAllBarCode, AllocateBarCode, fetchElementData, fetchAllBarCodesNumber, findDistributorUnderManufactur, findOemUnderManufactur, fetchAllAllocatedBarcode, rollBackAllocatedBarCode, findDelerUnderDistributor, findDelerUnderOem, createNewSubscription, fetchAllSubscriptionPlans, findSubScriptionById, editSubscriptionById, manuFacturMAPaDevice, fetchDistributorOnBasisOfState, fetchdelerOnBasisOfDistributor, createTechnician, fetchAllDistributors, fetchAlldelersUnderDistributor, fetchAllTechnicien } = require('../controllers/manuFactrerController');
 const { upload } = require('../config/cloudinary');
 const router = express.Router();
 
@@ -58,7 +58,8 @@ router.post("/fetchdelerOnBasisOfDistributor",authMiddelWere,fetchdelerOnBasisOf
 // some more Apis for create Technicien
 router.post("/createTechnician",authMiddelWere,createTechnician);
 router.post("/fetchAllDistributors",authMiddelWere, fetchAllDistributors);
-router.post("/fetchAlldelersUnderDistributor",authMiddelWere,fetchAlldelersUnderDistributor)
+router.post("/fetchAlldelersUnderDistributor",authMiddelWere,fetchAlldelersUnderDistributor);
+router.post("/fetchAllTechnicien",authMiddelWere,fetchAllTechnicien);
 
 
 

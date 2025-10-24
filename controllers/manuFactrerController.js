@@ -1235,7 +1235,42 @@ exports.createTechnician = async (req, res) => {
     }
 }
 
+exports.fetchAllTechnicien = async (req, res) => {
+    try {
+        const userId = req.user.userId;
 
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please provide userId"
+            })
+        };
+
+        // fetchAllTechnicien
+        const technicien = await Technicien.find({ manufacturId: userId });
+
+        if (!technicien) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No technicien Found"
+            })
+        };
+
+
+        return res.status(200).json({
+            sucess: false,
+            message: "Fetch All Technicien SucessFully",
+            technicien,
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchAllTechnicien"
+        })
+    }
+}
 
 
 
