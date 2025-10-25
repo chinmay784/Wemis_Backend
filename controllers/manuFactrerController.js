@@ -2792,6 +2792,134 @@ exports.manuFacturMAPaDevice = async (req, res) => {
     }
 }
 
+// this for only distributors deler only not implemented (Oem dele)
+exports.fetchDeviceNoOnBasisOfDeler = async (req, res) => {
+    try {
+        const userId = req.user?.userId;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide userId",
+            });
+        }
+
+        const { delerName } = req.body;
+
+        if (!delerName) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide delerName in request body",
+            });
+        }
+
+        // Find all dealers matching this name
+        const dealers = await CreateDelerUnderDistributor.find({ name: delerName });
+
+        if (!dealers || dealers.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No dealers found with this name",
+            });
+        }
+
+        // Extract all device info with sim details
+        const deviceDetails = dealers.flatMap((dealer) =>
+            dealer.allocateBarcodes.map((barcode) => ({
+                deviceSerialNo: barcode.deviceSerialNo,
+                status: barcode.status || "unknown",
+                simDetails: Array.isArray(barcode.simDetails) ? barcode.simDetails : [],
+            }))
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Device details fetched successfully",
+            count: deviceDetails.length,
+            devices: deviceDetails,
+        });
+    } catch (error) {
+        console.error("Error in fetchDeviceNoOnBasisOfDeler:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server error in fetchDeviceNoOnBasisOfDeler",
+        });
+    }
+};
+
+
+// this for Subscriptions Packages api
+exports.fetchSubScriptionPackages = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: 'Please Provide userId'
+            })
+        };
+
+        // find SubScription packages document or Collections
+        const SubScriptionPackage = await createSubscription.find({ manuFacturId: userId });
+
+        if (!SubScriptionPackage) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found In This Collections"
+            })
+        };
+
+
+        return res.status(200).json({
+            sucess: true,
+            message: "All SubscriptionsPackages Fetched SucessFully",
+            SubScriptionPackage
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error In fetchSubScriptionPackages"
+        })
+    }
+}
+
+
+// this for fetchTechnicien on the basis of delerName // Not Implement right now
+exports.fetchTechnicienAllRelatedData = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        };
+
+        const { delerName } = req.body;
+
+        if (!delerName) {
+            return res.status(200).json({
+                sucess: false,
+                message: `Please Provide delerName`
+            })
+        }
+
+        // db call in 
+        const dataIn = await CreateDelerUnderDistributor.find({})
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in fetchTechnicienAllRelatedData"
+        })
+    }
+}
+
 
 
 exports.fetchDistributorOnBasisOfState = async (req, res) => {
