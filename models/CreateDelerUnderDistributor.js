@@ -6,9 +6,9 @@ const CreateDelerUnderDistributor = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "ManuFactur"
     },
-    distributorId:{
-        type:mongoose.Types.ObjectId,
-        ref:"Distributor"
+    distributorId: {
+        type: mongoose.Types.ObjectId,
+        ref: "Distributor"
     },
     select_Distributor_Name: {
         type: String,
@@ -86,11 +86,42 @@ const CreateDelerUnderDistributor = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    address:{
+    address: {
         type: String,
         trim: true,
-    }
+    },
+    allocateBarcodes: [
+        {
+            manufacturId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "ManuFactur"
+            },
+            elementName: { type: String, trim: true },
+            elementType: { type: String, trim: true },
+            elementModelNo: { type: String, trim: true },
+            elementPartNo: { type: String, trim: true },
+            elementTacNo: { type: String, trim: true },
+            elementCopNo: { type: String, trim: true },
+            copValid: { type: String, trim: true },
+            voltage: { type: String, trim: true },
+            batchNo: { type: String, trim: true },
+            baecodeCreationType: { type: String, trim: true },
+            barCodeNo: { type: String, trim: true },
+            is_Renew: { type: String, trim: true },
+            deviceSerialNo: { type: String, trim: true },
+            status: { type: String },
+
+            simDetails: [
+                {
+                    simNo: { type: String, trim: true },
+                    iccidNo: { type: String, trim: true },
+                    validityDate: { type: String, trim: true },
+                    operator: { type: String, trim: true },
+                }
+            ]
+        }
+    ]
 });
 
 
-module.exports = mongoose.model("CreateDelerUnderDistributor",CreateDelerUnderDistributor)
+module.exports = mongoose.model("CreateDelerUnderDistributor", CreateDelerUnderDistributor)

@@ -1115,7 +1115,7 @@ exports.fetchAllDistributors = async (req, res) => {
         })
     }
 }
-// THis is not Complite or Implemented right Now
+
 exports.fetchAlldelersUnderDistributor = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -1881,6 +1881,15 @@ exports.AllocateBarCode = async (req, res) => {
             // find deler name 
             const delername = await CreateDelerUnderDistributor.findById(deler);
 
+            // ✅ Ensure the array exists
+            if (!Array.isArray(delername.allocateBarcodes)) {
+                delername.allocateBarcodes = [];
+            }
+
+            // ✅ Push all barcode objects
+            delername.allocateBarcodes.push(...formattedBarcodes)
+
+
             // ✅ Also create AllocateBarcode entry
             await AllocateBarCode.create({
                 country,
@@ -2037,6 +2046,14 @@ exports.AllocateBarCode = async (req, res) => {
             console.log(deler)
             // find deler name 
             const delername = await CreateDelerUnderOems.findById(deler);
+
+            // ✅ Ensure the array exists
+            if (!Array.isArray(delername.allocateBarcodes)) {
+                delername.allocateBarcodes = [];
+            }
+
+            // ✅ Push the full barcode objects
+            delername.allocateBarcodes.push(...formattedBarcodes)
 
 
             // 🧾 Also create AllocateBarCode record for tracking
