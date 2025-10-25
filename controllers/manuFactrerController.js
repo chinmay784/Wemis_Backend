@@ -2981,18 +2981,19 @@ exports.fetchdelerOnBasisOfDistributor = async (req, res) => {
             })
         }
 
-        const { distributorName } = req.body;
+        const { distributorId } = req.body;
 
-        if (!distributorName) {
+        if (!distributorId) {
             return res.status(200).json({
                 sucess: false,
-                message: "Please Provide distributorName"
+                message: "Please Provide distributorId"
             })
         };
 
 
         // find all deler under distributor
-        const delers = await CreateDelerUnderDistributor.find({ select_Distributor_Name: distributorName });
+        const delers = await CreateDelerUnderDistributor.find({ distributorId: distributorId });
+        
 
         if (!delers) {
             return res.status(200).json({
@@ -3001,11 +3002,12 @@ exports.fetchdelerOnBasisOfDistributor = async (req, res) => {
             })
         }
 
+        
 
         return res.status(200).json({
             sucess: true,
+            delers,
             message: "fetch all delers on Basis of distributor",
-            deler: delers.contact_Person_Name,
         })
 
 
