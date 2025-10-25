@@ -1910,6 +1910,14 @@ exports.AllocateBarCode = async (req, res) => {
                 delerName: delername.name
             });
 
+
+            // 🔁 Optionally mark these barcodes as allocated in their own collection
+            await createBarCode.updateMany(
+                { barCodeNo: { $in: barcodes } },
+                { $set: { status: 'ALLOCATED', allocatedTo: 'Distributor', distributorId: distributor } }
+            );
+
+
             return res.status(200).json({
                 success: true,
                 message: "Barcodes allocated successfully to Distributor",
