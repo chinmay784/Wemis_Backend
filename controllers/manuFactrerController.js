@@ -1887,7 +1887,9 @@ exports.AllocateBarCode = async (req, res) => {
             }
 
             // ✅ Push all barcode objects
-            delername.allocateBarcodes.push(...formattedBarcodes)
+            delername.allocateBarcodes.push(...formattedBarcodes);
+
+            await delername.save()
 
 
             // ✅ Also create AllocateBarcode entry
@@ -2063,6 +2065,7 @@ exports.AllocateBarCode = async (req, res) => {
             // ✅ Push the full barcode objects
             delername.allocateBarcodes.push(...formattedBarcodes)
 
+            await delername.save();
 
             // 🧾 Also create AllocateBarCode record for tracking
             const allocated = await AllocateBarCode.create({
