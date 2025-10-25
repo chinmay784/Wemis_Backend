@@ -3005,7 +3005,7 @@ exports.fetchdelerOnBasisOfDistributor = async (req, res) => {
         return res.status(200).json({
             sucess: true,
             message: "fetch all delers on Basis of distributor",
-            deler: delers.name,
+            deler: delers.contact_Person_Name,
         })
 
 
