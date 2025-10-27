@@ -3035,18 +3035,18 @@ exports.viewAMapDeviceInManufactur = async (req, res) => {
         }
 
 
-        const { mapDeviceId } = req.body;
+        const { deviceNo } = req.body;
 
-        if (!mapDeviceId) {
+        if (!deviceNo) {
             return res.status(200).json({
                 sucess: false,
-                message: "Please Provide mapDeviceId"
+                message: "Please Provide deviceNo"
             })
         }
 
 
         // On the Basis of mapDeviceId find all details
-        const mapDevice = await MapDevice.findById(mapDeviceId);
+        const mapDevice = await MapDevice.findOne({ deviceNo: deviceNo });
 
         if (!mapDevice) {
             return res.status(200).json({
@@ -3084,18 +3084,18 @@ exports.viewDocumentsOnMapDevice = async (req, res) => {
             })
         }
 
-        const { mapDeviceId } = req.body;
+        const { deviceNo } = req.body;
 
-        if (!mapDeviceId) {
+        if (!deviceNo) {
             return res.status(200).json({
                 sucess: false,
-                message: "Please Provide mapDeviceId"
+                message: "Please Provide deviceNo"
             })
         }
 
 
         // On the Basis of mapDeviceId find all details
-        const mapDevice = await MapDevice.findById(mapDeviceId);
+        const mapDevice = await MapDevice.findOne({ deviceNo: deviceNo })
 
         if (!mapDevice) {
             return res.status(200).json({
@@ -3106,16 +3106,15 @@ exports.viewDocumentsOnMapDevice = async (req, res) => {
 
         return res.status(200).json({
             sucess: true,
-            documents: {
-                vechileDucument: mapDevice.VechileIDocument,
-                rcDocument: mapDevice.RcDocument,
-                deviceDocument: mapDevice.DeviceDocument,
-                panDocument: mapDevice.PanCardDocument,
-                adharDocument: mapDevice.AdharCardDocument,
-                invoiceDocument: mapDevice.InvoiceDocument,
-                signatureDocument: mapDevice.SignatureDocument,
-                panicButtonDocument: mapDevice.PanicButtonWithSticker,
-            },
+            vechileDucument: mapDevice.VechileIDocument,
+            rcDocument: mapDevice.RcDocument,
+            deviceDocument: mapDevice.DeviceDocument,
+            panDocument: mapDevice.PanCardDocument,
+            adharDocument: mapDevice.AdharCardDocument,
+            invoiceDocument: mapDevice.InvoiceDocument,
+            signatureDocument: mapDevice.SignatureDocument,
+            panicButtonDocument: mapDevice.PanicButtonWithSticker,
+
             message: "All Documents Realted To Particular Device Fetched SucessFully"
         })
 
