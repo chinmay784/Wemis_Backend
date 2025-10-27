@@ -2848,17 +2848,17 @@ exports.manuFacturMAPaDevice = async (req, res) => {
 
 
 
-        if (typeof simDetails === "string") {
-            try {
-                simDetails = JSON.parse(simDetails);
-            } catch (err) {
-                console.error("❌ Invalid JSON for simDetails:", err.message);
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid format for simDetails",
-                });
-            }
-        }
+        // if (typeof simDetails === "string") {
+        //     try {
+        //         simDetails = JSON.parse(simDetails);
+        //     } catch (err) {
+        //         console.error("❌ Invalid JSON for simDetails:", err.message);
+        //         return res.status(400).json({
+        //             success: false,
+        //             message: "Invalid format for simDetails",
+        //         });
+        //     }
+        // }
 
 
 
