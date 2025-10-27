@@ -11,7 +11,7 @@ const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCo
 const createSubscription = require("../models/CreateNewSubscriptions");
 const MapDevice = require("../models/mapADeviceModel");
 const Technicien = require("../models/CreateTechnicien");
-const {cloudinary} = require("../config/cloudinary")
+const { cloudinary } = require("../config/cloudinary")
 
 
 
@@ -2552,18 +2552,259 @@ exports.editSubscriptionById = async (req, res) => {
 
 
 // Here Implement manufactur Map A device
+// exports.manuFacturMAPaDevice = async (req, res) => {
+//     try {
+//         const userId = req.user.userId;
+
+//         if (!userId) {
+//             return res.status(200).json({
+//                 sucess: false,
+//                 message: "Please Provide UserId"
+//             })
+//         }
+
+//         // ✅ Extract all fields from req.body
+//         const {
+//             country,
+//             state,
+//             distributorName,
+//             delerName,
+//             deviceType,
+//             deviceNo,
+//             voltage,
+//             elementType,
+//             batchNo,
+//             simDetails,
+//             VechileBirth,
+//             RegistrationNo,
+//             date,
+//             ChassisNumber,
+//             EngineNumber,
+//             VehicleType,
+//             MakeModel,
+//             ModelYear,
+//             InsuranceRenewDate,
+//             PollutionRenewdate,
+//             fullName,
+//             email,
+//             mobileNo,
+//             GstinNo,
+//             Customercountry,
+//             Customerstate,
+//             Customerdistrict,
+//             Rto,
+//             PinCode,
+//             CompliteAddress,
+//             AdharNo,
+//             PanNo,
+//             Packages,
+//             InvoiceNo,
+//             VehicleKMReading,
+//             DriverLicenseNo,
+//             MappedDate,
+//             NoOfPanicButtons,
+//             VechileIDocument,
+//             RcDocument,
+//             DeviceDocument,
+//             PanCardDocument,
+//             AdharCardDocument,
+//             InvoiceDocument,
+//             SignatureDocument,
+//             PanicButtonWithSticker
+//         } = req.body;
+
+
+//         // ✅ Check if deviceNo already exists
+//         const existingDevice = await MapDevice.findOne({ deviceNo });
+//         if (existingDevice) {
+//             return res.status(409).json({
+//                 success: false,
+//                 message: `Device with deviceNo "${deviceNo}" already exists.`,
+//             });
+//         };
+
+
+
+//         // Ensure all files are uploaded
+//         const requiredFiles = ['Vechile_Doc', 'Rc_Doc', 'Pan_Card', 'Device_Doc', 'Adhar_Card', 'Invious_Doc', 'Signature_Doc', 'Panic_Sticker'];
+//         for (let field of requiredFiles) {
+//             if (!req.files[field] || req.files[field].length === 0) {
+//                 return res.status(400).json({
+//                     message: `${field} file is required`,
+//                     success: false
+//                 });
+//             }
+//         }
+
+
+
+//         // ✅ Upload files separately
+//         let vc = null;
+//         let Rc = null;
+//         let Pc = null;
+//         let Dc = null;
+//         let Ac = null;
+//         let Ic = null;
+//         let Sc = null;
+//         let Ps = null;
+
+
+
+
+//         if (req.files['Vechile_Doc']) {
+//             const file = req.files['Vechile_Doc'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw" // keeps PDF as raw
+//             });
+//             vc = result.secure_url;
+//         }
+
+//         if (req.files['Rc_Doc']) {
+//             const file = req.files['Rc_Doc'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Rc = result.secure_url;
+//         }
+
+//         if (req.files['Pan_Card']) {
+//             const file = req.files['Pan_Card'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Pc = result.secure_url;
+//         }
+
+//         if (req.files['Device_Doc']) {
+//             const file = req.files['Device_Doc'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Dc = result.secure_url;
+//         }
+
+//         if (req.files['Adhar_Card']) {
+//             const file = req.files['Adhar_Card'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Ac = result.secure_url;
+//         }
+
+//         if (req.files['Invious_Doc']) {
+//             const file = req.files['Invious_Doc'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Ic = result.secure_url;
+//         }
+
+//         if (req.files['Signature_Doc']) {
+//             const file = req.files['Signature_Doc'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Sc = result.secure_url;
+//         }
+
+//         if (req.files['Panic_Sticker']) {
+//             const file = req.files['Panic_Sticker'][0];
+//             const result = await cloudinary.uploader.upload(file.path, {
+//                 folder: "profile_pics",
+//                 resource_type: "raw"
+//             });
+//             Ps = result.secure_url;
+//         }
+
+
+
+//         // Then save in dataBase
+//         const newMapDevice = new MapDevice({
+//             manufacturId: userId,
+//             country,
+//             state,
+//             distributorName,
+//             delerName,
+//             deviceType,
+//             deviceNo,
+//             voltage,
+//             elementType,
+//             batchNo,
+//             simDetails,
+//             VechileBirth,
+//             RegistrationNo,
+//             date,
+//             ChassisNumber,
+//             EngineNumber,
+//             VehicleType,
+//             MakeModel,
+//             ModelYear,
+//             InsuranceRenewDate,
+//             PollutionRenewdate,
+//             fullName,
+//             email,
+//             mobileNo,
+//             GstinNo,
+//             Customercountry,
+//             Customerstate,
+//             Customerdistrict,
+//             Rto,
+//             PinCode,
+//             CompliteAddress,
+//             AdharNo,
+//             PanNo,
+//             Packages,
+//             InvoiceNo,
+//             VehicleKMReading,
+//             DriverLicenseNo,
+//             MappedDate,
+//             NoOfPanicButtons,
+//             VechileIDocument: vc,
+//             RcDocument: Rc,
+//             DeviceDocument: Dc,
+//             PanCardDocument: Pc,
+//             AdharCardDocument: Ac,
+//             InvoiceDocument: Ic,
+//             SignatureDocument: Sc,
+//             PanicButtonWithSticker: Ps
+//         })
+
+
+//         await newMapDevice.save();
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "New Device Mapped Successfully",
+//         });
+
+//     } catch (error) {
+//         console.log(error, error.message);
+//         return res.status(500).json({
+//             sucess: false,
+//             message: "Server Error in manuFactur_Map_A_device"
+//         })
+//     }
+// }
+
 exports.manuFacturMAPaDevice = async (req, res) => {
     try {
         const userId = req.user.userId;
 
         if (!userId) {
-            return res.status(200).json({
-                sucess: false,
-                message: "Please Provide UserId"
-            })
+            return res.status(400).json({
+                success: false,
+                message: "Please provide userId",
+            });
         }
 
-        // ✅ Extract all fields from req.body
+        // ✅ Extract fields
         const {
             country,
             state,
@@ -2603,16 +2844,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             DriverLicenseNo,
             MappedDate,
             NoOfPanicButtons,
-            VechileIDocument,
-            RcDocument,
-            DeviceDocument,
-            PanCardDocument,
-            AdharCardDocument,
-            InvoiceDocument,
-            SignatureDocument,
-            PanicButtonWithSticker
         } = req.body;
-
 
         // ✅ Check if deviceNo already exists
         const existingDevice = await MapDevice.findOne({ deviceNo });
@@ -2621,111 +2853,60 @@ exports.manuFacturMAPaDevice = async (req, res) => {
                 success: false,
                 message: `Device with deviceNo "${deviceNo}" already exists.`,
             });
-        };
+        }
 
+        // ✅ Ensure required files are uploaded
+        const requiredFiles = [
+            "Vechile_Doc",
+            "Rc_Doc",
+            "Pan_Card",
+            "Device_Doc",
+            "Adhar_Card",
+            "Invious_Doc",
+            "Signature_Doc",
+            "Panic_Sticker",
+        ];
 
-
-        // Ensure all files are uploaded
-        const requiredFiles = ['Vechile_Doc', 'Rc_Doc', 'Pan_Card', 'Device_Doc', 'Adhar_Card', 'Invious_Doc', 'Signature_Doc', 'Panic_Sticker'];
         for (let field of requiredFiles) {
-            if (!req.files[field] || req.files[field].length === 0) {
+            if (!req.files?.[field] || req.files[field].length === 0) {
                 return res.status(400).json({
+                    success: false,
                     message: `${field} file is required`,
-                    success: false
                 });
             }
         }
 
-
-
-        // ✅ Upload files separately
-        let vc = null;
-        let Rc = null;
-        let Pc = null;
-        let Dc = null;
-        let Ac = null;
-        let Ic = null;
-        let Sc = null;
-        let Ps = null;
-
-
-
-
-        if (req.files['Vechile_Doc']) {
-            const file = req.files['Vechile_Doc'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw" // keeps PDF as raw
+        // ✅ Upload all files to Cloudinary
+        const uploadToCloudinary = async (fieldName) => {
+            const file = req.files[fieldName][0];
+            const uploaded = await cloudinary.uploader.upload(file.path, {
+                folder: "map_device_docs",
+                resource_type: "raw", // to support PDFs or other formats
             });
-            vc = result.secure_url;
-        }
+            return uploaded.secure_url;
+        };
 
-        if (req.files['Rc_Doc']) {
-            const file = req.files['Rc_Doc'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Rc = result.secure_url;
-        }
+        const [
+            vc,
+            Rc,
+            Pc,
+            Dc,
+            Ac,
+            Ic,
+            Sc,
+            Ps
+        ] = await Promise.all([
+            uploadToCloudinary("Vechile_Doc"),
+            uploadToCloudinary("Rc_Doc"),
+            uploadToCloudinary("Pan_Card"),
+            uploadToCloudinary("Device_Doc"),
+            uploadToCloudinary("Adhar_Card"),
+            uploadToCloudinary("Invious_Doc"),
+            uploadToCloudinary("Signature_Doc"),
+            uploadToCloudinary("Panic_Sticker"),
+        ]);
 
-        if (req.files['Pan_Card']) {
-            const file = req.files['Pan_Card'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Pc = result.secure_url;
-        }
-
-        if (req.files['Device_Doc']) {
-            const file = req.files['Device_Doc'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Dc = result.secure_url;
-        }
-
-        if (req.files['Adhar_Card']) {
-            const file = req.files['Adhar_Card'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Ac = result.secure_url;
-        }
-
-        if (req.files['Invious_Doc']) {
-            const file = req.files['Invious_Doc'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Ic = result.secure_url;
-        }
-
-        if (req.files['Signature_Doc']) {
-            const file = req.files['Signature_Doc'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Sc = result.secure_url;
-        }
-
-        if (req.files['Panic_Sticker']) {
-            const file = req.files['Panic_Sticker'][0];
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: "profile_pics",
-                resource_type: "raw"
-            });
-            Ps = result.secure_url;
-        }
-
-
-
-        // Then save in dataBase
+        // ✅ Create a new MapDevice document
         const newMapDevice = new MapDevice({
             manufacturId: userId,
             country,
@@ -2737,7 +2918,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             voltage,
             elementType,
             batchNo,
-            simDetails,
+            simDetails: Array.isArray(simDetails) ? simDetails : [simDetails],
             VechileBirth,
             RegistrationNo,
             date,
@@ -2773,25 +2954,26 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             AdharCardDocument: Ac,
             InvoiceDocument: Ic,
             SignatureDocument: Sc,
-            PanicButtonWithSticker: Ps
-        })
-
+            PanicButtonWithSticker: Ps,
+        });
 
         await newMapDevice.save();
 
         return res.status(200).json({
             success: true,
-            message: "New Device Mapped Successfully",
+            message: "Device mapped successfully",
+            data: newMapDevice,
         });
-
     } catch (error) {
-        console.log(error, error.message);
+        console.error("Error in manuFacturMAPaDevice:", error);
         return res.status(500).json({
-            sucess: false,
-            message: "Server Error in manuFactur_Map_A_device"
-        })
+            success: false,
+            message: "Server error while mapping device",
+            error: error.message,
+        });
     }
-}
+};
+
 
 // this for only distributors deler only not implemented (Oem dele)
 exports.fetchDeviceNoOnBasisOfDeler = async (req, res) => {
@@ -2994,7 +3176,7 @@ exports.fetchdelerOnBasisOfDistributor = async (req, res) => {
 
         // find all deler under distributor
         const delers = await CreateDelerUnderDistributor.find({ distributorId: distributorId });
-        
+
 
         if (!delers) {
             return res.status(200).json({
@@ -3003,7 +3185,7 @@ exports.fetchdelerOnBasisOfDistributor = async (req, res) => {
             })
         }
 
-        
+
 
         return res.status(200).json({
             sucess: true,
