@@ -10,7 +10,8 @@ const AllocateBarCode = require("../models/AllocateBarCode");
 const RollBackAlloCatedBarCodeSchema = require("../models/RollBackAlloCatedBarCode");
 const createSubscription = require("../models/CreateNewSubscriptions");
 const MapDevice = require("../models/mapADeviceModel");
-const Technicien = require("../models/CreateTechnicien")
+const Technicien = require("../models/CreateTechnicien");
+const {cloudinary} = require("../config/cloudinary")
 
 
 
