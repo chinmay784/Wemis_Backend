@@ -2846,6 +2846,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             NoOfPanicButtons,
         } = req.body;
 
+        console.log(simDetails,"Before SON.parse")
 
         if (typeof simDetails === "string") {
             try {
@@ -2859,7 +2860,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             }
         }
 
-
+        console.log(simDetails,"After SON.parse")
 
         // ✅ Check if deviceNo already exists
         const existingDevice = await MapDevice.findOne({ deviceNo });
