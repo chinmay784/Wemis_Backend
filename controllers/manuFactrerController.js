@@ -2805,7 +2805,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
         }
 
         // ✅ Extract fields
-        const {
+        let  {
             country,
             state,
             distributorName,
