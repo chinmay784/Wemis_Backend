@@ -33,7 +33,8 @@ app.use(
 );
 
 // ✅ Body parser
-app.use(express.json({ limit: "10kb" })); // Prevent DOS by limiting payload
+//app.use(express.json({ limit: "10kb" })); // Prevent DOS by limiting payload
+app.use(express.json());
 
 // ✅ Rate Limiting (Prevent brute force / DDoS)
 const limiter = rateLimit({
