@@ -2846,6 +2846,22 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             NoOfPanicButtons,
         } = req.body;
 
+
+
+        if (typeof simDetails === "string") {
+            try {
+                simDetails = JSON.parse(simDetails);
+            } catch (err) {
+                console.error("❌ Invalid JSON for simDetails:", err.message);
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid format for simDetails",
+                });
+            }
+        }
+
+
+
         // ✅ Check if deviceNo already exists
         const existingDevice = await MapDevice.findOne({ deviceNo });
         if (existingDevice) {
@@ -2918,7 +2934,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             voltage,
             elementType,
             batchNo,
-            simDetails: Array.isArray(simDetails) ? simDetails : [simDetails],
+            simDetails,
             VechileBirth,
             RegistrationNo,
             date,
