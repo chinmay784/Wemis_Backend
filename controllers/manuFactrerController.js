@@ -2793,6 +2793,7 @@ exports.editSubscriptionById = async (req, res) => {
 //     }
 // }
 
+// No Implement Packages in this Controller
 exports.manuFacturMAPaDevice = async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -2805,7 +2806,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
         }
 
         // ✅ Extract fields
-        let  {
+        let {
             country,
             state,
             distributorName,
@@ -2981,6 +2982,44 @@ exports.manuFacturMAPaDevice = async (req, res) => {
         });
     }
 };
+
+
+// Fetch Map Device On Basis of manufacturId 
+exports.fetchAllMapDevice = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide UserId"
+            })
+        }
+
+        // find in MpaADevice Document Or Collections on the basis of manufactur ID
+        const mapDevice = await MapDevice.find({ manufacturId: userId })
+
+        if (!mapDevice) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found In Map Device"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            mapDevice,
+            message: "Fetched All MapDevice"
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in FetchAllMapDevice",
+        })
+    }
+}
 
 
 // this for only distributors deler only not implemented (Oem dele)
