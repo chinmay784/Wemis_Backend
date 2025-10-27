@@ -74,3 +74,5 @@
 ::1 - - [27/Oct/2025:09:32:08 +0000] "POST /manufactur/fetchAllMapDevice HTTP/1.1" 200 2432 "-" "PostmanRuntime/7.49.0"
 ::1 - - [27/Oct/2025:09:42:25 +0000] "POST /manufactur/fetchAllMapDevice HTTP/1.1" 200 4268 "-" "PostmanRuntime/7.49.0"
 ::1 - - [27/Oct/2025:10:03:34 +0000] "POST /manufactur/fetchAllMapDevice HTTP/1.1" 200 4268 "-" "PostmanRuntime/7.49.0"
+::1 - - [27/Oct/2025:11:19:58 +0000] "POST /manufactur/viewAMapDeviceInManufactur HTTP/1.1" 200 2438 "-" "PostmanRuntime/7.49.0"
+::1 - - [27/Oct/2025:12:03:21 +0000] "POST /manufactur/viewDocumentsOnMapDevice HTTP/1.1" 200 1059 "-" "PostmanRuntime/7.49.0"

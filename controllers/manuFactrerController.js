@@ -3023,24 +3023,24 @@ exports.fetchAllMapDevice = async (req, res) => {
 
 
 
-exports.viewAMapDeviceInManufactur = async (req, res) =>{
+exports.viewAMapDeviceInManufactur = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        if(!userId){
+        if (!userId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide UserId"
+                sucess: false,
+                message: "Please Provide UserId"
             })
         }
 
 
-        const {mapDeviceId} = req.body;
+        const { mapDeviceId } = req.body;
 
-        if(!mapDeviceId){
+        if (!mapDeviceId) {
             return res.status(200).json({
-                sucess:false,
-                message:"Please Provide mapDeviceId"
+                sucess: false,
+                message: "Please Provide mapDeviceId"
             })
         }
 
@@ -3048,29 +3048,85 @@ exports.viewAMapDeviceInManufactur = async (req, res) =>{
         // On the Basis of mapDeviceId find all details
         const mapDevice = await MapDevice.findById(mapDeviceId);
 
-        if(!mapDevice){
+        if (!mapDevice) {
             return res.status(200).json({
-                sucess:false,
-                message:"No Data Found In mapDevice"
+                sucess: false,
+                message: "No Data Found In mapDevice"
             })
         }
 
 
         return res.status(200).json({
-            sucess:true,
+            sucess: true,
             mapDevice,
-            message:"View SucessFully"
+            message: "View SucessFully"
         })
 
     } catch (error) {
-        console.log(error,error.message);
+        console.log(error, error.message);
         return res.status(500).json({
-            sucess:false,
-            message:"Server Error in viewAMApDevice",
+            sucess: false,
+            message: "Server Error in viewAMApDevice",
         })
     }
 }
 
+
+
+exports.viewDocumentsOnMapDevice = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        if (!userId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Server error in viewDocumentsOnMapDevice"
+            })
+        }
+
+        const { mapDeviceId } = req.body;
+
+        if (!mapDeviceId) {
+            return res.status(200).json({
+                sucess: false,
+                message: "Please Provide mapDeviceId"
+            })
+        }
+
+
+        // On the Basis of mapDeviceId find all details
+        const mapDevice = await MapDevice.findById(mapDeviceId);
+
+        if (!mapDevice) {
+            return res.status(200).json({
+                sucess: false,
+                message: "No Data Found In mapDevice"
+            })
+        }
+
+        return res.status(200).json({
+            sucess: true,
+            documents: {
+                vechileDucument: mapDevice.VechileIDocument,
+                rcDocument: mapDevice.RcDocument,
+                deviceDocument: mapDevice.DeviceDocument,
+                panDocument: mapDevice.PanCardDocument,
+                adharDocument: mapDevice.AdharCardDocument,
+                invoiceDocument: mapDevice.InvoiceDocument,
+                signatureDocument: mapDevice.SignatureDocument,
+                panicButtonDocument: mapDevice.PanicButtonWithSticker,
+            },
+            message: "All Documents Realted To Particular Device Fetched SucessFully"
+        })
+
+    } catch (error) {
+        console.log(error, error.message);
+        return res.status(500).json({
+            sucess: false,
+            message: "Server Error in viewDocumentsOnMapDevice"
+        })
+    }
+}
 
 
 
