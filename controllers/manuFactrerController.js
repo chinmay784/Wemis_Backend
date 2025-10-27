@@ -3022,6 +3022,58 @@ exports.fetchAllMapDevice = async (req, res) => {
 }
 
 
+
+exports.viewAMapDeviceInManufactur = async (req, res) =>{
+    try {
+        const userId = req.user.userId;
+
+        if(!userId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide UserId"
+            })
+        }
+
+
+        const {mapDeviceId} = req.body;
+
+        if(!mapDeviceId){
+            return res.status(200).json({
+                sucess:false,
+                message:"Please Provide mapDeviceId"
+            })
+        }
+
+
+        // On the Basis of mapDeviceId find all details
+        const mapDevice = await MapDevice.findById(mapDeviceId);
+
+        if(!mapDevice){
+            return res.status(200).json({
+                sucess:false,
+                message:"No Data Found In mapDevice"
+            })
+        }
+
+
+        return res.status(200).json({
+            sucess:true,
+            mapDevice,
+            message:"View SucessFully"
+        })
+
+    } catch (error) {
+        console.log(error,error.message);
+        return res.status(500).json({
+            sucess:false,
+            message:"Server Error in viewAMApDevice",
+        })
+    }
+}
+
+
+
+
 // this for only distributors deler only not implemented (Oem dele)
 exports.fetchDeviceNoOnBasisOfDeler = async (req, res) => {
     try {
