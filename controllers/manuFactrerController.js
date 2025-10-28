@@ -2839,7 +2839,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             CompliteAddress,
             AdharNo,
             PanNo,
-            // Packages,
+            Packages,
             InvoiceNo,
             VehicleKMReading,
             DriverLicenseNo,
@@ -2915,6 +2915,14 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             uploadToCloudinary("Panic_Sticker"),
         ]);
 
+        const pack = {
+            packageId:Packages._id,
+            packageName:Packages.packageName,
+            packageType:Packages.packageType,
+            billingCycle:Packages.billingCycle,
+            price:Packages.price
+        }
+
         // ✅ Create a new MapDevice document
         const newMapDevice = new MapDevice({
             manufacturId: userId,
@@ -2950,7 +2958,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             CompliteAddress,
             AdharNo,
             PanNo,
-            // Packages,
+            Packages:pack,
             InvoiceNo,
             VehicleKMReading,
             DriverLicenseNo,
@@ -3126,6 +3134,10 @@ exports.viewDocumentsOnMapDevice = async (req, res) => {
         })
     }
 }
+
+
+exports
+
 
 
 
