@@ -2847,13 +2847,20 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             NoOfPanicButtons,
         } = req.body;
 
-        console.log(simDetails, "Before SON.parse")
+        console.log("Before SON.parse")
 
         if (typeof simDetails === "string") {
             simDetails = JSON.parse(simDetails);
         }
 
-        console.log(simDetails, "After SON.parse")
+        console.log("After SON.parse")
+
+
+        console.log(Packages, "Before ")
+        if (typeof Packages === "string") {
+            Packages = JSON.parse(Packages);
+        }
+        console.log(Packages, "After ")
 
         // ✅ Check if deviceNo already exists
         const existingDevice = await MapDevice.findOne({ deviceNo });
@@ -2915,13 +2922,13 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             uploadToCloudinary("Panic_Sticker"),
         ]);
 
-        const pack = {
-            packageId:Packages._id,
-            packageName:Packages.packageName,
-            packageType:Packages.packageType,
-            billingCycle:Packages.billingCycle,
-            price:Packages.price
-        }
+        let pack = {
+            packageId: Packages._id,
+            packageName: Packages.packageName,
+            packageType: Packages.packageType,
+            billingCycle: Packages.billingCycle,
+            price: Packages.price
+        };
 
         // ✅ Create a new MapDevice document
         const newMapDevice = new MapDevice({
@@ -2958,7 +2965,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             CompliteAddress,
             AdharNo,
             PanNo,
-            Packages:pack,
+            Packages: pack,
             InvoiceNo,
             VehicleKMReading,
             DriverLicenseNo,
