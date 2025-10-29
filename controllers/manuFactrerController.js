@@ -2922,13 +2922,13 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             uploadToCloudinary("Panic_Sticker"),
         ]);
 
-        let pack = {
-            packageId: Packages._id,
-            packageName: Packages.packageName,
-            packageType: Packages.packageType,
-            billingCycle: Packages.billingCycle,
-            price: Packages.price
-        };
+        // let pack = {
+        //     packageId: Packages._id,
+        //     packageName: Packages.packageName,
+        //     packageType: Packages.packageType,
+        //     billingCycle: Packages.billingCycle,
+        //     price: Packages.price
+        // };
 
         // ✅ Create a new MapDevice document
         const newMapDevice = new MapDevice({
@@ -2965,7 +2965,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
             CompliteAddress,
             AdharNo,
             PanNo,
-            Packages: pack,
+            Packages,
             InvoiceNo,
             VehicleKMReading,
             DriverLicenseNo,
