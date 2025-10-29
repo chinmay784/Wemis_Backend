@@ -52,20 +52,32 @@ const mapDeviceSchema = new mongoose.Schema({
     PanNo: { type: String, trim: true },
 
     // ✅ Packages (Array of Subdocuments)
-    Packages:
-    {
+    // Packages:
+    // {
+    //     packageId: {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: "createSubscription", // reference to your Package model
+    //         // required: true
+    //     },
+    //     packageName: { type: String, trim: true },
+    //     packageType: { type: String, trim: true },
+    //     billingCycle: { type: String, trim: true }, // e.g. "30 days"
+    //     price: { type: Number, default: 0 },
+    //     // startDate: { type: String, trim: true },
+    //     // endDate: { type: String, trim: true },
+    //     // status: { type: String, enum: ["active", "expired", "pending"], default: "active" }
+    // },
+
+    // ✅ Packages (embedded object)
+    Packages: {
         packageId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "createSubscription", // reference to your Package model
-            // required: true
+            ref: "createSubscription",
         },
-        packageName: { type: String, trim: true },
-        packageType: { type: String, trim: true },
-        billingCycle: { type: String, trim: true }, // e.g. "30 days"
-        price: { type: Number, default: 0 },
-        // startDate: { type: String, trim: true },
-        // endDate: { type: String, trim: true },
-        // status: { type: String, enum: ["active", "expired", "pending"], default: "active" }
+        packageName: String,
+        packageType: String,
+        billingCycle: String,
+        price: Number,
     },
 
     // Installation Detail
