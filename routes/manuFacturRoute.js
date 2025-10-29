@@ -27,7 +27,7 @@ router.post("/fetchAllAssignElementDataRelatedToCreateBarCode", authMiddelWere, 
 router.post("/fetchAllBarCode", authMiddelWere, fetchAllBarCode);
 router.post("/AllocateBarCode", authMiddelWere, AllocateBarCode);
 router.post("/fetchElementData", authMiddelWere, fetchElementData);
-router.post("/fetchAllBarCode", authMiddelWere, fetchAllBarCodesNumber);
+router.post("/fetchAllBarCodeNumber", authMiddelWere, fetchAllBarCodesNumber);
 router.post("/findDistributorUnderManufactur", authMiddelWere, findDistributorUnderManufactur);
 router.post("/findOemUnderManufactur", authMiddelWere, findOemUnderManufactur);
 router.post("/fetchAllAllocatedBarcode", authMiddelWere, fetchAllAllocatedBarcode);

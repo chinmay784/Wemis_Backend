@@ -15,67 +15,58 @@ const wlpRoutes = require("./routes/wlpRoute");
 const manufacturRoutes = require("./routes/manuFacturRoute");
 
 const app = express();
+app.set("trust proxy", 1);
+app.use(helmet());
+// ✅ Serve React frontend (after build)
+const _dirname = path.dirname("");
+app.use(express.static(path.join(_dirname, "./Wemis_Frontend/dist")));
 
-// ✅ Tell Express to trust proxy headers (important for real client IPs)
-// ✅ If using Render, Nginx, or a load balancer
-app.set('trust proxy', 1);
-
-// ✅ Security Middlewares
-app.use(helmet()); // Secure HTTP headers
-
-// ✅ CORS (Restrict allowed origins in production)
-app.use(
-  cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(",") || "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-
-// ✅ Body parser
-//app.use(express.json({ limit: "10kb" })); // Prevent DOS by limiting payload
+app.use(cors({"origin":"*"}));
 app.use(express.json());
 
-// ✅ Rate Limiting (Prevent brute force / DDoS)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // max requests per IP
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: "Too many requests from this IP, please try again later.",
 });
 app.use(limiter);
 
-// ✅ Logging (Audit Trail)
+// Logging
 const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
   flags: "a",
 });
-app.use(morgan("combined", { stream: logStream })); // Logs requests to file
-app.use(morgan("dev")); // Also log in console for dev
+app.use(morgan("combined", { stream: logStream }));
+app.use(morgan("dev"));
 
-// ✅ API Routes
-app.use("/superadmin", superAdminRoutes);
-app.use("/admin", adminRoutes);
-app.use("/wlp", wlpRoutes);
-app.use("/manufactur", manufacturRoutes);
+// ✅ API routes
+app.use("/api/superadmin", superAdminRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/wlp", wlpRoutes);
+app.use("/api/manufactur", manufacturRoutes);
 
-// ✅ Health Check Endpoint
+
+
+// // ✅ Fallback route for React Router (important!)
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(_dirname, "Wemis_Frontend", "dist", "index.html"));
+// });
+
+
+// ✅ Health check
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "UP", timestamp: new Date().toISOString() });
 });
 
-// ✅ Error Handling Middleware
+// ✅ Error handler
 app.use((err, req, res, next) => {
   console.error("❌ Error:", err.message);
-  res.status(500).json({
-    success: false,
-    message: "Internal Server Error",
-  });
+  res.status(500).json({ success: false, message: "Internal Server Error" });
 });
 
-// ✅ Start Server
-const PORT = process.env.PORT || 3000;
+// ✅ Start server
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`✅ Server is running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
 
-// ✅ Connect to Database
 connectToDatabase();
