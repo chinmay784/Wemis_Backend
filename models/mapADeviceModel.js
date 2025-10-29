@@ -70,14 +70,8 @@ const mapDeviceSchema = new mongoose.Schema({
 
     // ✅ Packages (embedded object)
     Packages: {
-        packageId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "createSubscription",
-        },
-        packageName: String,
-        packageType: String,
-        billingCycle: String,
-        price: Number,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "createSubscription",
     },
 
     // Installation Detail

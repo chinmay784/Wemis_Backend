@@ -2856,11 +2856,7 @@ exports.manuFacturMAPaDevice = async (req, res) => {
         console.log("After SON.parse")
 
 
-        console.log(Packages, "Before ")
-        if (typeof Packages === "string") {
-            Packages = JSON.parse(Packages);
-        }
-        console.log(Packages, "After ")
+       
 
         // ✅ Check if deviceNo already exists
         const existingDevice = await MapDevice.findOne({ deviceNo });
